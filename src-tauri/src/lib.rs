@@ -1,9 +1,10 @@
-use tauri::Error;
 use anyhow::Result;
 use image::codecs::avif::AvifEncoder;
 use image::ImageEncoder;
+use serde::{Deserialize, Serialize};
 use std::fs::File;
 use std::io::BufWriter;
+use tauri::Error;
 use webp;
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
@@ -26,11 +27,41 @@ pub fn run() {
         .expect("error while running tauri application");
 }
 
+#[derive(Debug, Serialize, Deserialize)]
+struct FileInfo {
+    file_name: String,
+    file_name_with_extension: String,
+    mime_type: String,
+}
+
+#[derive(Debug, Serialize, Deserialize, PartialEq)]
+#[serde(rename_all = "snake_case")]
+enum ExtensionType {
+    Webp,
+    Avif,
+}
+
 #[tauri::command]
-fn convert(files_binary: Vec<Vec<u8>>) -> Result<Vec<Vec<u8>>, Error> {
+fn convert(
+    files_binary: Vec<Vec<u8>>,
+    file_infos: Vec<FileInfo>,
+    extension_type: ExtensionType,
+) -> Result<Vec<Vec<u8>>, Error> {
     for (i, file_binary) in files_binary.iter().enumerate() {
-        let output_path = format!("C:/Users/HARUMI/OneDrive/デスクトップ/output_{}.webp", i);
-        encode_to_webp(file_binary.clone(), &output_path, 75)?;
+        let extension_str = match extension_type {
+            ExtensionType::Webp => "webp",
+            ExtensionType::Avif => "avif",
+        };
+
+        let output_path = format!(
+            "C:/Users/HARUMI/OneDrive/デスクトップ/{}.{}",
+            file_infos[i].file_name, extension_str
+        );
+        if extension_type == ExtensionType::Webp {
+            encode_to_webp(file_binary.clone(), &output_path, 75)?;
+        } else if extension_type == ExtensionType::Avif {
+            encode_to_avif(file_binary.clone(), &output_path, 75)?;
+        }
     }
     Ok(files_binary)
 }

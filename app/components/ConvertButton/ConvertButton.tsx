@@ -2,7 +2,7 @@
 
 import { Button } from "antd";
 import { useAtom } from "jotai";
-import { filesBinaryAtom } from "@/app/atom";
+import { filesBinaryAtom, fileInfosAtom, extensionTypeAtom } from "@/app/atom";
 import { invoke } from "@tauri-apps/api/core";
 
 async function createSendData(filesBinary: Uint8Array[]) {
@@ -13,13 +13,17 @@ async function createSendData(filesBinary: Uint8Array[]) {
 
 export default function ConvertButton() {
   const [filesBinary] = useAtom(filesBinaryAtom);
+  const [fileInfos] = useAtom(fileInfosAtom);
+  const [extensionType] = useAtom(extensionTypeAtom);
+
   async function convert() {
     if (!filesBinary) {
       console.error("filesBinary is undefined");
       return;
     }
     const sendData = await createSendData(filesBinary);
-    await invoke("convert", { filesBinary: sendData });
+    console.log(fileInfos);
+    await invoke("convert", { filesBinary: sendData, fileInfos: fileInfos , extensionType: extensionType});
     console.log("convert success");
   }
   return <Button onClick={convert}>Convert</Button>;
