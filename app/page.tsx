@@ -1,8 +1,9 @@
 import { ConfigProvider } from "antd";
-import FileDialog from "./components/FileDialog/FileDialog";
-import SelectFiles from "./components/SelectFiles/SelectFiles";
 import SettingsMenu from "./components/SettingsMenu/SettingsMenu";
 import LoadingModal from "./components/LoadingModal/LoadingModal";
+import InputTab from "./components/InputTab/InputTab";
+import OutputTab from "./components/OutputTab/OutputTab";
+
 export default function Home() {
   return (
     <ConfigProvider
@@ -18,9 +19,9 @@ export default function Home() {
         <div className="min-w-[230px] h-screen">
           <SettingsMenu />
         </div>
-        <div className="flex-1 min-h-screen">
-          <FileDialog />
-          <SelectFiles />
+        <div className="flex-1 min-h-screen bg-gray-200 relative">
+          <InputTab />
+          <OutputTab />
         </div>
       </div>
     </ConfigProvider>

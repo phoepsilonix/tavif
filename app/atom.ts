@@ -24,3 +24,6 @@ export const processedFilePathsAtom = atom<string[]>([]);
 
 // 処理済みファイルバイナリ
 export const processedFilesBinaryAtom = atom<Uint8Array[]>([]);
+
+// タブ選択状態
+export const tabSelectedAtom = atom<"input" | "output">("input");

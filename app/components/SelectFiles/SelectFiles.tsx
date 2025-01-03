@@ -4,6 +4,7 @@ import { useAtom } from "jotai";
 import { filePathsAtom, filesBinaryAtom, fileInfosAtom } from "@/app/atom";
 import { FileInfo } from "./index.d";
 import { useEffect } from "react";
+import File from "./File";
 
 function getFileInfo(filePaths: string[]): FileInfo[] {
   return filePaths.map((filePath) => {
@@ -40,25 +41,6 @@ function getFileInfo(filePaths: string[]): FileInfo[] {
   });
 }
 
-function getFileBase64(binary: Uint8Array): string {
-  if (!binary || binary.length === 0) {
-    return "";
-  }
-  const len = binary.length;
-  let base64 = "";
-  for (let i = 0; i < len; i++) {
-    base64 += String.fromCharCode(binary[i]);
-  }
-  return btoa(base64);
-}
-
-function getFileSize(binary: Uint8Array): number {
-  if (!binary) {
-    return 0;
-  }
-  return parseFloat((binary.length / 1024).toFixed(1));
-}
-
 export default function SelectFiles() {
   const [filePaths] = useAtom(filePathsAtom);
   const [filesBinary] = useAtom(filesBinaryAtom);
@@ -67,7 +49,6 @@ export default function SelectFiles() {
   useEffect(() => {
     const infos: FileInfo[] = getFileInfo(filePaths);
     setFileInfos(infos);
-    console.log(fileInfos);
   }, [filePaths]);
 
   return (
@@ -75,21 +56,7 @@ export default function SelectFiles() {
       <ul>
         {filesBinary.length > 0 &&
           fileInfos.map((fileInfo, index) => (
-            <li
-              key={fileInfo.file_name_with_extension}
-              className="flex items-center gap-3 text-sm"
-            >
-              <div className="flex items-center aspect-square w-14 h-auto">
-                <img
-                  src={`data:${fileInfo.mime_type};base64,${getFileBase64(
-                    filesBinary[index]
-                  )}`}
-                  alt={fileInfo.file_name_with_extension}
-                />
-              </div>
-              {fileInfo.file_name_with_extension}
-              <span>{getFileSize(filesBinary[index])}KB</span>
-            </li>
+            <File key={fileInfo.file_name_with_extension} fileInfo={fileInfo} binary={filesBinary[index]} />
           ))}
       </ul>
     </div>

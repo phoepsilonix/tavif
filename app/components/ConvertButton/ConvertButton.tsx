@@ -39,11 +39,9 @@ export default function ConvertButton() {
 
     const sendData = await createSendData(filesBinary);
     const result: [Uint8Array[], string[]] = await invoke("convert", { filesBinary: sendData, fileInfos: fileInfos , extensionType: extensionType, quality: quality});
-    console.log("convert success");
     setProcessedFilesBinary(result[0]);
     setProcessedFilePaths(result[1]);
     setIsProcessing(false);
-    console.log(processedFilePaths);
   }
   return (
     <>
