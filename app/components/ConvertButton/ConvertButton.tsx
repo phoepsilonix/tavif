@@ -2,7 +2,7 @@
 
 import { Button } from "antd";
 import { useAtom } from "jotai";
-import { filesBinaryAtom, fileInfosAtom, extensionTypeAtom } from "@/app/atom";
+import { filesBinaryAtom, fileInfosAtom, extensionTypeAtom, qualityAtom } from "@/app/atom";
 import { invoke } from "@tauri-apps/api/core";
 
 async function createSendData(filesBinary: Uint8Array[]) {
@@ -15,6 +15,7 @@ export default function ConvertButton() {
   const [filesBinary] = useAtom(filesBinaryAtom);
   const [fileInfos] = useAtom(fileInfosAtom);
   const [extensionType] = useAtom(extensionTypeAtom);
+  const [quality] = useAtom(qualityAtom);
 
   async function convert() {
     if (!filesBinary) {
@@ -23,7 +24,7 @@ export default function ConvertButton() {
     }
     const sendData = await createSendData(filesBinary);
     console.log(fileInfos);
-    await invoke("convert", { filesBinary: sendData, fileInfos: fileInfos , extensionType: extensionType});
+    await invoke("convert", { filesBinary: sendData, fileInfos: fileInfos , extensionType: extensionType, quality: quality});
     console.log("convert success");
   }
   return <Button onClick={convert}>Convert</Button>;

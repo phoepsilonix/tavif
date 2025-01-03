@@ -15,7 +15,7 @@ export default function Home() {
       }}
     >
       <div className="flex w-full h-screen">
-        <div className="min-w-[200px] h-screen">
+        <div className="min-w-[230px] h-screen">
           <SettingsMenu />
         </div>
         <div className="flex-1">

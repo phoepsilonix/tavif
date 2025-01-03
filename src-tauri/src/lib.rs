@@ -46,6 +46,7 @@ fn convert(
     files_binary: Vec<Vec<u8>>,
     file_infos: Vec<FileInfo>,
     extension_type: ExtensionType,
+    quality: u8,
 ) -> Result<Vec<Vec<u8>>, Error> {
     for (i, file_binary) in files_binary.iter().enumerate() {
         let extension_str = match extension_type {
@@ -58,9 +59,9 @@ fn convert(
             file_infos[i].file_name, extension_str
         );
         if extension_type == ExtensionType::Webp {
-            encode_to_webp(file_binary.clone(), &output_path, 75)?;
+            encode_to_webp(file_binary.clone(), &output_path, quality)?;
         } else if extension_type == ExtensionType::Avif {
-            encode_to_avif(file_binary.clone(), &output_path, 75)?;
+            encode_to_avif(file_binary.clone(), &output_path, quality)?;
         }
     }
     Ok(files_binary)

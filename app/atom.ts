@@ -12,3 +12,6 @@ export const fileInfosAtom = atom<FileInfo[]>([]);
 
 // 拡張子
 export const extensionTypeAtom = atom<"webp" | "avif">("webp");
+
+// 品質
+export const qualityAtom = atom<number>(75);
