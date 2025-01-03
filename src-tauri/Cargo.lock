@@ -153,6 +153,7 @@ dependencies = [
  "image",
  "log",
  "rav1e",
+ "rayon",
  "serde",
  "serde_json",
  "tauri",

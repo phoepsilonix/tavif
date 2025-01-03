@@ -1,6 +1,7 @@
 use anyhow::Result;
 use image::codecs::avif::AvifEncoder;
 use image::ImageEncoder;
+use rayon::prelude::*;
 use serde::{Deserialize, Serialize};
 use std::fs::File;
 use std::io::BufWriter;
@@ -49,22 +50,25 @@ fn convert(
     quality: u8,
     output_path: String,
 ) -> Result<Vec<Vec<u8>>, Error> {
-    for (i, file_binary) in files_binary.iter().enumerate() {
-        let extension_str = match extension_type {
-            ExtensionType::Webp => "webp",
-            ExtensionType::Avif => "avif",
-        };
+    files_binary
+        .par_iter()
+        .enumerate()
+        .for_each(|(i, file_binary)| {
+            let extension_str = match extension_type {
+                ExtensionType::Webp => "webp",
+                ExtensionType::Avif => "avif",
+            };
 
-        let output_path = format!(
-            "{}/{}.{}",
-            output_path, file_infos[i].file_name, extension_str
-        );
-        if extension_type == ExtensionType::Webp {
-            encode_to_webp(file_binary.clone(), &output_path, quality)?;
-        } else if extension_type == ExtensionType::Avif {
-            encode_to_avif(file_binary.clone(), &output_path, quality)?;
-        }
-    }
+            let output_path = format!(
+                "{}/{}.{}",
+                output_path, file_infos[i].file_name, extension_str
+            );
+            if extension_type == ExtensionType::Webp {
+                encode_to_webp(file_binary.clone(), &output_path, quality).unwrap();
+            } else if extension_type == ExtensionType::Avif {
+                encode_to_avif(file_binary.clone(), &output_path, quality).unwrap();
+            }
+        });
     Ok(files_binary)
 }
 

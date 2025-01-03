@@ -29,3 +29,4 @@ anyhow = "1.0"
 rav1e = "0.7.1"
 image = { version = "0.24", features = ["avif"] }
 webp = "0.2"
+rayon = "1.10.0"
