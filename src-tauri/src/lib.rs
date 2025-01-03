@@ -47,6 +47,7 @@ fn convert(
     file_infos: Vec<FileInfo>,
     extension_type: ExtensionType,
     quality: u8,
+    output_path: String,
 ) -> Result<Vec<Vec<u8>>, Error> {
     for (i, file_binary) in files_binary.iter().enumerate() {
         let extension_str = match extension_type {
@@ -55,8 +56,8 @@ fn convert(
         };
 
         let output_path = format!(
-            "C:/Users/HARUMI/OneDrive/デスクトップ/{}.{}",
-            file_infos[i].file_name, extension_str
+            "{}/{}.{}",
+            output_path, file_infos[i].file_name, extension_str
         );
         if extension_type == ExtensionType::Webp {
             encode_to_webp(file_binary.clone(), &output_path, quality)?;

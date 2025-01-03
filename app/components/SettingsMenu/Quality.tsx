@@ -30,6 +30,11 @@ const IntegerStep: React.FC = () => {
           style={{ margin: '0 16px' }}
           value={inputValue}
           onChange={onChange}
+          onBlur={() => {
+            if (!inputValue) {
+              setInputValue(75);
+            }
+          }}
         />
       </Col>
     </Row>

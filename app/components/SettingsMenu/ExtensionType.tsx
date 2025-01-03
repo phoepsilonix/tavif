@@ -7,7 +7,7 @@ import { extensionTypeAtom } from "@/app/atom";
 export default function ExtensionType() {
   const [extensionType, setExtensionType] = useAtom(extensionTypeAtom);
   return (
-    <div className="flex flex-col gap-1">
+    <div className="flex flex-col gap-2">
       <span className="text-sm font-bold text-white tracking-wider">
         Extension Type
       </span>
