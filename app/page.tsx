@@ -1,7 +1,7 @@
 import { ConfigProvider } from "antd";
 import FileDialog from "./components/FileDialog/FileDialog";
 import SelectFiles from "./components/SelectFiles/SelectFiles";
-
+import ConvertButton from "./components/ConvertButton/ConvertButton";
 export default function Home() {
   return (
     <ConfigProvider
@@ -14,6 +14,7 @@ export default function Home() {
     >
       <FileDialog />
       <SelectFiles />
+      <ConvertButton />
     </ConfigProvider>
   );
 }
