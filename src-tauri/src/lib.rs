@@ -5,6 +5,7 @@ use rayon::prelude::*;
 use serde::{Deserialize, Serialize};
 use std::fs::File;
 use std::io::BufWriter;
+use std::sync::{Arc, Mutex};
 use tauri::Error;
 use webp;
 
@@ -48,8 +49,10 @@ fn convert(
     file_infos: Vec<FileInfo>,
     extension_type: ExtensionType,
     quality: u8,
-    output_path: String,
-) -> Result<Vec<Vec<u8>>, Error> {
+) -> Result<(Vec<Vec<u8>>, Vec<String>), Error> {
+    let temp_dir = std::env::temp_dir();
+    let output_paths = Arc::new(Mutex::new(Vec::new()));
+
     files_binary
         .par_iter()
         .enumerate()
@@ -59,17 +62,26 @@ fn convert(
                 ExtensionType::Avif => "avif",
             };
 
-            let output_path = format!(
-                "{}/{}.{}",
-                output_path, file_infos[i].file_name, extension_str
-            );
+            let output_path =
+                temp_dir.join(format!("{}.{}", file_infos[i].file_name, extension_str)); // 一時ディレクトリにファイル名を作成
+
             if extension_type == ExtensionType::Webp {
-                encode_to_webp(file_binary.clone(), &output_path, quality).unwrap();
+                encode_to_webp(file_binary.clone(), output_path.to_str().unwrap(), quality)
+                    .unwrap();
             } else if extension_type == ExtensionType::Avif {
-                encode_to_avif(file_binary.clone(), &output_path, quality).unwrap();
+                encode_to_avif(file_binary.clone(), output_path.to_str().unwrap(), quality)
+                    .unwrap();
             }
+
+            output_paths
+                .lock()
+                .unwrap()
+                .push(output_path.to_str().unwrap().to_string());
         });
-    Ok(files_binary)
+
+    // output_pathsのロックを取得
+    let output_paths_locked = output_paths.lock().unwrap();
+    Ok((files_binary, output_paths_locked.clone())) // ロックを保持したまま値を返す
 }
 
 fn encode_to_avif(img_binary: Vec<u8>, output_path: &str, quality: u8) -> Result<()> {

@@ -1,6 +1,9 @@
 import { atom } from "jotai";
 import { FileInfo } from "./components/SelectFiles/index.d";
 
+// 処理中
+export const isProcessingAtom = atom<boolean>(false);
+
 // ファイルパス
 export const filePathsAtom = atom<string[]>([]);
 
@@ -15,3 +18,9 @@ export const extensionTypeAtom = atom<"webp" | "avif">("webp");
 
 // 品質
 export const qualityAtom = atom<number>(75);
+
+// 処理済みファイルパス
+export const processedFilePathsAtom = atom<string[]>([]);
+
+// 処理済みファイルバイナリ
+export const processedFilesBinaryAtom = atom<Uint8Array[]>([]);

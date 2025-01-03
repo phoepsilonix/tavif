@@ -2,9 +2,8 @@
 
 import { Button } from "antd";
 import { useAtom } from "jotai";
-import { filesBinaryAtom, fileInfosAtom, extensionTypeAtom, qualityAtom } from "@/app/atom";
+import { filesBinaryAtom, fileInfosAtom, extensionTypeAtom, qualityAtom, processedFilePathsAtom, processedFilesBinaryAtom, isProcessingAtom } from "@/app/atom";
 import { invoke } from "@tauri-apps/api/core";
-import { open } from "@tauri-apps/plugin-dialog";
 import { Modal } from "antd";
 
 async function createSendData(filesBinary: Uint8Array[]) {
@@ -18,9 +17,14 @@ export default function ConvertButton() {
   const [fileInfos] = useAtom(fileInfosAtom);
   const [extensionType] = useAtom(extensionTypeAtom);
   const [quality] = useAtom(qualityAtom);
+  const [isProcessing, setIsProcessing] = useAtom(isProcessingAtom);
+  const [processedFilePaths, setProcessedFilePaths] = useAtom(processedFilePathsAtom);
+  const [processedFilesBinary, setProcessedFilesBinary] = useAtom(processedFilesBinaryAtom);
+
   const [modal, contextHolder] = Modal.useModal();
 
   async function convert() {
+    setIsProcessing(true);
     if (!filesBinary) {
       console.error("filesBinary is undefined");
       return;
@@ -33,23 +37,17 @@ export default function ConvertButton() {
       return;
     }
 
-    const outputPath = await open({
-      title: "Save Location",
-      directory: true,
-      multiple: false,
-      canCreateDirectories: true,
-    });
-    if (!outputPath) {
-      return;
-    }
-
     const sendData = await createSendData(filesBinary);
-    await invoke("convert", { filesBinary: sendData, fileInfos: fileInfos , extensionType: extensionType, quality: quality, outputPath: outputPath});
+    const result: [Uint8Array[], string[]] = await invoke("convert", { filesBinary: sendData, fileInfos: fileInfos , extensionType: extensionType, quality: quality});
     console.log("convert success");
+    setProcessedFilesBinary(result[0]);
+    setProcessedFilePaths(result[1]);
+    setIsProcessing(false);
+    console.log(processedFilePaths);
   }
   return (
     <>
-      <Button onClick={convert}>Convert</Button>
+      <Button onClick={convert} className="font-bold text-lg tracking-wider">Convert</Button>
       {contextHolder}
     </>
   );
