@@ -4,11 +4,12 @@ import { getCurrentWebview } from "@tauri-apps/api/webview";
 import type { DragDropEvent } from "@tauri-apps/api/webview";
 import type { Event } from "@tauri-apps/api/event";
 import { useAtom } from "jotai";
-import { filePathsAtom, filesBinaryAtom } from "../../atom";
+import { filePathsAtom, filesBinaryAtom, tabSelectedAtom } from "../../atom";
 
 export default function Dropzone() {
   const [filePaths, setFilePaths] = useAtom(filePathsAtom);
   const [filesBinary, setFilesBinary] = useAtom(filesBinaryAtom);
+  const [tabSelected, setTabSelected] = useAtom(tabSelectedAtom);
 
   useEffect(() => {
     // ドラッグ＆ドロップリスナーを設定する非同期関数
@@ -30,6 +31,7 @@ export default function Dropzone() {
                 const uniquePaths = Array.from(new Set(allPaths)); // 重複を排除
                 return uniquePaths; // ユニークなパスを返す
               });
+              setTabSelected("input");
             } else {
               // パスが配列でない場合のエラーメッセージ
               console.error("Dropped paths is not an array:", paths);
