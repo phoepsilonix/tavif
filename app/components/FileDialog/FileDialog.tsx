@@ -20,7 +20,7 @@ export default function FileDialog() {
       filters: [
         {
           name: "Image Files",
-          extensions: ["jpg", "jpeg", "png", "webp", "avif"],
+          extensions: ["jpg", "jpeg", "png", "webp"],
         },
       ],
     });
@@ -40,7 +40,7 @@ export default function FileDialog() {
 
   return (
     <div>
-      <Button type="primary" onClick={openDialog}>
+      <Button type="primary" onClick={openDialog} title="Add files.">
         <FolderOpenOutlined size={16} className="fill-white" />
         Add Files
       </Button>

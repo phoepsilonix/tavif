@@ -1,15 +1,16 @@
 "use client";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { getCurrentWebview } from "@tauri-apps/api/webview";
 import type { DragDropEvent } from "@tauri-apps/api/webview";
 import type { Event } from "@tauri-apps/api/event";
 import { useAtom } from "jotai";
-import { filePathsAtom, filesBinaryAtom, tabSelectedAtom } from "../../atom";
+import { filePathsAtom, tabSelectedAtom } from "../../atom";
+import { Modal } from "antd";
 
 export default function Dropzone() {
   const [filePaths, setFilePaths] = useAtom(filePathsAtom);
-  const [filesBinary, setFilesBinary] = useAtom(filesBinaryAtom);
   const [tabSelected, setTabSelected] = useAtom(tabSelectedAtom);
+  const [modal, modalContextHolder] = Modal.useModal();
 
   useEffect(() => {
     // ドラッグ＆ドロップリスナーを設定する非同期関数
@@ -25,13 +26,48 @@ export default function Dropzone() {
             const paths = event.payload.paths;
             // パスが配列であるか確認
             if (Array.isArray(paths)) {
-              // 既存のパスに新しいパスを追加し、重複を排除
-              setFilePaths((prevPaths) => {
-                const allPaths = [...prevPaths, ...paths]; // 既存のパスと新しいパスを結合
-                const uniquePaths = Array.from(new Set(allPaths)); // 重複を排除
-                return uniquePaths; // ユニークなパスを返す
+              // 有効な拡張子のリスト
+              const validExtensions = ["jpeg", "jpg", "png", "webp"];
+              // 有効なパスのみをフィルタリング
+              const filteredPaths: string[] = [];
+              const invalidExtensions = new Set<string>();
+
+              paths.forEach((path) => {
+                const extension = path.split(".").pop()?.toLowerCase() || "";
+                if (validExtensions.includes(extension)) {
+                  filteredPaths.push(path);
+                } else {
+                  invalidExtensions.add(extension);
+                }
               });
-              setTabSelected("input");
+
+              // 無効な拡張子があれば警告を表示
+              if (invalidExtensions.size > 0) {
+                const extensions = Array.from(invalidExtensions).join(", ");
+                modal.warning({
+                  title: "Warning",
+                  centered: true,
+                  content: `Files with extension ${extensions} are not supported`,
+                });
+              }
+
+              // 有効なパスがある場合のみ処理を続行
+              if (filteredPaths.length > 0) {
+                // 既存のパスに新しいパスを追加し、重複を排除
+                setFilePaths((prevPaths) => {
+                  const allPaths = [...prevPaths, ...filteredPaths]; // 既存のパスと新しいパスを結合
+                  const uniquePaths = Array.from(new Set(allPaths)); // 重複を排除
+                  return uniquePaths; // ユニークなパスを返す
+                });
+                setTabSelected("input");
+              } else {
+                // 有効なファイルがない場合のメッセージ
+                modal.error({
+                  title: "Error",
+                  centered: true,
+                  content: "No valid image files dropped",
+                });
+              }
             } else {
               // パスが配列でない場合のエラーメッセージ
               console.error("Dropped paths is not an array:", paths);
@@ -53,5 +89,5 @@ export default function Dropzone() {
     };
   }, []);
 
-  return <div></div>;
+  return <div>{modalContextHolder}</div>;
 }

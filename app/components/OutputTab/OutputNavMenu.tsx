@@ -67,17 +67,17 @@ export default function OutputNavMenu() {
   if (processedFilePathsSorted.length === 0) return <Null />;
 
   return (
-    <div className="absolute top-0 left-0 w-full h-fit p-2 flex items-center justify-between gap-2 bg-gray-50/50 backdrop-blur-sm border-l-2 border-r-2 border-gray-300 z-10">
+    <div className="absolute top-1 left-0 w-full h-fit p-2 flex items-center justify-between gap-2 bg-gray-50/50 backdrop-blur-sm border-l-2 border-r-2 border-gray-300 z-10">
       <div className="flex items-center gap-2">
-        <Button type="primary" onClick={saveAll}>
+        <Button type="primary" onClick={saveAll} title="Save all files.">
           <DownloadOutlined size={16} className="fill-white" />
           Save ALL
         </Button>
-        <Button type="primary" onClick={saveSelected}>
+        <Button type="primary" onClick={saveSelected} title="Save selected files.">
           <DownloadOutlined size={16} className="fill-white" />
           Save Selected
         </Button>
-        <Button type="default" onClick={removeResult}>
+        <Button type="default" onClick={removeResult} title="Delete all processed files from the temp directory.">
           <DeleteOutlined size={16} className="fill-white" />
           Remove Result
         </Button>
