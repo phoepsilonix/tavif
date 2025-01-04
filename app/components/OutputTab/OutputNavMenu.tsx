@@ -7,6 +7,7 @@ import DownloadOutlined from "../icons/Download";
 import { DeleteOutlined } from "@ant-design/icons";
 import { Checkbox, CheckboxChangeEvent } from "antd";
 import Null from "./Null";
+import "@ant-design/v5-patch-for-react-19";
 
 export default function OutputNavMenu() {
   const [processedFilePathsSorted, setProcessedFilePathsSorted] = useAtom(processedFilePathsSortedAtom);
