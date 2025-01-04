@@ -5,6 +5,7 @@ import SelectFiles from "../SelectFiles/SelectFiles";
 import { useAtom } from "jotai";
 import { tabSelectedAtom, filePathsAtom } from "../../atom";
 import InputNubMenu from "./InputNubMenu";
+import Null from "./Null";
 
 export default function InputTab() {
   const [tabSelected, setTabSelected] = useAtom(tabSelectedAtom);
@@ -22,9 +23,9 @@ export default function InputTab() {
             filePaths.length > 0 ? "pt-10" : ""
           }`}
         >
-          {filePaths.length > 0 && <InputNubMenu />}
           <Dropzone />
-          <SelectFiles />
+          {filePaths.length > 0 && <InputNubMenu />}
+          {filePaths.length > 0 ? <SelectFiles /> : <Null />}
         </div>
       </div>
     </div>
