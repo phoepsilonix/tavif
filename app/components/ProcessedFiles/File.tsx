@@ -5,6 +5,7 @@ import { getFileBase64, getFileSize } from "../SelectFiles/utils";
 import { Checkbox } from "antd";
 import { useAtom } from "jotai";
 import { checkboxSelectedAtom } from "@/app/atom";
+import { useEffect, useState } from "react";
 
 function getFileSizeBulk(binary: Uint8Array, processedFileBinary: Uint8Array) {
   const binarySize: number = getFileSize(binary);
@@ -25,10 +26,18 @@ export default function File({
   binary,
   processedFileBinary,
 }: ProcessedFilesProps) {
-  const { binarySize, processedFileBinarySize, compressionRate } =
-    getFileSizeBulk(binary, processedFileBinary);
-
   const [checkboxSelected, setCheckboxSelected] = useAtom(checkboxSelectedAtom);
+
+  const [initialBinary, setInitialBinary] = useState<Uint8Array | null>(null);
+
+  useEffect(() => {
+    if (initialBinary === null) {
+      setInitialBinary(binary);
+    }
+  }, [binary, initialBinary]);
+
+  const { binarySize, processedFileBinarySize, compressionRate } =
+    getFileSizeBulk(initialBinary || binary, processedFileBinary);
 
   return (
     <li
@@ -41,7 +50,9 @@ export default function File({
         </span>
         <div className="flex items-center aspect-square w-20 h-auto">
           <img
-            src={`data:${fileInfo.mime_type};base64,${getFileBase64(binary)}`}
+            src={`data:${fileInfo.mime_type};base64,${getFileBase64(
+              initialBinary || binary
+            )}`}
             alt={fileInfo.file_name_with_extension}
           />
         </div>

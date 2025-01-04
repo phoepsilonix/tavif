@@ -72,10 +72,7 @@ export default function ProcessedFiles() {
     // チェックボックスの選択状態を更新
     setCheckboxSelected([]);
     processedFilePathsSorted.forEach((_, index) => {
-      setCheckboxSelected((prev) => [
-        ...prev,
-        { index: index, checked: true },
-      ]);
+      setCheckboxSelected((prev) => [...prev, { index: index , checked: true }]);
     });
   }, [processedFilePathsSorted]);
 
