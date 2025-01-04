@@ -27,7 +27,8 @@ pub fn run() {
         .invoke_handler(tauri::generate_handler![
             convert,
             get_files_binary,
-            save_files
+            save_files,
+            remove_result
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
@@ -144,6 +145,14 @@ fn save_files(file_paths: Vec<String>, output_dir: String) -> Result<(), Error> 
         let mut buffer = Vec::new();
         reader.read_to_end(&mut buffer)?;
         std::fs::write(output_path, buffer)?;
+    }
+    Ok(())
+}
+
+#[tauri::command]
+fn remove_result(file_paths: Vec<String>) -> Result<(), Error> {
+    for file_path in file_paths {
+        std::fs::remove_file(file_path)?;
     }
     Ok(())
 }

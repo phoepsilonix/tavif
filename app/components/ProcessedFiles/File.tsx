@@ -29,7 +29,6 @@ export default function File({
     getFileSizeBulk(binary, processedFileBinary);
 
   const [checkboxSelected, setCheckboxSelected] = useAtom(checkboxSelectedAtom);
-  console.log(checkboxSelected);
 
   return (
     <li
@@ -81,6 +80,7 @@ export default function File({
             )
           );
         }}
+        className="z-1"
       />
     </li>
   );
