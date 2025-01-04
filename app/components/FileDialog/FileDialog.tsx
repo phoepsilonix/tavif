@@ -5,15 +5,7 @@ import { open } from "@tauri-apps/plugin-dialog";
 import { Button } from "antd";
 import { useAtom } from "jotai";
 import { filePathsAtom, filesBinaryAtom } from "@/app/atom";
-import { readFile } from "@tauri-apps/plugin-fs";
-
-const readFileAsync = async (filePaths: string[]): Promise<Uint8Array[]> => {
-  const binarys = await Promise.all(filePaths.map(async (filePath) => {
-    const res = await readFile(filePath);
-    return res;
-  }));
-  return binarys;
-}
+import { readFileAsync } from "./utils";
 
 export default function FileDialog() {
   const [_, setFilePaths] = useAtom(filePathsAtom);

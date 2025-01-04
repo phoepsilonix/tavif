@@ -1,8 +1,9 @@
 "use client";
-import { FileProps } from "./index.d";
-import { getFileBase64, getFileSize } from "./utils";
+import { ProcessedFilesProps } from ".";
+import { getFileBase64, getFileSize } from "../SelectFiles/utils";
 
-export default function File({ fileInfo, binary }: FileProps) {
+
+export default function File({ fileInfo, binary, processedFileBinary }: ProcessedFilesProps) {
   const extension =
     fileInfo.file_name_with_extension.split(".").pop()?.toLowerCase() || "";
   return (
@@ -25,7 +26,7 @@ export default function File({ fileInfo, binary }: FileProps) {
             {extension.toUpperCase()}
           </span>
           <span className="text-sm font-bold tracking-wider text-gray-700">
-            {getFileSize(binary)}KB
+            {getFileSize(binary)}KB → {getFileSize(processedFileBinary)}KB
           </span>
         </div>
       </div>

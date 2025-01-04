@@ -49,7 +49,7 @@ fn convert(
     file_infos: Vec<FileInfo>,
     extension_type: ExtensionType,
     quality: u8,
-) -> Result<(Vec<Vec<u8>>, Vec<String>), Error> {
+) -> Result<Vec<String>, Error> {
     let temp_dir = std::env::temp_dir();
     let output_paths = Arc::new(Mutex::new(Vec::new()));
 
@@ -81,7 +81,7 @@ fn convert(
 
     // output_pathsのロックを取得
     let output_paths_locked = output_paths.lock().unwrap();
-    Ok((files_binary, output_paths_locked.clone())) // ロックを保持したまま値を返す
+    Ok(output_paths_locked.clone()) // ロックを保持したまま値を返す
 }
 
 fn encode_to_avif(img_binary: Vec<u8>, output_path: &str, quality: u8) -> Result<()> {

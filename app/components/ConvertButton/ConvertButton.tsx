@@ -2,7 +2,7 @@
 
 import { Button } from "antd";
 import { useAtom } from "jotai";
-import { filesBinaryAtom, fileInfosAtom, extensionTypeAtom, qualityAtom, processedFilePathsAtom, processedFilesBinaryAtom, isProcessingAtom , tabSelectedAtom} from "@/app/atom";
+import { filesBinaryAtom, fileInfosAtom, extensionTypeAtom, qualityAtom, processedFilePathsAtom, isProcessingAtom , tabSelectedAtom} from "@/app/atom";
 import { invoke } from "@tauri-apps/api/core";
 import { Modal } from "antd";
 
@@ -19,7 +19,6 @@ export default function ConvertButton() {
   const [quality] = useAtom(qualityAtom);
   const [isProcessing, setIsProcessing] = useAtom(isProcessingAtom);
   const [processedFilePaths, setProcessedFilePaths] = useAtom(processedFilePathsAtom);
-  const [processedFilesBinary, setProcessedFilesBinary] = useAtom(processedFilesBinaryAtom);
   const [tabSelected, setTabSelected] = useAtom(tabSelectedAtom);
 
   const [modal, contextHolder] = Modal.useModal();
@@ -39,9 +38,8 @@ export default function ConvertButton() {
     }
 
     const sendData = await createSendData(filesBinary);
-    const result: [Uint8Array[], string[]] = await invoke("convert", { filesBinary: sendData, fileInfos: fileInfos , extensionType: extensionType, quality: quality});
-    setProcessedFilesBinary(result[0]);
-    setProcessedFilePaths(result[1]);
+    const result: string[] = await invoke("convert", { filesBinary: sendData, fileInfos: fileInfos , extensionType: extensionType, quality: quality});
+    setProcessedFilePaths(result);
     setIsProcessing(false);
     setTabSelected("output");
   }
