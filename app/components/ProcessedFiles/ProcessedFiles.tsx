@@ -8,6 +8,7 @@ import {
   processedFilesBinaryAtom,
   processedFileInfosAtom,
   processedFilePathsSortedAtom,
+  checkboxSelectedAtom,
 } from "@/app/atom";
 import File from "./File";
 import { useEffect } from "react";
@@ -28,10 +29,10 @@ export default function ProcessedFiles() {
   const [processedFilePathsSorted, setProcessedFilePathsSorted] = useAtom(
     processedFilePathsSortedAtom
   );
+  const [checkboxSelected, setCheckboxSelected] = useAtom(checkboxSelectedAtom);
 
   useEffect(() => {
     const processedInfos: FileInfo[] = getFileInfo(processedFilePaths);
-    console.log(processedFilePaths);
 
     // fileInfosの順番に基づいてprocessedInfosを整列
     const sortedProcessedInfos = fileInfos
@@ -67,6 +68,15 @@ export default function ProcessedFiles() {
     };
 
     fetchProcessedFiles();
+
+    // チェックボックスの選択状態を更新
+    setCheckboxSelected([]);
+    processedFilePathsSorted.forEach((_, index) => {
+      setCheckboxSelected((prev) => [
+        ...prev,
+        { index: index, checked: true },
+      ]);
+    });
   }, [processedFilePathsSorted]);
 
   return (

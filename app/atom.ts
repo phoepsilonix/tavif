@@ -1,6 +1,6 @@
 import { atom } from "jotai";
 import { FileInfo } from "./components/SelectFiles/index.d";
-
+import type { CheckboxSelected } from "@/app/index.d";
 // 処理中
 export const isProcessingAtom = atom<boolean>(false);
 
@@ -33,3 +33,6 @@ export const processedFileInfosAtom = atom<FileInfo[]>([]);
 
 // タブ選択状態
 export const tabSelectedAtom = atom<"input" | "output">("input");
+
+// 各ファイルのチェックボックス選択状態
+export const checkboxSelectedAtom = atom<CheckboxSelected[]>([]);

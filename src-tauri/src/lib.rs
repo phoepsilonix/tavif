@@ -139,7 +139,6 @@ fn save_files(file_paths: Vec<String>, output_dir: String) -> Result<(), Error> 
     for file_path in file_paths {
         let file = File::open(&file_path)?;
         let file_name = file_path.split("\\").last().unwrap().to_string();
-        println!("{}", file_name);
         let output_path = output_dir.clone() + "/" + &file_name;
         let mut reader = BufReader::new(file);
         let mut buffer = Vec::new();

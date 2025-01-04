@@ -10,7 +10,7 @@ export default function File({ fileInfo, binary, index }: FileProps) {
       key={fileInfo.file_name_with_extension}
       className="flex items-center gap-3 text-sm border-b border-gray-300"
     >
-      <span className="text-sm font-medium tracking-wider text-gray-700">
+      <span className="text-sm font-medium tracking-wider text-gray-700 px-1">
         {index + 1}
       </span>
       <div className="flex items-center aspect-square w-20 h-auto">
