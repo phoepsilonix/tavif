@@ -17,14 +17,14 @@ export default function File({ fileInfo, binary }: FileProps) {
         />
       </div>
       <div className="flex flex-col gap-1">
-        <span className="text-sm font-bold text-gray-700">
+        <span className="text-sm font-bold text-gray-700 tracking-wider">
           {fileInfo.file_name_with_extension}
         </span>
         <div className="flex items-center gap-3">
           <span className="text-sm bg-green-200 text-gray-700 font-bold tracking-wider px-4 py-1 rounded-full">
             {extension.toUpperCase()}
           </span>
-          <span className="text-sm font-bold tracking-wider text-gray-700">
+          <span className="text-sm font-medium tracking-wider text-gray-700">
             {getFileSize(binary)}KB
           </span>
         </div>
