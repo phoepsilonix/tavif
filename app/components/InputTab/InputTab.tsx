@@ -3,20 +3,29 @@
 import Dropzone from "../Dropzone/Dropzone";
 import SelectFiles from "../SelectFiles/SelectFiles";
 import { useAtom } from "jotai";
-import { tabSelectedAtom } from "../../atom";
+import { tabSelectedAtom, filePathsAtom } from "../../atom";
+import InputNubMenu from "./InputNubMenu";
 
 export default function InputTab() {
   const [tabSelected, setTabSelected] = useAtom(tabSelectedAtom);
+  const [filePaths, setFilePaths] = useAtom(filePathsAtom);
+
   return (
     <div
       className={`flex flex-col w-full h-full ${
         tabSelected === "output" ? "hidden" : ""
       }`}
     >
-      <div className="bg-white/80 w-full h-full p-2 overflow-y-auto border-2 border-gray-300 border-b-white/80">
-        {/* <FileDialog /> */}
-        <Dropzone />
-        <SelectFiles />
+      <div className="w-full h-full relative">
+        <div
+          className={`bg-white/80 w-full h-full p-2 overflow-y-auto border-2 border-gray-300 border-b-white/80 ${
+            filePaths.length > 0 ? "pt-10" : ""
+          }`}
+        >
+          {filePaths.length > 0 && <InputNubMenu />}
+          <Dropzone />
+          <SelectFiles />
+        </div>
       </div>
     </div>
   );

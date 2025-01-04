@@ -25,16 +25,24 @@ export default function FileDialog() {
       ],
     });
     if (!paths) return;
-    setFilePaths(paths);
+    setFilePaths((prevPaths) => {
+      const allPaths = [...prevPaths, ...paths]; // 既存のパスと新しいパスを結合
+      const uniquePaths = Array.from(new Set(allPaths)); // 重複を排除
+      return uniquePaths; // ユニークなパスを返す
+    });
     const binarys = await readFileAsync(paths);
-    setFilesBinary(binarys);
+    setFilesBinary((prevBinarys) => {
+      const allBinarys = [...prevBinarys, ...binarys]; // 既存のバイナリと新しいバイナリを結合
+      const uniqueBinarys = Array.from(new Set(allBinarys)); // 重複を排除
+      return uniqueBinarys; // ユニークなバイナリを返す
+    });
   }
 
   return (
     <div>
       <Button type="primary" onClick={openDialog}>
         <FolderOpenOutlined size={16} className="fill-white" />
-        Select Files
+        Add Files
       </Button>
     </div>
   );

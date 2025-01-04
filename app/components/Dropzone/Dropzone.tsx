@@ -53,5 +53,5 @@ export default function Dropzone() {
     };
   }, []);
 
-  return <div>Dropzone</div>;
+  return <div></div>;
 }
