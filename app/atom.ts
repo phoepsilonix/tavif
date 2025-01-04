@@ -22,6 +22,9 @@ export const qualityAtom = atom<number>(75);
 // 処理済みファイルパス
 export const processedFilePathsAtom = atom<string[]>([]);
 
+// 処理&整列済みファイルパス
+export const processedFilePathsSortedAtom = atom<string[]>([]);
+
 // 処理済みファイルバイナリ
 export const processedFilesBinaryAtom = atom<Uint8Array[]>([]);
 

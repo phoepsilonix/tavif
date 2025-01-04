@@ -4,7 +4,7 @@ use image::ImageEncoder;
 use rayon::prelude::*;
 use serde::{Deserialize, Serialize};
 use std::fs::File;
-use std::io::BufWriter;
+use std::io::{BufReader, BufWriter, Read};
 use std::sync::{Arc, Mutex};
 use tauri::Error;
 use webp;
@@ -24,7 +24,7 @@ pub fn run() {
             }
             Ok(())
         })
-        .invoke_handler(tauri::generate_handler![convert])
+        .invoke_handler(tauri::generate_handler![convert, get_files_binary])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }
@@ -115,4 +115,18 @@ fn encode_to_webp(img_binary: Vec<u8>, output_path: &str, quality: u8) -> Result
     // エンコードされたデータをファイルに書き込む
     std::fs::write(output_path, encoded)?;
     Ok(())
+}
+
+
+#[tauri::command]
+fn get_files_binary(file_paths: Vec<String>) -> Result<Vec<Vec<u8>>, Error> {
+    let mut files_binary = Vec::new();
+    for file_path in file_paths {
+        let file = File::open(file_path)?;
+        let mut reader = BufReader::new(file);
+        let mut buffer = Vec::new();
+        reader.read_to_end(&mut buffer)?;
+        files_binary.push(buffer);
+    }
+    Ok(files_binary)
 }
