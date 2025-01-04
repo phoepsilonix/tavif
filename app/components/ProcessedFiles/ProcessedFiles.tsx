@@ -74,6 +74,7 @@ export default function ProcessedFiles() {
       {processedFileInfos.length > 0 &&
         processedFileInfos.map((fileInfo, index) => (
           <File
+            index={index}
             key={fileInfo.file_name_with_extension}
             fileInfo={fileInfo}
             binary={filesBinary[index]}

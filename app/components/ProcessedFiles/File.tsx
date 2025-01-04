@@ -2,7 +2,6 @@
 import { ProcessedFilesProps } from ".";
 import RightArrow from "../icons/RightArrow";
 import { getFileBase64, getFileSize } from "../SelectFiles/utils";
-import { RightCircleTwoTone } from "@ant-design/icons";
 
 function getFileSizeBulk(binary: Uint8Array, processedFileBinary: Uint8Array) {
   const binarySize: number = getFileSize(binary);
@@ -18,6 +17,7 @@ function getFileSizeBulk(binary: Uint8Array, processedFileBinary: Uint8Array) {
 }
 
 export default function File({
+  index,
   fileInfo,
   binary,
   processedFileBinary,
@@ -30,8 +30,11 @@ export default function File({
   return (
     <li
       key={fileInfo.file_name_with_extension}
-      className="flex items-center gap-3 text-sm"
+      className="flex items-center gap-3 text-sm border-b border-gray-300"
     >
+      <span className="text-sm font-medium tracking-wider text-gray-700">
+        {index + 1}
+      </span>
       <div className="flex items-center aspect-square w-20 h-auto">
         <img
           src={`data:${fileInfo.mime_type};base64,${getFileBase64(binary)}`}
@@ -47,8 +50,8 @@ export default function File({
             <span className="text-sm font-medium tracking-wider text-gray-700">
               {binarySize}KB
             </span>
-            <RightArrow size={16} className="text-gray-700" />
-            <span className="text-base font-medium tracking-wider text-gray-700">
+            <RightArrow size={16} className="fill-gray-700" />
+            <span className="text-base font-bold tracking-wider text-gray-700">
               {processedFileBinarySize}KB
             </span>
             <span

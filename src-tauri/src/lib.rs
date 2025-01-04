@@ -24,7 +24,11 @@ pub fn run() {
             }
             Ok(())
         })
-        .invoke_handler(tauri::generate_handler![convert, get_files_binary])
+        .invoke_handler(tauri::generate_handler![
+            convert,
+            get_files_binary,
+            save_files
+        ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }
@@ -117,7 +121,6 @@ fn encode_to_webp(img_binary: Vec<u8>, output_path: &str, quality: u8) -> Result
     Ok(())
 }
 
-
 #[tauri::command]
 fn get_files_binary(file_paths: Vec<String>) -> Result<Vec<Vec<u8>>, Error> {
     let mut files_binary = Vec::new();
@@ -129,4 +132,19 @@ fn get_files_binary(file_paths: Vec<String>) -> Result<Vec<Vec<u8>>, Error> {
         files_binary.push(buffer);
     }
     Ok(files_binary)
+}
+
+#[tauri::command]
+fn save_files(file_paths: Vec<String>, output_dir: String) -> Result<(), Error> {
+    for file_path in file_paths {
+        let file = File::open(&file_path)?;
+        let file_name = file_path.split("\\").last().unwrap().to_string();
+        println!("{}", file_name);
+        let output_path = output_dir.clone() + "/" + &file_name;
+        let mut reader = BufReader::new(file);
+        let mut buffer = Vec::new();
+        reader.read_to_end(&mut buffer)?;
+        std::fs::write(output_path, buffer)?;
+    }
+    Ok(())
 }

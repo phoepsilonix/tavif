@@ -22,7 +22,12 @@ export default function SelectFiles() {
       <ul>
         {filesBinary.length > 0 &&
           fileInfos.map((fileInfo, index) => (
-            <File key={fileInfo.file_name_with_extension} fileInfo={fileInfo} binary={filesBinary[index]} />
+            <File
+              key={fileInfo.file_name_with_extension}
+              fileInfo={fileInfo}
+              binary={filesBinary[index]}
+              index={index}
+            />
           ))}
       </ul>
     </div>

@@ -13,7 +13,7 @@ export default function InputTab() {
         tabSelected === "output" ? "hidden" : ""
       }`}
     >
-      <div className="bg-white/80 w-full h-full border-2 border-gray-300 border-b-white/80">
+      <div className="bg-white/80 w-full h-full p-2 overflow-y-auto border-2 border-gray-300 border-b-white/80">
         <FileDialog />
         <SelectFiles />
       </div>

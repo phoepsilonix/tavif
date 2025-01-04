@@ -18,7 +18,7 @@ export default function Home() {
       }}
     >
       <LoadingModal />
-      <div className="flex w-screen h-screen">
+      <div className="flex w-screen h-screen relative">
         <div className="min-w-[230px] h-screen">
           <SettingsMenu />
         </div>

@@ -2,14 +2,17 @@
 import { FileProps } from "./index.d";
 import { getFileBase64, getFileSize } from "./utils";
 
-export default function File({ fileInfo, binary }: FileProps) {
+export default function File({ fileInfo, binary, index }: FileProps) {
   const extension =
     fileInfo.file_name_with_extension.split(".").pop()?.toLowerCase() || "";
   return (
     <li
       key={fileInfo.file_name_with_extension}
-      className="flex items-center gap-3 text-sm"
+      className="flex items-center gap-3 text-sm border-b border-gray-300"
     >
+      <span className="text-sm font-medium tracking-wider text-gray-700">
+        {index + 1}
+      </span>
       <div className="flex items-center aspect-square w-20 h-auto">
         <img
           src={`data:${fileInfo.mime_type};base64,${getFileBase64(binary)}`}
