@@ -4,6 +4,9 @@ import type { CheckboxSelected } from "@/app/index.d";
 // 処理中
 export const isProcessingAtom = atom<boolean>(false);
 
+// 保存中
+export const isSavingAtom = atom<boolean>(false);
+
 // ファイルパス
 export const filePathsAtom = atom<string[]>([]);
 
