@@ -70,9 +70,6 @@ export default function OutputNavMenu() {
   }
 
   async function removeResult() {
-    await invoke("remove_result", {
-      filePaths: processedFilePathsSorted,
-    });
     setProcessedFilePathsSorted([]);
     setCheckboxSelected([]);
     setProcessedFilePaths([]);
