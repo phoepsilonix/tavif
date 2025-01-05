@@ -31,7 +31,9 @@ export default function File({ fileInfo, binary, index }: FileProps) {
         </span>
         <div className="flex items-center aspect-square w-20 h-auto">
           <img
-            src={`data:${fileInfo.mime_type};base64,${getFileBase64(binary)}`}
+            src={`data:image/jpeg;base64,${getFileBase64(
+              binary || thumbnailsBinarys[index]
+            )}`}
             alt={fileInfo.file_name_with_extension}
           />
         </div>

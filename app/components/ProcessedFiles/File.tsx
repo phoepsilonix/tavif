@@ -47,7 +47,7 @@ export default function File({
         </span>
         <div className="flex items-center aspect-square w-20 h-auto">
           <img
-            src={`data:${processedFileInfo.mime_type};base64,${getFileBase64(
+            src={`data:image/jpeg;base64,${getFileBase64(
               initialBinarys || thumbnailsBinarys[index]
             )}`}
             alt={processedFileInfo.file_name_with_extension}

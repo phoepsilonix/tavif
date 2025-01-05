@@ -1,7 +1,7 @@
 "use client";
 
 import { useAtom } from "jotai";
-import { filePathsAtom, fileInfosAtom, thumbnailsBinaryAtom } from "@/app/atom";
+import { filePathsAtom, fileInfosAtom, thumbnailsBinaryAtom, isProcessingAtom } from "@/app/atom";
 import { FileInfo } from "@/app/index.d";
 import { useEffect } from "react";
 import File from "./File";
@@ -13,14 +13,17 @@ export default function SelectFiles() {
   const [filePaths] = useAtom(filePathsAtom);
   const [fileInfos, setFileInfos] = useAtom(fileInfosAtom);
   const [thumbnailsBinarys, setThumbnailsBinary] = useAtom(thumbnailsBinaryAtom);
+  const [_, setIsProcessing] = useAtom(isProcessingAtom);
 
   useEffect(() => {
     const fetchData = async () => {
+      setIsProcessing(true);
       const binarys: Uint8Array[] = await readFileAsync(filePaths);
       const infos: FileInfo[] = getFileInfo(filePaths, binarys);
       setFileInfos(infos);
       const thumbBinarys: Uint8Array[] = await invoke<Uint8Array[]>("generate_thumbnail", { imgBinarys: binarys });
       setThumbnailsBinary(thumbBinarys);
+      setIsProcessing(false);
     };
 
     fetchData();
