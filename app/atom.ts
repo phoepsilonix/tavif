@@ -10,9 +10,6 @@ export const isSavingAtom = atom<boolean>(false);
 // ファイルパス
 export const filePathsAtom = atom<string[]>([]);
 
-// サムネイルバイナリ
-export const thumbnailsBinaryAtom = atom<Uint8Array[]>([]);
-
 // ファイル情報
 export const fileInfosAtom = atom<FileInfo[]>([]);
 

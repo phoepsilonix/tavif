@@ -1,12 +1,12 @@
 "use client";
 import { ProcessedFilesProps } from ".";
 import RightArrow from "../icons/RightArrow";
-import { getFileBase64 } from "../SelectFiles/utils";
 import { Checkbox } from "antd";
 import { useAtom } from "jotai";
-import { checkboxSelectedAtom, thumbnailsBinaryAtom } from "@/app/atom";
+import { checkboxSelectedAtom, filePathsAtom } from "@/app/atom";
 import { ProcessedFileInfo } from "@/app/index.d";
 import { useEffect, useState } from "react";
+import { readFile } from "@tauri-apps/plugin-fs";
 
 function getCompressionRate(processedFileInfo: ProcessedFileInfo) {
   const compressionRate: number = parseFloat(
@@ -25,14 +25,24 @@ export default function File({
   processedFileInfo,
 }: ProcessedFilesProps) {
   const [checkboxSelected, setCheckboxSelected] = useAtom(checkboxSelectedAtom);
-  const [thumbnailsBinarys] = useAtom(thumbnailsBinaryAtom);
-  const [initialBinarys, setInitialBinarys] = useState<Uint8Array>();
+  const [filePaths] = useAtom(filePathsAtom);
+
+  const [imageSrc, setImageSrc] = useState<string | null>(null);
 
   useEffect(() => {
-    if (thumbnailsBinarys.length > 0) {
-      setInitialBinarys(thumbnailsBinarys[index]);
-    }
-  }, []);
+    const handleImageLoad = async (filePath: string) => {
+      try {
+        const data = await readFile(filePath);
+        const blob = new Blob([data], { type: "image/jpeg" });
+        const url = URL.createObjectURL(blob);
+        setImageSrc(url);
+      } catch (error) {
+        console.error("ファイルの読み込みに失敗しました:", error);
+      }
+    };
+
+    handleImageLoad(filePaths[index]);
+  }, [processedFileInfo.file_name_with_extension]);
 
   const compressionRate = getCompressionRate(processedFileInfo);
 
@@ -46,12 +56,12 @@ export default function File({
           {index + 1}
         </span>
         <div className="flex items-center aspect-square w-20 h-auto">
-          <img
-            src={`data:image/jpeg;base64,${getFileBase64(
-              initialBinarys || thumbnailsBinarys[index]
-            )}`}
-            alt={processedFileInfo.file_name_with_extension}
-          />
+          {imageSrc && (
+            <img
+              src={imageSrc}
+              alt={processedFileInfo.file_name_with_extension}
+            />
+          )}
         </div>
         <div className="flex flex-col gap-1">
           <span className="text-sm font-bold text-gray-700 tracking-wider">

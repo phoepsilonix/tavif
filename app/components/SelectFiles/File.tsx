@@ -1,15 +1,31 @@
 "use client";
 import { FileProps } from "./index.d";
-import { getFileBase64 } from "./utils";
 import { Button } from "antd";
 import { DeleteOutlined } from "@ant-design/icons";
 import { useAtom } from "jotai";
-import { filePathsAtom, fileInfosAtom, thumbnailsBinaryAtom } from "../../atom";
+import { filePathsAtom, fileInfosAtom } from "../../atom";
+import { useState, useEffect } from "react";
+import { readFile } from "@tauri-apps/plugin-fs";
 
-export default function File({ fileInfo, binary, index }: FileProps) {
+export default function File({ fileInfo, index }: FileProps) {
   const [filePaths, setFilePaths] = useAtom(filePathsAtom);
   const [fileInfos, setFileInfos] = useAtom(fileInfosAtom);
-  const [thumbnailsBinarys, setThumbnailsBinary] = useAtom(thumbnailsBinaryAtom);
+  const [imageSrc, setImageSrc] = useState<string | null>(null);
+
+  useEffect(() => {
+    const handleImageLoad = async (filePath: string) => {
+      try {
+        const data = await readFile(filePath);
+        const blob = new Blob([data], { type: "image/jpeg" });
+        const url = URL.createObjectURL(blob);
+        setImageSrc(url);
+      } catch (error) {
+        console.error("ファイルの読み込みに失敗しました:", error);
+      }
+    };
+
+    handleImageLoad(filePaths[index]);
+  }, [fileInfo.file_name_with_extension]);
 
   const extension =
     fileInfo.file_name_with_extension.split(".").pop()?.toLowerCase() || "";
@@ -17,7 +33,6 @@ export default function File({ fileInfo, binary, index }: FileProps) {
   const removeFile = (index: number) => {
     setFilePaths((prev) => prev.filter((_, i) => i !== index));
     setFileInfos((prev) => prev.filter((_, i) => i !== index));
-    setThumbnailsBinary((prev) => prev.filter((_, i) => i !== index));
   };
 
   return (
@@ -30,12 +45,9 @@ export default function File({ fileInfo, binary, index }: FileProps) {
           {index + 1}
         </span>
         <div className="flex items-center aspect-square w-20 h-auto">
-          <img
-            src={`data:image/jpeg;base64,${getFileBase64(
-              binary || thumbnailsBinarys[index]
-            )}`}
-            alt={fileInfo.file_name_with_extension}
-          />
+          {imageSrc && (
+            <img src={imageSrc} alt={fileInfo.file_name_with_extension} />
+          )}
         </div>
         <div className="flex flex-col gap-1">
           <span className="text-sm font-bold text-gray-700 tracking-wider">
