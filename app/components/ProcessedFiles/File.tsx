@@ -60,6 +60,7 @@ export default function File({
             <img
               src={imageSrc}
               alt={processedFileInfo.file_name_with_extension}
+              loading="lazy"
             />
           )}
         </div>

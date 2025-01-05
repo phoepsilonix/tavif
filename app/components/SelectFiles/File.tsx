@@ -46,7 +46,11 @@ export default function File({ fileInfo, index }: FileProps) {
         </span>
         <div className="flex items-center aspect-square w-20 h-auto">
           {imageSrc && (
-            <img src={imageSrc} alt={fileInfo.file_name_with_extension} />
+            <img
+              src={imageSrc}
+              alt={fileInfo.file_name_with_extension}
+              loading="lazy"
+            />
           )}
         </div>
         <div className="flex flex-col gap-1">
