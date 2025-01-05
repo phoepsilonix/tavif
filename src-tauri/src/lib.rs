@@ -28,7 +28,6 @@ pub fn run() {
             convert,
             get_files_binary,
             save_files,
-            remove_result,
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
@@ -149,26 +148,69 @@ fn save_files(file_paths: Vec<String>, output_dir: String) -> Result<(), Error> 
     Ok(())
 }
 
-#[tauri::command]
-fn remove_result(file_paths: Vec<String>) -> Result<(), Error> {
-    for file_path in file_paths {
-        std::fs::remove_file(file_path)?;
-    }
-    Ok(())
-}
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use std::fs;
+    use std::path::Path;
 
-// #[tauri::command]
-// fn generate_thumbnail(img_binarys: Vec<Vec<u8>>) -> Vec<Vec<u8>> {
-//     let mut thumbnails_binary = Vec::new();
-//     for img_binary in img_binarys {
-//         let img = image::load_from_memory(&img_binary).expect("Failed to load image");
-//         let thumbnail = img.thumbnail(80, 80);
-//         let mut buffer = Vec::new();
-//         let mut cursor = Cursor::new(&mut buffer);
-//         thumbnail
-//             .write_to(&mut cursor, ImageOutputFormat::Jpeg(80))
-//             .expect("Failed to write thumbnail");
-//         thumbnails_binary.push(buffer);
-//     }
-//     thumbnails_binary
-// }
+    #[test]
+    fn test_convert() {
+        // テスト用の画像データを準備（ここでは簡単なPNG画像を使用）
+        let image_data = include_bytes!("../../public/null.png").to_vec(); // 実際の画像ファイルを指定
+        let files_binary = vec![image_data]; // ダミーデータを実際の画像データに変更
+        let file_infos = vec![FileInfo {
+            file_name: "test".to_string(),
+            file_name_with_extension: "test.webp".to_string(),
+            mime_type: "image/webp".to_string(),
+        }];
+        let extension_type = ExtensionType::Webp;
+        let quality = 75;
+
+        // convert関数を呼び出す
+        let result = convert(files_binary, file_infos, extension_type, quality);
+
+        // 結果を検証
+        assert!(result.is_ok());
+        let output_paths = result.unwrap();
+        assert_eq!(output_paths.len(), 1);
+        assert!(Path::new(&output_paths[0]).exists()); // 出力ファイルが存在することを確認
+    }
+
+    #[test]
+    fn test_get_files_binary() {
+        // テスト用のファイルを作成
+        let test_file_path = "test_file.txt";
+        fs::write(test_file_path, b"Hello, world!").unwrap();
+
+        // get_files_binary関数を呼び出す
+        let result = get_files_binary(vec![test_file_path.to_string()]);
+
+        // 結果を検証
+        assert!(result.is_ok());
+        let files_binary = result.unwrap();
+        assert_eq!(files_binary.len(), 1);
+        assert_eq!(files_binary[0], b"Hello, world!");
+
+        // テスト用のファイルを削除
+        fs::remove_file(test_file_path).unwrap();
+    }
+
+    #[test]
+    fn test_save_files() {
+        // テスト用のデータを準備
+        let test_file_path = "test_save_file.txt";
+        fs::write(test_file_path, b"Test data").unwrap();
+        let output_dir = "."; // 現在のディレクトリに保存
+
+        // save_files関数を呼び出す
+        let result = save_files(vec![test_file_path.to_string()], output_dir.to_string());
+
+        // 結果を検証
+        assert!(result.is_ok());
+        assert!(Path::new(test_file_path).exists()); // 元のファイルが存在することを確認
+
+        // テスト用のファイルを削除
+        fs::remove_file(test_file_path).unwrap();
+    }
+}
