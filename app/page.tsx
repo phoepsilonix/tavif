@@ -6,6 +6,7 @@ import LoadingModal from "./components/LoadingModal/LoadingModal";
 import InputTab from "./components/InputTab/InputTab";
 import OutputTab from "./components/OutputTab/OutputTab";
 import InputTabButton, { OutputTabButton } from "./components/TabButton/TabButton";
+import WindowMenu from "./components/WindowMenu/WindowMenu";
 
 export default function Home() {
   return (
@@ -18,11 +19,11 @@ export default function Home() {
       }}
     >
       <LoadingModal />
-      <div className="flex w-screen h-screen relative">
-        <div className="min-w-[230px] h-screen">
+      <div className="flex w-screen h-[calc(100vh-30px)] relative">
+        <div className="min-w-[230px] h-[calc(100vh-30px)]">
           <SettingsMenu />
         </div>
-        <div className="flex-1 min-h-screen bg-gray-200 pt-[36px] relative">
+        <div className="flex-1 min-h-[calc(100vh-30px)] bg-gray-200 pt-[36px] relative">
           <InputTabButton />
           <OutputTabButton />
           <InputTab />
