@@ -2,7 +2,7 @@
   "$schema": "../node_modules/@tauri-apps/cli/config.schema.json",
   "productName": "avif_conv",
   "version": "0.1.0",
-  "identifier": "com.tauri.dev",
+  "identifier": "com.harumi.avif_conv",
   "build": {
     "frontendDist": "../out",
     "devUrl": "http://localhost:3000",
@@ -15,13 +15,20 @@
         "title": "AVIF/WEBP Converter",
         "width": 800,
         "height": 600,
+        "minWidth": 720,
+        "minHeight": 250,
         "resizable": true,
         "fullscreen": false,
         "label": "main"
       }
     ],
     "security": {
-      "csp": null
+      "headers": {
+        "Cross-Origin-Opener-Policy": "same-origin",
+        "Cross-Origin-Embedder-Policy": "require-corp",
+        "X-Content-Type-Options": null
+      },
+      "csp": "default-src 'self'; connect-src ipc: http://ipc.localhost"
     }
   },
   "bundle": {
