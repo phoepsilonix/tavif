@@ -1,24 +1,26 @@
 "use client";
 
 import { useAtom } from "jotai";
-import { filePathsAtom, filesBinaryAtom, fileInfosAtom } from "@/app/atom";
-import { FileInfo } from "./index.d";
+import { filePathsAtom, fileInfosAtom, thumbnailsBinaryAtom } from "@/app/atom";
+import { FileInfo } from "@/app/index.d";
 import { useEffect } from "react";
 import File from "./File";
 import { getFileInfo } from "./utils";
 import { readFileAsync } from "../FileDialog/utils";
+import { invoke } from "@tauri-apps/api/core";
 
 export default function SelectFiles() {
   const [filePaths] = useAtom(filePathsAtom);
-  const [filesBinary, setFilesBinary] = useAtom(filesBinaryAtom);
   const [fileInfos, setFileInfos] = useAtom(fileInfosAtom);
+  const [thumbnailsBinarys, setThumbnailsBinary] = useAtom(thumbnailsBinaryAtom);
 
   useEffect(() => {
     const fetchData = async () => {
-      const infos: FileInfo[] = getFileInfo(filePaths);
+      const binarys: Uint8Array[] = await readFileAsync(filePaths);
+      const infos: FileInfo[] = getFileInfo(filePaths, binarys);
       setFileInfos(infos);
-      const binarys = await readFileAsync(filePaths);
-      setFilesBinary(binarys);
+      const thumbBinarys: Uint8Array[] = await invoke<Uint8Array[]>("generate_thumbnail", { imgBinarys: binarys });
+      setThumbnailsBinary(thumbBinarys);
     };
 
     fetchData();
@@ -27,12 +29,12 @@ export default function SelectFiles() {
   return (
     <div>
       <ul>
-        {filesBinary.length > 0 &&
+        {thumbnailsBinarys.length > 0 &&
           fileInfos.map((fileInfo, index) => (
             <File
               key={fileInfo.file_name_with_extension}
               fileInfo={fileInfo}
-              binary={filesBinary[index]}
+              binary={thumbnailsBinarys[index]}
               index={index}
             />
           ))}

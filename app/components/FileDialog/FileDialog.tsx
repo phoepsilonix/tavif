@@ -5,12 +5,13 @@ import { open } from "@tauri-apps/plugin-dialog";
 import { Button } from "antd";
 import { useAtom } from "jotai";
 import FolderOpenOutlined from "../icons/FolderOpen";
-import { filePathsAtom, filesBinaryAtom } from "@/app/atom";
+import { filePathsAtom, thumbnailsBinaryAtom } from "@/app/atom";
 import { readFileAsync } from "./utils";
+import { invoke } from "@tauri-apps/api/core";
 
 export default function FileDialog() {
   const [_, setFilePaths] = useAtom(filePathsAtom);
-  const [__, setFilesBinary] = useAtom(filesBinaryAtom);
+  const [___, setThumbnailsBinary] = useAtom(thumbnailsBinaryAtom);
 
   async function openDialog(): Promise<void> {
     const paths: string[] | null = await open({
@@ -30,11 +31,13 @@ export default function FileDialog() {
       const uniquePaths = Array.from(new Set(allPaths)); // 重複を排除
       return uniquePaths; // ユニークなパスを返す
     });
+
     const binarys = await readFileAsync(paths);
-    setFilesBinary((prevBinarys) => {
-      const allBinarys = [...prevBinarys, ...binarys]; // 既存のバイナリと新しいバイナリを結合
-      const uniqueBinarys = Array.from(new Set(allBinarys)); // 重複を排除
-      return uniqueBinarys; // ユニークなバイナリを返す
+    const thumbBinarys = await invoke<Uint8Array[]>("generate_thumbnail", { imgBinarys: binarys });
+    setThumbnailsBinary((prev) => {
+      const allThumbBinarys = [...prev, ...thumbBinarys]; // 既存のバイナリと新しいバイナリを結合
+      const uniqueThumbBinarys = Array.from(new Set(allThumbBinarys)); // 重複を排除
+      return uniqueThumbBinarys; // ユニークなバイナリを返す
     });
   }
 

@@ -1,11 +1,5 @@
-export interface FileInfo {
-  file_name: string;
-  file_name_with_extension: string;
-  mime_type: string;
-}
-
 export interface FileProps {
   index: number;
   fileInfo: FileInfo;
-  binary: Uint8Array;
+  binary?: Uint8Array;
 }

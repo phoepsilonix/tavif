@@ -3,17 +3,17 @@ import FileDialog from "../FileDialog/FileDialog";
 import { Button } from "antd";
 import { DeleteOutlined } from "@ant-design/icons";
 import { useAtom } from "jotai";
-import { filePathsAtom, filesBinaryAtom, fileInfosAtom } from "../../atom";
+import { filePathsAtom, fileInfosAtom, thumbnailsBinaryAtom } from "../../atom";
 
 export default function InputNubMenu() {
   const [filePaths, setFilePaths] = useAtom(filePathsAtom);
-  const [filesBinary, setFilesBinary] = useAtom(filesBinaryAtom);
   const [fileInfos, setFileInfos] = useAtom(fileInfosAtom);
+  const [thumbnailsBinarys, setThumbnailsBinary] = useAtom(thumbnailsBinaryAtom);
 
   const removeAll = () => {
     setFilePaths([]);
-    setFilesBinary([]);
     setFileInfos([]);
+    setThumbnailsBinary([]);
   };
 
   return (

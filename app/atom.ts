@@ -1,5 +1,5 @@
 import { atom } from "jotai";
-import { FileInfo } from "./components/SelectFiles/index.d";
+import type { ProcessedFileInfo, FileInfo } from "@/app/index.d";
 import type { CheckboxSelected } from "@/app/index.d";
 // 処理中
 export const isProcessingAtom = atom<boolean>(false);
@@ -10,8 +10,8 @@ export const isSavingAtom = atom<boolean>(false);
 // ファイルパス
 export const filePathsAtom = atom<string[]>([]);
 
-// ファイルバイナリ
-export const filesBinaryAtom = atom<Uint8Array[]>([]);
+// サムネイルバイナリ
+export const thumbnailsBinaryAtom = atom<Uint8Array[]>([]);
 
 // ファイル情報
 export const fileInfosAtom = atom<FileInfo[]>([]);
@@ -28,11 +28,8 @@ export const processedFilePathsAtom = atom<string[]>([]);
 // 処理&整列済みファイルパス
 export const processedFilePathsSortedAtom = atom<string[]>([]);
 
-// 処理済みファイルバイナリ
-export const processedFilesBinaryAtom = atom<Uint8Array[]>([]);
-
 // 処理済みファイル情報
-export const processedFileInfosAtom = atom<FileInfo[]>([]);
+export const processedFileInfosAtom = atom<ProcessedFileInfo[]>([]);
 
 // タブ選択状態
 export const tabSelectedAtom = atom<"input" | "output">("input");

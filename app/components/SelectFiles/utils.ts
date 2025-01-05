@@ -1,7 +1,8 @@
-import { FileInfo } from ".";
+import type { FileInfo, ProcessedFileInfo } from "@/app/index.d";
+import { invoke } from "@tauri-apps/api/core";
 
-export function getFileInfo(filePaths: string[]): FileInfo[] {
-  return filePaths.map((filePath) => {
+export function getFileInfo(filePaths: string[], binarys: Uint8Array[]): FileInfo[] {
+  return filePaths.map((filePath, index) => {
     const pathParts: string[] = filePath.split(/[/\\]/);
     const fileNameWithExtension: string = pathParts[pathParts.length - 1];
     const fileName: string = fileNameWithExtension
@@ -31,6 +32,7 @@ export function getFileInfo(filePaths: string[]): FileInfo[] {
       file_name: fileName,
       file_name_with_extension: fileNameWithExtension,
       mime_type: mimeType,
+      file_binary_size: getFileSize(binarys[index]),
     };
   });
 }
@@ -52,4 +54,34 @@ export function getFileSize(binary: Uint8Array): number {
     return 0;
   }
   return parseFloat((binary.length / 1024).toFixed(1));
+}
+
+export async function getProcessedFileInfo(processedFilePaths: string[], fileInfos: FileInfo[]): Promise<ProcessedFileInfo[]> {
+  const processedFileBinarys = await invoke<Uint8Array[]>("get_files_binary", {
+    filePaths: processedFilePaths,
+  });
+  const processedFileInfos: FileInfo[] = getFileInfo(processedFilePaths, processedFileBinarys);
+
+  // fileInfosの順番に基づいてprocessedInfosを整列
+  const sortedProcessedInfos = fileInfos
+    .map((fileInfo) =>
+      processedFileInfos.find(
+        (processedInfo) => processedInfo.file_name === fileInfo.file_name
+      )
+    )
+  .filter((info) => info !== undefined) as ProcessedFileInfo[];
+
+  // mime_typeを変換後のものに変更
+  sortedProcessedInfos.forEach((processedInfo, index) => {
+    const extension: string = processedInfo.file_name_with_extension.split(".").pop()?.toLowerCase() || "";
+    processedInfo.mime_type = `image/${extension}`;
+  });
+
+  return sortedProcessedInfos.map((processedFile, index) => ({
+    file_name: processedFile.file_name,
+    file_name_with_extension: processedFile.file_name_with_extension,
+    mime_type: processedFile.mime_type,
+    file_binary_size: fileInfos[index].file_binary_size,
+    processed_file_binary_size: processedFile.file_binary_size,
+  }));
 }

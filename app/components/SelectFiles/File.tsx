@@ -1,23 +1,23 @@
 "use client";
 import { FileProps } from "./index.d";
-import { getFileBase64, getFileSize } from "./utils";
+import { getFileBase64 } from "./utils";
 import { Button } from "antd";
 import { DeleteOutlined } from "@ant-design/icons";
 import { useAtom } from "jotai";
-import { filePathsAtom, filesBinaryAtom, fileInfosAtom } from "../../atom";
+import { filePathsAtom, fileInfosAtom, thumbnailsBinaryAtom } from "../../atom";
 
 export default function File({ fileInfo, binary, index }: FileProps) {
   const [filePaths, setFilePaths] = useAtom(filePathsAtom);
-  const [filesBinary, setFilesBinary] = useAtom(filesBinaryAtom);
   const [fileInfos, setFileInfos] = useAtom(fileInfosAtom);
+  const [thumbnailsBinarys, setThumbnailsBinary] = useAtom(thumbnailsBinaryAtom);
 
   const extension =
     fileInfo.file_name_with_extension.split(".").pop()?.toLowerCase() || "";
 
   const removeFile = (index: number) => {
     setFilePaths((prev) => prev.filter((_, i) => i !== index));
-    setFilesBinary((prev) => prev.filter((_, i) => i !== index));
     setFileInfos((prev) => prev.filter((_, i) => i !== index));
+    setThumbnailsBinary((prev) => prev.filter((_, i) => i !== index));
   };
 
   return (
@@ -44,7 +44,7 @@ export default function File({ fileInfo, binary, index }: FileProps) {
               {extension.toUpperCase()}
             </span>
             <span className="text-sm font-medium tracking-wider text-gray-700">
-              {getFileSize(binary)}KB
+              {fileInfo.file_binary_size}KB
             </span>
           </div>
         </div>

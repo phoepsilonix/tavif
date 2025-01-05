@@ -1,10 +1,11 @@
 use anyhow::Result;
 use image::codecs::avif::AvifEncoder;
 use image::ImageEncoder;
+use image::ImageOutputFormat;
 use rayon::prelude::*;
 use serde::{Deserialize, Serialize};
 use std::fs::File;
-use std::io::{BufReader, BufWriter, Read};
+use std::io::{BufReader, BufWriter, Cursor, Read};
 use std::sync::{Arc, Mutex};
 use tauri::Error;
 use webp;
@@ -28,7 +29,8 @@ pub fn run() {
             convert,
             get_files_binary,
             save_files,
-            remove_result
+            remove_result,
+            generate_thumbnail
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
@@ -155,4 +157,20 @@ fn remove_result(file_paths: Vec<String>) -> Result<(), Error> {
         std::fs::remove_file(file_path)?;
     }
     Ok(())
+}
+
+#[tauri::command]
+fn generate_thumbnail(img_binarys: Vec<Vec<u8>>) -> Vec<Vec<u8>> {
+    let mut thumbnails_binary = Vec::new();
+    for img_binary in img_binarys {
+        let img = image::load_from_memory(&img_binary).expect("Failed to load image");
+        let thumbnail = img.thumbnail(80, 80);
+        let mut buffer = Vec::new();
+        let mut cursor = Cursor::new(&mut buffer);
+        thumbnail
+            .write_to(&mut cursor, ImageOutputFormat::Jpeg(80))
+            .expect("Failed to write thumbnail");
+        thumbnails_binary.push(buffer);
+    }
+    thumbnails_binary
 }

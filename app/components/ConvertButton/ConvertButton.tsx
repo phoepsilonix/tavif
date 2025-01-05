@@ -3,26 +3,26 @@
 import { Button } from "antd";
 import { useAtom } from "jotai";
 import {
-  filesBinaryAtom,
+  filePathsAtom,
   fileInfosAtom,
   extensionTypeAtom,
   qualityAtom,
   processedFilePathsAtom,
-  processedFilesBinaryAtom,
   isProcessingAtom,
   tabSelectedAtom,
 } from "@/app/atom";
 import { invoke } from "@tauri-apps/api/core";
 import { Modal } from "antd";
+import { readFileAsync } from "../FileDialog/utils";
 
-async function createSendData(filesBinary: Uint8Array[]) {
-  return filesBinary.map((uint8Array) => {
+async function createSendData(binarys: Uint8Array[]) {
+  return binarys.map((uint8Array) => {
     return Array.from(uint8Array);
   });
 }
 
 export default function ConvertButton() {
-  const [filesBinary] = useAtom(filesBinaryAtom);
+  const [filePaths, setFilePaths] = useAtom(filePathsAtom);
   const [fileInfos] = useAtom(fileInfosAtom);
   const [extensionType] = useAtom(extensionTypeAtom);
   const [quality] = useAtom(qualityAtom);
@@ -36,7 +36,8 @@ export default function ConvertButton() {
 
   async function convert() {
     setIsProcessing(true);
-    if (!filesBinary) {
+    const binarys = await readFileAsync(filePaths);
+    if (!binarys) {
       console.error("filesBinary is undefined");
       return;
     }
@@ -49,7 +50,7 @@ export default function ConvertButton() {
       return;
     }
 
-    const sendData = await createSendData(filesBinary);
+    const sendData = await createSendData(binarys);
     const result: string[] = await invoke("convert", {
       filesBinary: sendData,
       fileInfos: fileInfos,
@@ -65,9 +66,9 @@ export default function ConvertButton() {
       <Button
         onClick={convert}
         className={`font-bold text-lg tracking-wider text-[#00b96b] py-5 mt-5 uppercase ${
-          filesBinary.length > 0 ? "" : "cursor-not-allowed opacity-50"
+          filePaths.length > 0 ? "" : "cursor-not-allowed opacity-50"
         }`}
-        title={filesBinary.length > 0 ? "Let's convert!" : "Please select files first."}
+        title={filePaths.length > 0 ? "Let's convert!" : "Please select files first."}
       >
         Convert
       </Button>

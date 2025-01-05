@@ -2,27 +2,20 @@
 
 import { useAtom } from "jotai";
 import {
-  filesBinaryAtom,
   fileInfosAtom,
   processedFilePathsAtom,
-  processedFilesBinaryAtom,
   processedFileInfosAtom,
   processedFilePathsSortedAtom,
   checkboxSelectedAtom,
 } from "@/app/atom";
 import File from "./File";
 import { useEffect } from "react";
-import { getFileInfo } from "../SelectFiles/utils";
-import { FileInfo } from "../SelectFiles";
-import { invoke } from "@tauri-apps/api/core";
+import { getProcessedFileInfo } from "../SelectFiles/utils";
+import type { ProcessedFileInfo } from "@/app/index.d";
 
 export default function ProcessedFiles() {
-  const [filesBinary] = useAtom(filesBinaryAtom);
   const [fileInfos] = useAtom(fileInfosAtom);
   const [processedFilePaths] = useAtom(processedFilePathsAtom);
-  const [processedFilesBinary, setProcessedFilesBinary] = useAtom(
-    processedFilesBinaryAtom
-  );
   const [processedFileInfos, setProcessedFileInfos] = useAtom(
     processedFileInfosAtom
   );
@@ -32,60 +25,55 @@ export default function ProcessedFiles() {
   const [checkboxSelected, setCheckboxSelected] = useAtom(checkboxSelectedAtom);
 
   useEffect(() => {
-    const processedInfos: FileInfo[] = getFileInfo(processedFilePaths);
+    const fetchProcessedInfos = async () => {
+      const processedInfos: ProcessedFileInfo[] = await getProcessedFileInfo(
+        processedFilePaths,
+        fileInfos
+      );
 
-    // fileInfosの順番に基づいてprocessedInfosを整列
-    const sortedProcessedInfos = fileInfos
-      .map((fileInfo) =>
-        processedInfos.find(
-          (processedInfo) => processedInfo.file_name === fileInfo.file_name
+      // processedFilePathsからfile_nameを抽出して新たな配列を作成
+      const processedFilePathsWithFileName = processedFilePaths.map(
+        (processedFilePath) => {
+          const fileName = processedFilePath.split("\\").pop()?.split(".")[0];
+          const filePath = processedFilePath;
+          return { filePath, fileName };
+        }
+      );
+
+      // processedFileInfosの順番に基づいてprocessedFilePathsを整列し、重複を排除
+      const sortedProcessedFilePaths = processedInfos
+        .map(
+          (processedFileInfo) =>
+            processedFilePathsWithFileName.find(
+              (processedFilePath) =>
+                processedFilePath.fileName === processedFileInfo.file_name
+            )?.filePath
         )
-      )
-      .filter((info) => info !== undefined) as FileInfo[];
+        .filter((filePath): filePath is string => filePath !== undefined);
 
-    // fileInfosの順番に基づいてprocessedFilePathsを整列
-    const sortedProcessedFilePaths = fileInfos
-      .map((fileInfo) =>
-        processedFilePaths.find((processedFilePath) =>
-          processedFilePath.includes(fileInfo.file_name)
-        )
-      )
-      .filter((filePath) => filePath !== undefined) as string[];
+      setProcessedFileInfos(processedInfos);
+      setProcessedFilePathsSorted(sortedProcessedFilePaths);
+    };
 
-    setProcessedFileInfos(sortedProcessedInfos);
-    setProcessedFilePathsSorted(sortedProcessedFilePaths);
+    fetchProcessedInfos();
   }, [processedFilePaths]);
 
   useEffect(() => {
-    const fetchProcessedFiles = async () => {
-      const processedFilesBinary: Uint8Array[] = (await invoke(
-        "get_files_binary",
-        {
-          filePaths: processedFilePathsSorted,
-        }
-      )) as Uint8Array[];
-      setProcessedFilesBinary(processedFilesBinary);
-    };
-
-    fetchProcessedFiles();
-
     // チェックボックスの選択状態を更新
     setCheckboxSelected([]);
     processedFilePathsSorted.forEach((_, index) => {
-      setCheckboxSelected((prev) => [...prev, { index: index , checked: true }]);
+      setCheckboxSelected((prev) => [...prev, { index: index, checked: true }]);
     });
   }, [processedFilePathsSorted]);
 
   return (
     <div>
       {processedFileInfos.length > 0 &&
-        processedFileInfos.map((fileInfo, index) => (
+        processedFileInfos.map((processedFileInfo, index) => (
           <File
             index={index}
-            key={fileInfo.file_name_with_extension}
-            fileInfo={fileInfo}
-            binary={filesBinary[index]}
-            processedFileBinary={processedFilesBinary[index]}
+            key={processedFileInfo.file_name_with_extension}
+            processedFileInfo={processedFileInfo}
           />
         ))}
     </div>

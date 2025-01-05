@@ -1,5 +1,5 @@
-import { FileProps } from "../SelectFiles";
-
-export interface ProcessedFilesProps extends FileProps {
-  processedFileBinary: Uint8Array;
+import { ProcessedFileInfo } from "@/app/index.d";
+export interface ProcessedFilesProps {
+  index: number;
+  processedFileInfo: ProcessedFileInfo;
 }

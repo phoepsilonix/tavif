@@ -11,6 +11,7 @@ export default function Null() {
           <span className="text-gray-500">or</span>
           <FileDialog />
         </div>
+        <p className="text-gray-400 text-xs pt-6">Supported jpg, jpeg, png, and webp.</p>
       </div>
     </div>
   );
