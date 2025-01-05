@@ -15,11 +15,9 @@ export default function SelectFiles() {
 
   useEffect(() => {
     const fetchData = async () => {
-      setIsProcessing(true);
       const binarys: Uint8Array[] = await readFileAsync(filePaths);
       const infos: FileInfo[] = getFileInfo(filePaths, binarys);
       setFileInfos(infos);
-      setIsProcessing(false);
     };
 
     fetchData();
