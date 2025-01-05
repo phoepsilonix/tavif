@@ -4,7 +4,7 @@ import Dropzone from "../Dropzone/Dropzone";
 import SelectFiles from "../SelectFiles/SelectFiles";
 import { useAtom } from "jotai";
 import { tabSelectedAtom, filePathsAtom } from "../../atom";
-import InputNubMenu from "./InputNubMenu";
+import InputNubMenu from "./InputNavMenu";
 import Null from "./Null";
 
 export default function InputTab() {
