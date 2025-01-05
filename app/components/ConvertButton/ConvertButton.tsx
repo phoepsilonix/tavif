@@ -66,9 +66,10 @@ export default function ConvertButton() {
       <Button
         onClick={convert}
         className={`font-bold text-lg tracking-wider text-[#00b96b] py-5 mt-5 uppercase ${
-          filePaths.length > 0 ? "" : "cursor-not-allowed opacity-50"
+          filePaths.length > 0 ? "" : "cursor-not-allowed"
         }`}
         title={filePaths.length > 0 ? "Let's convert!" : "Please select files first."}
+        disabled={filePaths.length === 0}
       >
         Convert
       </Button>

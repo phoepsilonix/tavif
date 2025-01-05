@@ -156,7 +156,7 @@ mod tests {
 
     #[test]
     fn test_convert() {
-        // テスト用の画像データを準備（ここでは簡単なPNG画像を使用）
+        // テスト用の画像データを準備
         let image_data = include_bytes!("../../public/null.png").to_vec(); // 実際の画像ファイルを指定
         let files_binary = vec![image_data]; // ダミーデータを実際の画像データに変更
         let file_infos = vec![FileInfo {
