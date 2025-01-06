@@ -7,7 +7,7 @@ import {
   processedFileInfosAtom,
   processedFilePathsSortedAtom,
   checkboxSelectedAtom,
-} from "@/app/atom";
+} from "@/app/lib/atom";
 import File from "./File";
 import { useEffect } from "react";
 import { getProcessedFileInfo } from "../SelectFiles/utils";

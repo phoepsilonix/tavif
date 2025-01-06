@@ -4,7 +4,7 @@ import { getCurrentWebview } from "@tauri-apps/api/webview";
 import type { DragDropEvent } from "@tauri-apps/api/webview";
 import type { Event } from "@tauri-apps/api/event";
 import { useAtom } from "jotai";
-import { filePathsAtom, tabSelectedAtom } from "../../atom";
+import { filePathsAtom, tabSelectedAtom } from "../../lib/atom";
 import { Modal } from "antd";
 
 export default function Dropzone() {

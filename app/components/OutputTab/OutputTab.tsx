@@ -1,7 +1,7 @@
 "use client";
 
 import { useAtom } from "jotai";
-import { tabSelectedAtom } from "../../atom";
+import { tabSelectedAtom } from "../../lib/atom";
 import ProcessedFiles from "../ProcessedFiles/ProcessedFiles";
 import OutputNavMenu from "./OutputNavMenu";
 

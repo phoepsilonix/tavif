@@ -1,7 +1,7 @@
 "use client";
 
 import { useAtom } from "jotai";
-import { filePathsAtom, fileInfosAtom, isProcessingAtom } from "@/app/atom";
+import { filePathsAtom, fileInfosAtom, isProcessingAtom } from "@/app/lib/atom";
 import { FileInfo } from "@/app/index.d";
 import { useEffect } from "react";
 import File from "./File";

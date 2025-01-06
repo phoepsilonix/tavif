@@ -3,7 +3,7 @@
 import Dropzone from "../Dropzone/Dropzone";
 import SelectFiles from "../SelectFiles/SelectFiles";
 import { useAtom } from "jotai";
-import { tabSelectedAtom, filePathsAtom } from "../../atom";
+import { tabSelectedAtom, filePathsAtom } from "../../lib/atom";
 import InputNubMenu from "./InputNavMenu";
 import Null from "./Null";
 

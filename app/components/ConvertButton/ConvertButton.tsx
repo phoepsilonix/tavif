@@ -10,7 +10,7 @@ import {
   processedFilePathsAtom,
   isProcessingAtom,
   tabSelectedAtom,
-} from "@/app/atom";
+} from "@/app/lib/atom";
 import { invoke } from "@tauri-apps/api/core";
 import { Modal } from "antd";
 import { readFileAsync } from "../FileDialog/utils";
@@ -68,7 +68,9 @@ export default function ConvertButton() {
         className={`font-bold text-lg tracking-wider text-[#00b96b] py-5 mt-5 uppercase ${
           filePaths.length > 0 ? "" : "cursor-not-allowed"
         }`}
-        title={filePaths.length > 0 ? "Let's convert!" : "Please select files first."}
+        title={
+          filePaths.length > 0 ? "Let's convert!" : "Please select files first."
+        }
         disabled={filePaths.length === 0}
       >
         Convert

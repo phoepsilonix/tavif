@@ -2,7 +2,7 @@
 
 import { Select } from "antd";
 import { useAtom } from "jotai";
-import { extensionTypeAtom } from "@/app/atom";
+import { extensionTypeAtom } from "@/app/lib/atom";
 
 export default function ExtensionType() {
   const [extensionType, setExtensionType] = useAtom(extensionTypeAtom);
@@ -19,7 +19,7 @@ export default function ExtensionType() {
           { value: "webp", label: "WebP" },
           { value: "avif", label: "AVIF" },
         ]}
-    />
+      />
     </div>
   );
 }

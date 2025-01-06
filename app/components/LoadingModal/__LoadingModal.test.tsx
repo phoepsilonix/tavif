@@ -3,7 +3,11 @@ import "@testing-library/jest-dom";
 import { render, screen } from "@testing-library/react";
 import LoadingModal from "./LoadingModal";
 import { useAtom } from "jotai";
-import { isProcessingAtom, isSavingAtom, extensionTypeAtom } from "@/app/atom";
+import {
+  isProcessingAtom,
+  isSavingAtom,
+  extensionTypeAtom,
+} from "@/app/lib/atom";
 
 vi.mock("jotai");
 

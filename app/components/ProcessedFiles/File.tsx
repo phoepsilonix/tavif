@@ -3,7 +3,7 @@ import { ProcessedFilesProps } from ".";
 import RightArrow from "../icons/RightArrow";
 import { Checkbox } from "antd";
 import { useAtom } from "jotai";
-import { checkboxSelectedAtom, filePathsAtom } from "@/app/atom";
+import { checkboxSelectedAtom, filePathsAtom } from "@/app/lib/atom";
 import { ProcessedFileInfo } from "@/app/index.d";
 import { useEffect, useState } from "react";
 import { readFile } from "@tauri-apps/plugin-fs";

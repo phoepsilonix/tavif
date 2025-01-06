@@ -2,7 +2,12 @@ import { Button } from "antd";
 import { open } from "@tauri-apps/plugin-dialog";
 import { invoke } from "@tauri-apps/api/core";
 import { useAtom } from "jotai";
-import { processedFilePathsSortedAtom, checkboxSelectedAtom , processedFilePathsAtom, isSavingAtom} from "@/app/atom";
+import {
+  processedFilePathsSortedAtom,
+  checkboxSelectedAtom,
+  processedFilePathsAtom,
+  isSavingAtom,
+} from "@/app/lib/atom";
 import DownloadOutlined from "../icons/Download";
 import { DeleteOutlined } from "@ant-design/icons";
 import { Checkbox, CheckboxChangeEvent } from "antd";
@@ -11,9 +16,13 @@ import "@ant-design/v5-patch-for-react-19";
 import { Modal } from "antd";
 
 export default function OutputNavMenu() {
-  const [processedFilePathsSorted, setProcessedFilePathsSorted] = useAtom(processedFilePathsSortedAtom);
+  const [processedFilePathsSorted, setProcessedFilePathsSorted] = useAtom(
+    processedFilePathsSortedAtom
+  );
   const [checkboxSelected, setCheckboxSelected] = useAtom(checkboxSelectedAtom);
-  const [processedFilePaths, setProcessedFilePaths] = useAtom(processedFilePathsAtom);
+  const [processedFilePaths, setProcessedFilePaths] = useAtom(
+    processedFilePathsAtom
+  );
   const [isSaving, setIsSaving] = useAtom(isSavingAtom);
   const [modal, modalContextHolder] = Modal.useModal();
 
@@ -94,11 +103,19 @@ export default function OutputNavMenu() {
           <DownloadOutlined size={16} className="fill-white" />
           Save ALL
         </Button>
-        <Button type="primary" onClick={saveSelected} title="Save selected files.">
+        <Button
+          type="primary"
+          onClick={saveSelected}
+          title="Save selected files."
+        >
           <DownloadOutlined size={16} className="fill-white" />
           Save Selected
         </Button>
-        <Button type="default" onClick={removeResult} title="Delete all processed files from the temp directory.">
+        <Button
+          type="default"
+          onClick={removeResult}
+          title="Delete all processed files from the temp directory."
+        >
           <DeleteOutlined size={16} className="fill-white" />
           Remove Result
         </Button>

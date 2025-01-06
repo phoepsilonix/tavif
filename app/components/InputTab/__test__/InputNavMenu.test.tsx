@@ -4,7 +4,7 @@ import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import InputNavMenu from "../InputNavMenu";
 import { useAtom } from "jotai";
-import { filePathsAtom } from "@/app/atom";
+import { filePathsAtom } from "@/app/lib/atom";
 
 vi.mock("jotai");
 

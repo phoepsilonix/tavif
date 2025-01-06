@@ -4,7 +4,7 @@ import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import FileDialog from "./FileDialog";
 import { useAtom } from "jotai";
-import { filePathsAtom } from "@/app/atom";
+import { filePathsAtom } from "@/app/lib/atom";
 import { open } from "@tauri-apps/plugin-dialog";
 
 vi.mock("jotai");

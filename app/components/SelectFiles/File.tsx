@@ -3,7 +3,7 @@ import { FileProps } from "./index.d";
 import { Button } from "antd";
 import { DeleteOutlined } from "@ant-design/icons";
 import { useAtom } from "jotai";
-import { filePathsAtom, fileInfosAtom } from "../../atom";
+import { filePathsAtom, fileInfosAtom } from "../../lib/atom";
 import { useState, useEffect } from "react";
 import { readFile } from "@tauri-apps/plugin-fs";
 

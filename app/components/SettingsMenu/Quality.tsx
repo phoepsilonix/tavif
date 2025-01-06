@@ -1,15 +1,15 @@
 "use client";
 
-import React from 'react';
-import type { InputNumberProps } from 'antd';
-import { Col, InputNumber, Row, Slider } from 'antd';
-import { useAtom } from 'jotai';
-import { qualityAtom } from '@/app/atom';
+import React from "react";
+import type { InputNumberProps } from "antd";
+import { Col, InputNumber, Row, Slider } from "antd";
+import { useAtom } from "jotai";
+import { qualityAtom } from "@/app/lib/atom";
 
 const IntegerStep: React.FC = () => {
   const [inputValue, setInputValue] = useAtom(qualityAtom);
 
-  const onChange: InputNumberProps['onChange'] = (newValue) => {
+  const onChange: InputNumberProps["onChange"] = (newValue) => {
     setInputValue(newValue as number);
   };
 
@@ -20,14 +20,14 @@ const IntegerStep: React.FC = () => {
           min={1}
           max={100}
           onChange={onChange}
-          value={typeof inputValue === 'number' ? inputValue : 0}
+          value={typeof inputValue === "number" ? inputValue : 0}
         />
       </Col>
       <Col span={4}>
         <InputNumber
           min={1}
           max={100}
-          style={{ margin: '0 16px' }}
+          style={{ margin: "0 16px" }}
           value={inputValue}
           onChange={onChange}
           onBlur={() => {
@@ -44,7 +44,9 @@ const IntegerStep: React.FC = () => {
 export default function Quality() {
   return (
     <div className="flex flex-col gap-1">
-      <span className="text-sm font-bold text-white tracking-wider">Quality</span>
+      <span className="text-sm font-bold text-white tracking-wider">
+        Quality
+      </span>
       <IntegerStep />
     </div>
   );

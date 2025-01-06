@@ -33,3 +33,7 @@ export const tabSelectedAtom = atom<"input" | "output">("input");
 
 // 各ファイルのチェックボックス選択状態
 export const checkboxSelectedAtom = atom<CheckboxSelected[]>([]);
+
+// アプリにフォーカスされているか
+export const isFocusedAtom = atom<boolean>(false);
+

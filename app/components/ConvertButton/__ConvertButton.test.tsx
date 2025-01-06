@@ -4,7 +4,7 @@ import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import ConvertButton from "./ConvertButton";
 import { useAtom } from "jotai";
-import { filePathsAtom, isProcessingAtom } from "@/app/atom";
+import { filePathsAtom, isProcessingAtom } from "@/app/lib/atom";
 import { readFileAsync } from "../FileDialog/utils";
 
 vi.mock("../FileDialog/utils", () => ({

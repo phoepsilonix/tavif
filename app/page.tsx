@@ -6,7 +6,6 @@ import LoadingModal from "./components/LoadingModal/LoadingModal";
 import InputTab from "./components/InputTab/InputTab";
 import OutputTab from "./components/OutputTab/OutputTab";
 import InputTabButton, { OutputTabButton } from "./components/TabButton/TabButton";
-import WindowMenu from "./components/WindowMenu/WindowMenu";
 
 export default function Home() {
   return (
