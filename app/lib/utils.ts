@@ -1,7 +1,8 @@
 import { invoke } from "@tauri-apps/api/core";
 import { open } from "@tauri-apps/plugin-dialog";
 import type { ModalType } from "antd/es/modal/index.d";
-import type { CheckboxSelected } from "@/app/index.d";
+import type { CheckboxSelected, FileInfo } from "@/app/index.d";
+import { readFileAsync } from "../components/FileDialog/utils";
 
 export async function openDialog(
   setFilePaths: (paths: string[]) => void,
@@ -82,5 +83,48 @@ export async function saveSelected(
     title: "Success",
     centered: true,
     content: "Saved successfully",
+  });
+}
+
+export async function convert(
+  setIsProcessing: (isProcessing: boolean) => void,
+  filePaths: string[],
+  modal: ModalType,
+  quality: number,
+  extensionType: string,
+  fileInfos: FileInfo[],
+  setProcessedFilePaths: (processedFilePaths: string[]) => void,
+  setTabSelected: (tabSelected: "output" | "input") => void
+) {
+  setIsProcessing(true);
+  const binarys = await readFileAsync(filePaths);
+  if (!binarys) {
+    console.error("filesBinary is undefined");
+    return;
+  }
+  if (!quality) {
+    modal.error({
+      title: "Quality is not set",
+      centered: true,
+      content: "Please set the quality",
+    });
+    return;
+  }
+
+  const sendData = await createSendData(binarys);
+  const result: string[] = await invoke("convert", {
+    filesBinary: sendData,
+    fileInfos: fileInfos,
+    extensionType: extensionType,
+    quality: quality,
+  });
+  setProcessedFilePaths(result);
+  setIsProcessing(false);
+  setTabSelected("output");
+}
+
+async function createSendData(binarys: Uint8Array[]) {
+  return binarys.map((uint8Array) => {
+    return Array.from(uint8Array);
   });
 }

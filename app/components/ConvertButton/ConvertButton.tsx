@@ -11,15 +11,8 @@ import {
   isProcessingAtom,
   tabSelectedAtom,
 } from "@/app/lib/atom";
-import { invoke } from "@tauri-apps/api/core";
 import { Modal } from "antd";
-import { readFileAsync } from "../FileDialog/utils";
-
-async function createSendData(binarys: Uint8Array[]) {
-  return binarys.map((uint8Array) => {
-    return Array.from(uint8Array);
-  });
-}
+import { convert } from "@/app/lib/utils";
 
 export default function ConvertButton() {
   const [filePaths, setFilePaths] = useAtom(filePathsAtom);
@@ -34,44 +27,30 @@ export default function ConvertButton() {
 
   const [modal, contextHolder] = Modal.useModal();
 
-  async function convert() {
-    setIsProcessing(true);
-    const binarys = await readFileAsync(filePaths);
-    if (!binarys) {
-      console.error("filesBinary is undefined");
-      return;
-    }
-    if (!quality) {
-      modal.error({
-        title: "Quality is not set",
-        centered: true,
-        content: "Please set the quality",
-      });
-      return;
-    }
-
-    const sendData = await createSendData(binarys);
-    const result: string[] = await invoke("convert", {
-      filesBinary: sendData,
-      fileInfos: fileInfos,
-      extensionType: extensionType,
-      quality: quality,
-    });
-    setProcessedFilePaths(result);
-    setIsProcessing(false);
-    setTabSelected("output");
-  }
   return (
     <>
       <Button
-        onClick={convert}
+        onClick={() =>
+          convert(
+            setIsProcessing,
+            filePaths,
+            modal,
+            quality,
+            extensionType,
+            fileInfos,
+            setProcessedFilePaths,
+            setTabSelected
+          )
+        }
         className={`font-bold text-lg tracking-wider text-[#00b96b] py-5 mt-5 uppercase ${
-          filePaths.length > 0 ? "" : "cursor-not-allowed"
+          filePaths.length > 0 && !isProcessing ? "" : "cursor-not-allowed"
         }`}
         title={
-          filePaths.length > 0 ? "Let's convert!" : "Please select files first."
+          filePaths.length > 0 && !isProcessing
+            ? "Let's convert!"
+            : "Please select files first."
         }
-        disabled={filePaths.length === 0}
+        disabled={filePaths.length === 0 || isProcessing}
       >
         Convert
       </Button>
