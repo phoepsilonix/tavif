@@ -1,6 +1,4 @@
 import { Button } from "antd";
-import { open } from "@tauri-apps/plugin-dialog";
-import { invoke } from "@tauri-apps/api/core";
 import { useAtom } from "jotai";
 import {
   processedFilePathsSortedAtom,
@@ -14,7 +12,7 @@ import { Checkbox, CheckboxChangeEvent } from "antd";
 import Null from "./Null";
 import "@ant-design/v5-patch-for-react-19";
 import { Modal } from "antd";
-
+import { saveAll, saveSelected } from "@/app/lib/utils";
 export default function OutputNavMenu() {
   const [processedFilePathsSorted, setProcessedFilePathsSorted] = useAtom(
     processedFilePathsSortedAtom
@@ -26,57 +24,6 @@ export default function OutputNavMenu() {
   const [isSaving, setIsSaving] = useAtom(isSavingAtom);
   const [modal, modalContextHolder] = Modal.useModal();
 
-  async function saveAll() {
-    setIsSaving(true);
-    const outputDir = await open({
-      title: "Select Output Directory",
-      directory: true,
-      multiple: false,
-    });
-    if (!outputDir) {
-      setIsSaving(false);
-      return;
-    }
-
-    await invoke("save_files", {
-      filePaths: processedFilePathsSorted,
-      outputDir: outputDir,
-    });
-    setIsSaving(false);
-    modal.success({
-      title: "Success",
-      centered: true,
-      content: "Saved successfully",
-    });
-  }
-
-  async function saveSelected() {
-    setIsSaving(true);
-    const outputDir = await open({
-      title: "Select Output Directory",
-      directory: true,
-      multiple: false,
-    });
-    if (!outputDir) {
-      setIsSaving(false);
-      return;
-    }
-
-    const selectedFilePaths = checkboxSelected
-      .filter((item) => item.checked)
-      .map((item) => processedFilePathsSorted[item.index]);
-
-    await invoke("save_files", {
-      filePaths: selectedFilePaths,
-      outputDir: outputDir,
-    });
-    setIsSaving(false);
-    modal.success({
-      title: "Success",
-      centered: true,
-      content: "Saved successfully",
-    });
-  }
 
   function removeResult() {
     setProcessedFilePathsSorted([]);
@@ -99,13 +46,13 @@ export default function OutputNavMenu() {
     <div className="absolute top-1 left-0 w-full h-fit p-2 flex items-center justify-between gap-2 bg-gray-50/50 backdrop-blur-sm border-l-2 border-r-2 border-gray-300 z-10">
       {modalContextHolder}
       <div className="flex items-center gap-2">
-        <Button type="primary" onClick={saveAll} title="Save all files.">
+        <Button type="primary" onClick={() => saveAll(setIsSaving, processedFilePathsSorted, modal)} title="Save all files.">
           <DownloadOutlined size={16} className="fill-white" />
           Save ALL
         </Button>
         <Button
           type="primary"
-          onClick={saveSelected}
+          onClick={() => saveSelected(setIsSaving, processedFilePathsSorted, checkboxSelected, modal)}
           title="Save selected files."
         >
           <DownloadOutlined size={16} className="fill-white" />

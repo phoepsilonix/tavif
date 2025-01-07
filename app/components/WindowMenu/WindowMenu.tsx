@@ -8,6 +8,7 @@ import { useEffect, useState } from "react";
 import FileMenu from "./ContextMenu/FileMenu";
 import { useAtom } from "jotai";
 import { isFocusedAtom } from "@/app/lib/atom";
+import EditMenu from "./ContextMenu/EditMenu";
 
 
 export default function WindowMenu() {
@@ -62,7 +63,10 @@ export default function WindowMenu() {
     >
       <div className="flex items-center gap-2">
         <img src="/128x128.png" alt="logo" className="w-5 h-5" loading="lazy"/>
-        <FileMenu />
+        <div className="flex items-center">
+          <FileMenu />
+          <EditMenu />
+        </div>
       </div>
       <div className="flex">
         <div
