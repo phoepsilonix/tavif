@@ -1,36 +1,73 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Tavif AVIF/WEBP Converter App
 
-## Getting Started
+This project is a lightweight and fast desktop application for converting images to AVIF/WEBP format, developed using the **Rust [Tauri framework](https://tauri.app/)** and **[Next.js](https://nextjs.org/)**.
 
-First, run the development server:
+## Features
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+- **Lightweight**: By using Tauri, the application's binary size is minimized.
+- **Fast**: Utilizes Rust's performance for high-speed image conversion processing.
+- **Intuitive UI**: A simple and user-friendly interface powered by Next.js.
+- **Conversion to AVIF and WEBP**: Supports converting images in JPG, PNG, and WEBP formats to AVIF and WEBP formats.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Screenshots
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+![screenshot](https://github.com/user-attachments/assets/f76f478f-1467-4c7a-a123-e3f9f74a62bb)
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Installation
 
-## Learn More
+You can install the application by following these steps:
 
-To learn more about Next.js, take a look at the following resources:
+### 1. Clone this repository:
+   ```bash
+   git clone https://github.com/harumiWeb/avif_conv_app.git
+   cd avif_conv_app
+   ```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### 2. Install dependencies:
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+  #### Next.js dependencies
+  - Install the required packages.
+   ```bash
+   npm install
+   ```
 
-## Deploy on Vercel
+### 3. Start the development server:
+   ```bash
+   npm run tauri dev
+   ```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Build
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+To create a release build, run the following command:
+
+   ```bash
+   npm run tauri build
+   ```
+
+   - Once the build is complete, it will be generated in the `src-tauri/target/release/` directory.
+
+## Usage
+
+1. Launch the application.
+2. Drag and drop the image files you want to convert.
+3. Select the output format (AVIF or WEBP).
+4. Click the "Convert" button to convert the images.
+
+## Development Environment
+
+- Frontend: Next.js
+- Backend: Tauri (Rust)
+- Language: TypeScript (Frontend), Rust (Backend)
+
+## License
+
+This project is licensed under the [MIT License](LICENSE).
+
+## Developer
+
+- Developer: harumiWeb
+- Email: [halpost](https://www.halpost.tech/contact)
+- GitHub: [harumiWeb](https://github.com/harumiWeb)
+- X: [@HarumiWebDesign](https://x.com/HarumiWebDesign)
+
+If you have any questions or feedback, feel free to create an issue!
