@@ -1,8 +1,8 @@
 {
   "$schema": "../node_modules/@tauri-apps/cli/config.schema.json",
-  "productName": "avif_conv",
+  "productName": "Tavif",
   "version": "0.1.0",
-  "identifier": "com.harumi.avif_conv",
+  "identifier": "com.harumi.tavif",
   "build": {
     "frontendDist": "../out",
     "devUrl": "http://localhost:3000",
