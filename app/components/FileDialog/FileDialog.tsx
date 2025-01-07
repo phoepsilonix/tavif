@@ -11,7 +11,14 @@ export default function FileDialog() {
   const [filePaths, setFilePaths] = useAtom(filePathsAtom);
   return (
     <div>
-      <Button type="primary" onClick={() => openDialog(setFilePaths, filePaths)} title="Add files.">
+      <Button
+        type="primary"
+        onClick={(e) => {
+          e.stopPropagation();
+          openDialog(setFilePaths, filePaths);
+        }}
+        title="Add files."
+      >
         <FolderOpenOutlined size={16} className="fill-white" />
         Add Files
       </Button>
