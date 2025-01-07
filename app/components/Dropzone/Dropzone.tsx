@@ -8,8 +8,8 @@ import { filePathsAtom, tabSelectedAtom } from "../../lib/atom";
 import { Modal } from "antd";
 
 export default function Dropzone() {
-  const [filePaths, setFilePaths] = useAtom(filePathsAtom);
-  const [tabSelected, setTabSelected] = useAtom(tabSelectedAtom);
+  const [, setFilePaths] = useAtom(filePathsAtom);
+  const [, setTabSelected] = useAtom(tabSelectedAtom);
   const [modal, modalContextHolder] = Modal.useModal();
 
   useEffect(() => {

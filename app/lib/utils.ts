@@ -1,8 +1,8 @@
 import { invoke } from "@tauri-apps/api/core";
 import { open } from "@tauri-apps/plugin-dialog";
-import type { ModalType } from "antd/es/modal/index.d";
 import type { CheckboxSelected, FileInfo } from "@/app/index.d";
 import { readFileAsync } from "../components/FileDialog/utils";
+import type { HookAPI } from "antd/es/modal/useModal";
 
 export async function openDialog(
   setFilePaths: (paths: string[]) => void,
@@ -28,7 +28,7 @@ export async function openDialog(
 export async function saveAll(
   setIsSaving: (isSaving: boolean) => void,
   processedFilePathsSorted: string[],
-  modal: ModalType
+  modal: HookAPI
 ) {
   setIsSaving(true);
   const outputDir = await open({
@@ -57,7 +57,7 @@ export async function saveSelected(
   setIsSaving: (isSaving: boolean) => void,
   processedFilePathsSorted: string[],
   checkboxSelected: CheckboxSelected[],
-  modal: ModalType
+  modal: HookAPI
 ) {
   setIsSaving(true);
   const outputDir = await open({
@@ -89,7 +89,7 @@ export async function saveSelected(
 export async function convert(
   setIsProcessing: (isProcessing: boolean) => void,
   filePaths: string[],
-  modal: ModalType,
+  modal: HookAPI,
   quality: number,
   extensionType: string,
   fileInfos: FileInfo[],

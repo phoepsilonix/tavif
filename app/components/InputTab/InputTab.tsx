@@ -8,8 +8,8 @@ import InputNubMenu from "./InputNavMenu";
 import Null from "./Null";
 
 export default function InputTab() {
-  const [tabSelected, setTabSelected] = useAtom(tabSelectedAtom);
-  const [filePaths, setFilePaths] = useAtom(filePathsAtom);
+  const [tabSelected] = useAtom(tabSelectedAtom);
+  const [filePaths] = useAtom(filePathsAtom);
 
   return (
     <div

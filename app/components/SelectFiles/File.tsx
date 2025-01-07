@@ -9,7 +9,7 @@ import { readFile } from "@tauri-apps/plugin-fs";
 
 export default function File({ fileInfo, index }: FileProps) {
   const [filePaths, setFilePaths] = useAtom(filePathsAtom);
-  const [fileInfos, setFileInfos] = useAtom(fileInfosAtom);
+  const [, setFileInfos] = useAtom(fileInfosAtom);
   const [imageSrc, setImageSrc] = useState<string | null>(null);
 
   useEffect(() => {

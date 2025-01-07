@@ -19,10 +19,10 @@ export default function OutputNavMenu() {
     processedFilePathsSortedAtom
   );
   const [checkboxSelected, setCheckboxSelected] = useAtom(checkboxSelectedAtom);
-  const [processedFilePaths, setProcessedFilePaths] = useAtom(
+  const [, setProcessedFilePaths] = useAtom(
     processedFilePathsAtom
   );
-  const [isSaving, setIsSaving] = useAtom(isSavingAtom);
+  const [, setIsSaving] = useAtom(isSavingAtom);
   const [modal, modalContextHolder] = Modal.useModal();
 
 

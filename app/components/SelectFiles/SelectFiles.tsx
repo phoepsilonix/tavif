@@ -1,7 +1,7 @@
 "use client";
 
 import { useAtom } from "jotai";
-import { filePathsAtom, fileInfosAtom, isProcessingAtom } from "@/app/lib/atom";
+import { filePathsAtom, fileInfosAtom } from "@/app/lib/atom";
 import { FileInfo } from "@/app/index.d";
 import { useEffect } from "react";
 import File from "./File";
@@ -11,7 +11,6 @@ import { readFileAsync } from "../FileDialog/utils";
 export default function SelectFiles() {
   const [filePaths] = useAtom(filePathsAtom);
   const [fileInfos, setFileInfos] = useAtom(fileInfosAtom);
-  const [_, setIsProcessing] = useAtom(isProcessingAtom);
 
   useEffect(() => {
     const fetchData = async () => {

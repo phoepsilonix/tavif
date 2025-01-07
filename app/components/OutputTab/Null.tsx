@@ -4,7 +4,7 @@ export default function Null() {
       <span className="text-base font-bold text-gray-700 text-center">
         No result
         <br />
-        Select images from "INPUT" tab <br />
+        Select images from &quot;INPUT&quot; tab <br />
         and convert them to see the result here.
       </span>
       <div className="w-full h-full overflow-hidden absolute top-0 left-0">

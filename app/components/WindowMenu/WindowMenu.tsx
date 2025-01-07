@@ -15,7 +15,7 @@ import HelpMenu from "./ContextMenu/HelpMenu";
 export default function WindowMenu() {
   const [appWindow, setAppWindow] = useState<TauriWindow | null>(null);
 
-  const [isFocused, setIsFocused] = useAtom(isFocusedAtom);
+  const [, setIsFocused] = useAtom(isFocusedAtom);
 
   useEffect(() => {
     const handleFocus = () => {

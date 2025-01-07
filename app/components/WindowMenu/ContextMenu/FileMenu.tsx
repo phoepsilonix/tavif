@@ -51,7 +51,7 @@ const items: MenuProps["items"] = [
 
 export default function FileMenu() {
   const [filePaths, setFilePaths] = useAtom(filePathsAtom);
-  const [isFocused, setIsFocused] = useAtom(isFocusedAtom);
+  const [isFocused, ] = useAtom(isFocusedAtom);
   const fileButtonRef = useRef<HTMLButtonElement | null>(null);
   const [fileInfos, setFileInfos] = useAtom(fileInfosAtom);
   const [tabSelected, setTabSelected] = useAtom(tabSelectedAtom);
@@ -59,14 +59,14 @@ export default function FileMenu() {
     processedFilePathsSortedAtom
   );
   const [checkboxSelected, setCheckboxSelected] = useAtom(checkboxSelectedAtom);
-  const [processedFilePaths, setProcessedFilePaths] = useAtom(
+  const [, setProcessedFilePaths] = useAtom(
     processedFilePathsAtom
   );
-  const [isSaving, setIsSaving] = useAtom(isSavingAtom);
-  const [quality, setQuality] = useAtom(qualityAtom);
-  const [extensionType, setExtensionType] = useAtom(extensionTypeAtom);
+  const [, setIsSaving] = useAtom(isSavingAtom);
+  const [quality, ] = useAtom(qualityAtom);
+  const [extensionType, ] = useAtom(extensionTypeAtom);
   const [isProcessing, setIsProcessing] = useAtom(isProcessingAtom);
-  const [modal, modalContextHolder] = Modal.useModal();
+  const [modal, ] = Modal.useModal();
 
   function removeResult() {
     setProcessedFilePathsSorted([]);
@@ -191,13 +191,13 @@ function FileOpen(): React.ReactNode {
 
 function FileRemoveAll(): React.ReactNode {
   const [filePaths, setFilePaths] = useAtom(filePathsAtom);
-  const [tabSelected, setTabSelected] = useAtom(tabSelectedAtom);
-  const [fileInfos, setFileInfos] = useAtom(fileInfosAtom);
+  const [tabSelected, ] = useAtom(tabSelectedAtom);
+  const [, setFileInfos] = useAtom(fileInfosAtom);
   const [processedFilePathsSorted, setProcessedFilePathsSorted] = useAtom(
     processedFilePathsSortedAtom
   );
-  const [checkboxSelected, setCheckboxSelected] = useAtom(checkboxSelectedAtom);
-  const [processedFilePaths, setProcessedFilePaths] = useAtom(
+  const [, setCheckboxSelected] = useAtom(checkboxSelectedAtom);
+  const [, setProcessedFilePaths] = useAtom(
     processedFilePathsAtom
   );
 
@@ -252,10 +252,10 @@ function FileRemoveAll(): React.ReactNode {
 
 function FileSaveAll(): React.ReactNode {
   const [isSaving, setIsSaving] = useState(false);
-  const [processedFilePathsSorted, setProcessedFilePathsSorted] = useAtom(
+  const [processedFilePathsSorted, ] = useAtom(
     processedFilePathsSortedAtom
   );
-  const [modal, modalContextHolder] = Modal.useModal();
+  const [modal, ] = Modal.useModal();
   return (
     <button
       className={`flex items-center justify-between leading-5 w-full ${
@@ -282,11 +282,11 @@ function FileSaveAll(): React.ReactNode {
 
 function FileSaveSelected(): React.ReactNode {
   const [isSaving, setIsSaving] = useState(false);
-  const [processedFilePathsSorted, setProcessedFilePathsSorted] = useAtom(
+  const [processedFilePathsSorted, ] = useAtom(
     processedFilePathsSortedAtom
   );
-  const [checkboxSelected, setCheckboxSelected] = useAtom(checkboxSelectedAtom);
-  const [modal, modalContextHolder] = Modal.useModal();
+  const [checkboxSelected, ] = useAtom(checkboxSelectedAtom);
+  const [modal, ] = Modal.useModal();
   return (
     <button
       className={`flex items-center justify-between leading-5 w-full ${
@@ -325,15 +325,15 @@ function FileSaveSelected(): React.ReactNode {
 
 function FileConvert(): React.ReactNode {
   const [isProcessing, setIsProcessing] = useAtom(isProcessingAtom);
-  const [processedFilePaths, setProcessedFilePaths] = useAtom(
+  const [, setProcessedFilePaths] = useAtom(
     processedFilePathsAtom
   );
-  const [modal, modalContextHolder] = Modal.useModal();
-  const [filePaths, setFilePaths] = useAtom(filePathsAtom);
-  const [fileInfos, setFileInfos] = useAtom(fileInfosAtom);
-  const [quality, setQuality] = useAtom(qualityAtom);
-  const [extensionType, setExtensionType] = useAtom(extensionTypeAtom);
-  const [tabSelected, setTabSelected] = useAtom(tabSelectedAtom);
+  const [modal, ] = Modal.useModal();
+  const [filePaths, ] = useAtom(filePathsAtom);
+  const [fileInfos, ] = useAtom(fileInfosAtom);
+  const [quality, ] = useAtom(qualityAtom);
+  const [extensionType, ] = useAtom(extensionTypeAtom);
+  const [, setTabSelected] = useAtom(tabSelectedAtom);
   return (
     <button
       className={`flex items-center justify-between leading-5 w-full ${

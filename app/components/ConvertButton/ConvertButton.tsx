@@ -15,15 +15,13 @@ import { Modal } from "antd";
 import { convert } from "@/app/lib/utils";
 
 export default function ConvertButton() {
-  const [filePaths, setFilePaths] = useAtom(filePathsAtom);
+  const [filePaths] = useAtom(filePathsAtom);
   const [fileInfos] = useAtom(fileInfosAtom);
   const [extensionType] = useAtom(extensionTypeAtom);
   const [quality] = useAtom(qualityAtom);
   const [isProcessing, setIsProcessing] = useAtom(isProcessingAtom);
-  const [processedFilePaths, setProcessedFilePaths] = useAtom(
-    processedFilePathsAtom
-  );
-  const [tabSelected, setTabSelected] = useAtom(tabSelectedAtom);
+  const [, setProcessedFilePaths] = useAtom(processedFilePathsAtom);
+  const [, setTabSelected] = useAtom(tabSelectedAtom);
 
   const [modal, contextHolder] = Modal.useModal();
 

@@ -14,9 +14,9 @@ const items: MenuProps["items"] = [
 ];
 
 export default function SelectMenu() {
-  const [isFocused, setIsFocused] = useAtom(isFocusedAtom);
+  const [isFocused, ] = useAtom(isFocusedAtom);
   const [checkboxSelected, setCheckboxSelected] = useAtom(checkboxSelectedAtom);
-  const [processedFilePathsSorted, setProcessedFilePathsSorted] = useAtom(processedFilePathsSortedAtom);
+  const [processedFilePathsSorted, ] = useAtom(processedFilePathsSortedAtom);
   const selectButtonRef = useRef<HTMLButtonElement | null>(null);
   useEffect(() => {
     const handleKeyDownSelectShortcut = async (event: KeyboardEvent) => {
@@ -56,8 +56,8 @@ export default function SelectMenu() {
 }
 
 function SelectAll(): React.ReactNode {
-  const [checkboxSelected, setCheckboxSelected] = useAtom(checkboxSelectedAtom);
-  const [processedFilePathsSorted, setProcessedFilePathsSorted] = useAtom(processedFilePathsSortedAtom);
+  const [, setCheckboxSelected] = useAtom(checkboxSelectedAtom);
+  const [processedFilePathsSorted, ] = useAtom(processedFilePathsSortedAtom);
   return (
     <button
       title="Select all files."

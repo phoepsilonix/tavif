@@ -6,8 +6,8 @@ import { useAtom } from "jotai";
 import { filePathsAtom, fileInfosAtom } from "../../lib/atom";
 
 export default function InputNubMenu() {
-  const [filePaths, setFilePaths] = useAtom(filePathsAtom);
-  const [fileInfos, setFileInfos] = useAtom(fileInfosAtom);
+  const [, setFilePaths] = useAtom(filePathsAtom);
+  const [, setFileInfos] = useAtom(fileInfosAtom);
 
   const removeAll = () => {
     setFilePaths([]);

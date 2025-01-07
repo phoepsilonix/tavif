@@ -6,7 +6,7 @@ import ProcessedFiles from "../ProcessedFiles/ProcessedFiles";
 import OutputNavMenu from "./OutputNavMenu";
 
 export default function OutputTab() {
-  const [tabSelected, setTabSelected] = useAtom(tabSelectedAtom);
+  const [tabSelected] = useAtom(tabSelectedAtom);
   return (
     <div
       className={`flex flex-col w-full h-full relative ${
