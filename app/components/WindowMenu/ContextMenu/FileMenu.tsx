@@ -11,9 +11,11 @@ import {
   processedFilePathsSortedAtom,
   checkboxSelectedAtom,
   processedFilePathsAtom,
+  isSavingAtom,
 } from "@/app/lib/atom";
-import { openDialog } from "@/app/lib/utils";
-import { useEffect, useRef } from "react";
+import { openDialog, saveAll, saveSelected } from "@/app/lib/utils";
+import { useEffect, useRef, useState } from "react";
+import { Modal } from "antd";
 
 const items: MenuProps["items"] = [
   {
@@ -23,6 +25,17 @@ const items: MenuProps["items"] = [
   {
     label: <FileRemoveAll />,
     key: "1",
+  },
+  {
+    type: "divider",
+  },
+  {
+    label: <FileSaveAll />,
+    key: "2",
+  },
+  {
+    label: <FileSaveSelected />,
+    key: "3",
   },
 ];
 
@@ -39,6 +52,8 @@ export default function FileMenu() {
   const [processedFilePaths, setProcessedFilePaths] = useAtom(
     processedFilePathsAtom
   );
+  const [isSaving, setIsSaving] = useAtom(isSavingAtom);
+  const modal = Modal.useModal();
 
   function removeResult() {
     setProcessedFilePathsSorted([]);
@@ -78,6 +93,23 @@ export default function FileMenu() {
       ) {
         event.preventDefault();
         removeResult();
+      } else if (
+        event.key === "s" &&
+        event.ctrlKey &&
+        isFocused &&
+        processedFilePathsSorted.length > 0
+      ) {
+        event.preventDefault();
+        saveAll(setIsSaving, processedFilePathsSorted, modal);
+      } else if (
+        event.key === "s" &&
+        event.ctrlKey &&
+        event.altKey &&
+        isFocused &&
+        processedFilePathsSorted.length > 0
+      ) {
+        event.preventDefault();
+        saveSelected(setIsSaving, processedFilePathsSorted, checkboxSelected, modal);
       }
     };
 
@@ -105,13 +137,14 @@ function FileOpen(): React.ReactNode {
   const [filePaths, setFilePaths] = useAtom(filePathsAtom);
   return (
     <button
+      title="Add files."
       onClick={() => openDialog(setFilePaths, filePaths)}
       onKeyDown={(e) => {
         if (e.key === "Enter") {
           openDialog(setFilePaths, filePaths);
         }
       }}
-      className="flex items-center justify-between leading-5"
+      className="flex items-center justify-between leading-5 w-full"
     >
       Add Files
       <span className="text-xs pl-4 flex items-center justify-center pt-[1px]">
@@ -125,9 +158,13 @@ function FileRemoveAll(): React.ReactNode {
   const [filePaths, setFilePaths] = useAtom(filePathsAtom);
   const [tabSelected, setTabSelected] = useAtom(tabSelectedAtom);
   const [fileInfos, setFileInfos] = useAtom(fileInfosAtom);
-  const [processedFilePathsSorted, setProcessedFilePathsSorted] = useAtom(processedFilePathsSortedAtom);
+  const [processedFilePathsSorted, setProcessedFilePathsSorted] = useAtom(
+    processedFilePathsSortedAtom
+  );
   const [checkboxSelected, setCheckboxSelected] = useAtom(checkboxSelectedAtom);
-  const [processedFilePaths, setProcessedFilePaths] = useAtom(processedFilePathsAtom);
+  const [processedFilePaths, setProcessedFilePaths] = useAtom(
+    processedFilePathsAtom
+  );
 
   function removeAll() {
     setFilePaths([]);
@@ -141,6 +178,7 @@ function FileRemoveAll(): React.ReactNode {
 
   return (
     <button
+      title="Remove all files."
       onClick={() => {
         if (tabSelected === "input") {
           removeAll();
@@ -155,16 +193,85 @@ function FileRemoveAll(): React.ReactNode {
           removeResult();
         }
       }}
-      disabled={filePaths.length === 0 && tabSelected === "input" || processedFilePathsSorted.length === 0 && tabSelected === "output"}
+      disabled={
+        (filePaths.length === 0 && tabSelected === "input") ||
+        (processedFilePathsSorted.length === 0 && tabSelected === "output")
+      }
       className={`flex items-center justify-between leading-5 ${
-        filePaths.length === 0 && tabSelected === "input" ? "text-gray-300 cursor-not-allowed" : ""
+        filePaths.length === 0 && tabSelected === "input"
+          ? "text-gray-300 cursor-not-allowed"
+          : ""
       } ${
-        processedFilePathsSorted.length === 0 && tabSelected === "output" ? "text-gray-300 cursor-not-allowed" : ""
+        processedFilePathsSorted.length === 0 && tabSelected === "output"
+          ? "text-gray-300 cursor-not-allowed"
+          : ""
       }`}
     >
       Remove All
       <span className="text-xs pl-4 flex items-center justify-center pt-[1px]">
         Ctrl+D
+      </span>
+    </button>
+  );
+}
+
+function FileSaveAll(): React.ReactNode {
+  const [isSaving, setIsSaving] = useState(false);
+  const [processedFilePathsSorted, setProcessedFilePathsSorted] = useAtom(
+    processedFilePathsSortedAtom
+  );
+  const [modal, modalContextHolder] = Modal.useModal();
+  return (
+    <button
+      className={`flex items-center justify-between leading-5 w-full ${
+        isSaving || processedFilePathsSorted.length === 0
+          ? "text-gray-300 cursor-not-allowed"
+          : ""
+      }`}
+      onClick={() => saveAll(setIsSaving, processedFilePathsSorted, modal)}
+      disabled={isSaving || processedFilePathsSorted.length === 0}
+      title="Save all files."
+      onKeyDown={(e) => {
+        if (e.key === "Enter") {
+          saveAll(setIsSaving, processedFilePathsSorted, modal);
+        }
+      }}
+    >
+      Save All
+      <span className="text-xs pl-4 flex items-center justify-center pt-[1px]">
+        Ctrl+S
+      </span>
+    </button>
+  );
+}
+
+
+function FileSaveSelected(): React.ReactNode {
+  const [isSaving, setIsSaving] = useState(false);
+  const [processedFilePathsSorted, setProcessedFilePathsSorted] = useAtom(
+    processedFilePathsSortedAtom
+  );
+  const [checkboxSelected, setCheckboxSelected] = useAtom(checkboxSelectedAtom);
+  const [modal, modalContextHolder] = Modal.useModal();
+  return (
+    <button
+      className={`flex items-center justify-between leading-5 w-full ${
+        isSaving || processedFilePathsSorted.length === 0
+          ? "text-gray-300 cursor-not-allowed"
+          : ""
+      }`}
+      onClick={() => saveSelected(setIsSaving, processedFilePathsSorted, checkboxSelected, modal)}
+      disabled={isSaving || processedFilePathsSorted.length === 0}
+      title="Save selected files."
+      onKeyDown={(e) => {
+        if (e.key === "Enter") {
+          saveSelected(setIsSaving, processedFilePathsSorted, checkboxSelected, modal);
+        }
+      }}
+    >
+      Save Selected
+      <span className="text-xs pl-4 flex items-center justify-center pt-[1px]">
+        Ctrl+Alt+S
       </span>
     </button>
   );

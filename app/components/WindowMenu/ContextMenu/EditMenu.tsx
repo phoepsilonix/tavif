@@ -8,18 +8,18 @@ import { useEffect, useRef } from "react";
 
 const items: MenuProps["items"] = [
   {
-    label: <CheckAll />,
+    label: <SelectAll />,
     key: "0",
   }
 ];
 
-export default function EditMenu() {
+export default function SelectMenu() {
   const [isFocused, setIsFocused] = useAtom(isFocusedAtom);
   const [checkboxSelected, setCheckboxSelected] = useAtom(checkboxSelectedAtom);
   const [processedFilePathsSorted, setProcessedFilePathsSorted] = useAtom(processedFilePathsSortedAtom);
-  const editButtonRef = useRef<HTMLButtonElement | null>(null);
+  const selectButtonRef = useRef<HTMLButtonElement | null>(null);
   useEffect(() => {
-    const handleKeyDownEditShortcut = async (event: KeyboardEvent) => {
+    const handleKeyDownSelectShortcut = async (event: KeyboardEvent) => {
       if (event.key === "a" && event.ctrlKey && isFocused && processedFilePathsSorted.length > 0) {
         event.preventDefault();
         setCheckboxSelected((prev) =>
@@ -28,17 +28,17 @@ export default function EditMenu() {
             checked: !item.checked,
           }))
         );
-      } else if (event.key === "e" && event.altKey && isFocused) {
+      } else if (event.key === "s" && event.altKey && isFocused) {
         event.preventDefault();
-        editButtonRef.current?.click();
-        editButtonRef.current?.focus();
+        selectButtonRef.current?.click();
+        selectButtonRef.current?.focus();
       }
     };
 
-    window.addEventListener("keydown", handleKeyDownEditShortcut);
+    window.addEventListener("keydown", handleKeyDownSelectShortcut);
 
     return () => {
-      window.removeEventListener("keydown", handleKeyDownEditShortcut);
+      window.removeEventListener("keydown", handleKeyDownSelectShortcut);
     };
   }, [isFocused, checkboxSelected]);
 
@@ -47,19 +47,20 @@ export default function EditMenu() {
       <Button
         onClick={() => {}}
         className="px-2 text-white bg-[#00b96b] border-none h-[99%]"
-        ref={editButtonRef}
+        ref={selectButtonRef}
       >
-        Edit(E)
+        Select(S)
       </Button>
     </Dropdown>
   );
 }
 
-function CheckAll(): React.ReactNode {
+function SelectAll(): React.ReactNode {
   const [checkboxSelected, setCheckboxSelected] = useAtom(checkboxSelectedAtom);
   const [processedFilePathsSorted, setProcessedFilePathsSorted] = useAtom(processedFilePathsSortedAtom);
   return (
     <button
+      title="Select all files."
       onClick={() => setCheckboxSelected((prev) =>
           prev.map((item) => ({
             ...item,
@@ -79,7 +80,7 @@ function CheckAll(): React.ReactNode {
       disabled={processedFilePathsSorted.length === 0}
       className={`flex items-center justify-between leading-5 ${processedFilePathsSorted.length === 0 ? "text-gray-300 cursor-not-allowed" : ""}`}
     >
-      Check All
+      Select All
       <span className="text-xs pl-4 flex items-center justify-center pt-[1px]">
         Ctrl+A
       </span>
