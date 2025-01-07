@@ -3,7 +3,15 @@
 import type { MenuProps } from "antd";
 import { Dropdown, Button } from "antd";
 import { useAtom } from "jotai";
-import { fileInfosAtom, filePathsAtom, isFocusedAtom } from "@/app/lib/atom";
+import {
+  fileInfosAtom,
+  filePathsAtom,
+  isFocusedAtom,
+  tabSelectedAtom,
+  processedFilePathsSortedAtom,
+  checkboxSelectedAtom,
+  processedFilePathsAtom,
+} from "@/app/lib/atom";
 import { openDialog } from "@/app/lib/utils";
 import { useEffect, useRef } from "react";
 
@@ -15,7 +23,7 @@ const items: MenuProps["items"] = [
   {
     label: <FileRemoveAll />,
     key: "1",
-  }
+  },
 ];
 
 export default function FileMenu() {
@@ -23,6 +31,20 @@ export default function FileMenu() {
   const [isFocused, setIsFocused] = useAtom(isFocusedAtom);
   const fileButtonRef = useRef<HTMLButtonElement | null>(null);
   const [fileInfos, setFileInfos] = useAtom(fileInfosAtom);
+  const [tabSelected, setTabSelected] = useAtom(tabSelectedAtom);
+  const [processedFilePathsSorted, setProcessedFilePathsSorted] = useAtom(
+    processedFilePathsSortedAtom
+  );
+  const [checkboxSelected, setCheckboxSelected] = useAtom(checkboxSelectedAtom);
+  const [processedFilePaths, setProcessedFilePaths] = useAtom(
+    processedFilePathsAtom
+  );
+
+  function removeResult() {
+    setProcessedFilePathsSorted([]);
+    setCheckboxSelected([]);
+    setProcessedFilePaths([]);
+  }
 
   const removeAll = () => {
     setFilePaths([]);
@@ -38,11 +60,24 @@ export default function FileMenu() {
         event.preventDefault();
         fileButtonRef.current?.click();
         fileButtonRef.current?.focus();
-      } else if (event.key === "d" && event.ctrlKey && isFocused) {
+      } else if (
+        event.key === "d" &&
+        event.ctrlKey &&
+        isFocused &&
+        tabSelected === "input" &&
+        filePaths.length > 0
+      ) {
         event.preventDefault();
-        if (filePaths.length > 0) {
-          removeAll();
-        }
+        removeAll();
+      } else if (
+        event.key === "d" &&
+        event.ctrlKey &&
+        isFocused &&
+        tabSelected === "output" &&
+        processedFilePathsSorted.length > 0
+      ) {
+        event.preventDefault();
+        removeResult();
       }
     };
 
@@ -51,7 +86,7 @@ export default function FileMenu() {
     return () => {
       window.removeEventListener("keydown", handleKeyDownFileShortcut);
     };
-  }, [isFocused, filePaths]);
+  }, [isFocused, filePaths, tabSelected, processedFilePathsSorted]);
 
   return (
     <Dropdown menu={{ items }} trigger={["click"]}>
@@ -88,20 +123,44 @@ function FileOpen(): React.ReactNode {
 
 function FileRemoveAll(): React.ReactNode {
   const [filePaths, setFilePaths] = useAtom(filePathsAtom);
+  const [tabSelected, setTabSelected] = useAtom(tabSelectedAtom);
   const [fileInfos, setFileInfos] = useAtom(fileInfosAtom);
-  const removeAll = () => {
+  const [processedFilePathsSorted, setProcessedFilePathsSorted] = useAtom(processedFilePathsSortedAtom);
+  const [checkboxSelected, setCheckboxSelected] = useAtom(checkboxSelectedAtom);
+  const [processedFilePaths, setProcessedFilePaths] = useAtom(processedFilePathsAtom);
+
+  function removeAll() {
     setFilePaths([]);
     setFileInfos([]);
-  };
+  }
+  function removeResult() {
+    setProcessedFilePathsSorted([]);
+    setCheckboxSelected([]);
+    setProcessedFilePaths([]);
+  }
+
   return (
     <button
-      onClick={removeAll}
-      onKeyDown={(e) => {
-        if (e.key === "Enter") {
+      onClick={() => {
+        if (tabSelected === "input") {
           removeAll();
+        } else if (tabSelected === "output") {
+          removeResult();
         }
       }}
-      className="flex items-center justify-between leading-5"
+      onKeyDown={(e) => {
+        if (e.key === "Enter" && tabSelected === "input") {
+          removeAll();
+        } else if (e.key === "Enter" && tabSelected === "output") {
+          removeResult();
+        }
+      }}
+      disabled={filePaths.length === 0 && tabSelected === "input" || processedFilePathsSorted.length === 0 && tabSelected === "output"}
+      className={`flex items-center justify-between leading-5 ${
+        filePaths.length === 0 && tabSelected === "input" ? "text-gray-300 cursor-not-allowed" : ""
+      } ${
+        processedFilePathsSorted.length === 0 && tabSelected === "output" ? "text-gray-300 cursor-not-allowed" : ""
+      }`}
     >
       Remove All
       <span className="text-xs pl-4 flex items-center justify-center pt-[1px]">

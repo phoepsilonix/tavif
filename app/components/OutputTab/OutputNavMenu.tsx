@@ -78,7 +78,7 @@ export default function OutputNavMenu() {
     });
   }
 
-  async function removeResult() {
+  function removeResult() {
     setProcessedFilePathsSorted([]);
     setCheckboxSelected([]);
     setProcessedFilePaths([]);
