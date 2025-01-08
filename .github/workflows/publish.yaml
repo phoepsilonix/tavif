@@ -52,7 +52,7 @@ jobs:
         if: matrix.platform == 'windows-latest'
         run: |
           choco install nasm -y
-          $env:Path += ";C:\ProgramData\chocolatey\bin"
+          $env:Path += ";C:\ProgramData\chocolatey\bin\NASM"
           nasm -v
 
       - name: install frontend dependencies
