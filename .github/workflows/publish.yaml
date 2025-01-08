@@ -48,13 +48,14 @@ jobs:
         run: |
           brew install nasm
 
-      - name: install frontend dependencies
-        run: npm install
-
       - name: install dependencies (windows only)
         if: matrix.platform == 'windows-latest'
         run: |
           choco install nasm -y
+          nasm -v
+
+      - name: install frontend dependencies
+        run: npm install
 
       - uses: tauri-apps/tauri-action@v0
         env:
