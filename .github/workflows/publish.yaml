@@ -51,6 +51,11 @@ jobs:
       - name: install frontend dependencies
         run: npm install
 
+      - name: install dependencies (windows only)
+        if: matrix.platform == 'windows-latest'
+        run: |
+          choco install nasm -y
+
       - uses: tauri-apps/tauri-action@v0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
