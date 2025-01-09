@@ -5,6 +5,7 @@ import { Dropdown, Button } from "antd";
 import { useAtom } from "jotai";
 import { checkboxSelectedAtom, isFocusedAtom, processedFilePathsSortedAtom } from "@/app/lib/atom";
 import { useEffect, useRef } from "react";
+import "@ant-design/v5-patch-for-react-19";
 
 const items: MenuProps["items"] = [
   {

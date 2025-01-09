@@ -19,6 +19,7 @@ import {
 import { convert, openDialog, saveAll, saveSelected } from "@/app/lib/utils";
 import { useEffect, useRef, useState } from "react";
 import { Modal } from "antd";
+import "@ant-design/v5-patch-for-react-19";
 
 const items: MenuProps["items"] = [
   {

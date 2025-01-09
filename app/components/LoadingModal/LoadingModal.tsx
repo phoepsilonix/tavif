@@ -6,6 +6,7 @@ import {
   extensionTypeAtom,
 } from "@/app/lib/atom";
 import { Spin } from "antd";
+import "@ant-design/v5-patch-for-react-19";
 
 export default function LoadingModal() {
   const [isProcessing] = useAtom(isProcessingAtom);

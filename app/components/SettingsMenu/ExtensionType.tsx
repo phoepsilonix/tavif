@@ -3,6 +3,7 @@
 import { Select } from "antd";
 import { useAtom } from "jotai";
 import { extensionTypeAtom } from "@/app/lib/atom";
+import "@ant-design/v5-patch-for-react-19";
 
 export default function ExtensionType() {
   const [extensionType, setExtensionType] = useAtom(extensionTypeAtom);

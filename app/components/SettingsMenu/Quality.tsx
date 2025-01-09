@@ -5,6 +5,7 @@ import type { InputNumberProps } from "antd";
 import { Col, InputNumber, Row, Slider } from "antd";
 import { useAtom } from "jotai";
 import { qualityAtom } from "@/app/lib/atom";
+import "@ant-design/v5-patch-for-react-19";
 
 const IntegerStep: React.FC = () => {
   const [inputValue, setInputValue] = useAtom(qualityAtom);

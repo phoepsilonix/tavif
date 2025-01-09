@@ -7,6 +7,7 @@ import { checkboxSelectedAtom, filePathsAtom } from "@/app/lib/atom";
 import { ProcessedFileInfo } from "@/app/index.d";
 import { useEffect, useState } from "react";
 import { readFile } from "@tauri-apps/plugin-fs";
+import "@ant-design/v5-patch-for-react-19";
 
 function getCompressionRate(processedFileInfo: ProcessedFileInfo) {
   const compressionRate: number = parseFloat(

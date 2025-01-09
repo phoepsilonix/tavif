@@ -13,6 +13,7 @@ import {
 } from "@/app/lib/atom";
 import { Modal } from "antd";
 import { convert } from "@/app/lib/utils";
+import "@ant-design/v5-patch-for-react-19";
 
 export default function ConvertButton() {
   const [filePaths] = useAtom(filePathsAtom);

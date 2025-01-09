@@ -10,7 +10,7 @@ import { useAtom } from "jotai";
 import { isFocusedAtom } from "@/app/lib/atom";
 import EditMenu from "./ContextMenu/SelectMenu";
 import HelpMenu from "./ContextMenu/HelpMenu";
-
+import { BorderOutlined, MinusOutlined, CloseOutlined } from "@ant-design/icons";
 
 export default function WindowMenu() {
   const [appWindow, setAppWindow] = useState<TauriWindow | null>(null);
@@ -75,25 +75,19 @@ export default function WindowMenu() {
           className="titlebar-button hover:bg-[#1adb8b] w-[40px] h-[30px] flex justify-center items-center cursor-pointer transition-colors duration-150"
           id="titlebar-minimize"
         >
-          <img
-            src="https://api.iconify.design/mdi:window-minimize.svg"
-            alt="minimize"
-          />
+          <MinusOutlined title="Minimize"/>
         </div>
         <div
           className="titlebar-button hover:bg-[#1adb8b] w-[40px] h-[30px] flex justify-center items-center cursor-pointer transition-colors duration-150"
           id="titlebar-maximize"
         >
-          <img
-            src="https://api.iconify.design/mdi:window-maximize.svg"
-            alt="maximize"
-          />
+          <BorderOutlined title="Maximize"/>
         </div>
         <div
           className="titlebar-button hover:bg-red-400 w-[40px] h-[30px] flex justify-center items-center cursor-pointer transition-colors duration-150"
           id="titlebar-close"
         >
-          <img src="https://api.iconify.design/mdi:close.svg" alt="close" />
+          <CloseOutlined />
         </div>
       </div>
     </div>

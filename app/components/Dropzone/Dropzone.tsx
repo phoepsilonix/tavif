@@ -6,6 +6,7 @@ import type { Event } from "@tauri-apps/api/event";
 import { useAtom } from "jotai";
 import { filePathsAtom, tabSelectedAtom } from "../../lib/atom";
 import { Modal } from "antd";
+import "@ant-design/v5-patch-for-react-19";
 
 export default function Dropzone() {
   const [, setFilePaths] = useAtom(filePathsAtom);
