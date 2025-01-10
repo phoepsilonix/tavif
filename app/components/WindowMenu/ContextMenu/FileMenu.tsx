@@ -1,7 +1,7 @@
 "use client";
 
 import type { MenuProps } from "antd";
-import { Dropdown, Button } from "antd";
+import { Dropdown } from "antd";
 import { useAtom } from "jotai";
 import {
   fileInfosAtom,
@@ -20,7 +20,6 @@ import { convert, openDialog, saveAll, saveSelected } from "@/app/lib/utils";
 import { useEffect, useRef, useState } from "react";
 import { Modal } from "antd";
 import "@ant-design/v5-patch-for-react-19";
-import { useStyles } from "@/app/components/WindowMenu/WindowMenu";
 
 const items: MenuProps["items"] = [
   {
@@ -53,7 +52,7 @@ const items: MenuProps["items"] = [
 
 export default function FileMenu() {
   const [filePaths, setFilePaths] = useAtom(filePathsAtom);
-  const [isFocused, ] = useAtom(isFocusedAtom);
+  const [isFocused] = useAtom(isFocusedAtom);
   const fileButtonRef = useRef<HTMLButtonElement | null>(null);
   const [fileInfos, setFileInfos] = useAtom(fileInfosAtom);
   const [tabSelected, setTabSelected] = useAtom(tabSelectedAtom);
@@ -61,15 +60,12 @@ export default function FileMenu() {
     processedFilePathsSortedAtom
   );
   const [checkboxSelected, setCheckboxSelected] = useAtom(checkboxSelectedAtom);
-  const [, setProcessedFilePaths] = useAtom(
-    processedFilePathsAtom
-  );
+  const [, setProcessedFilePaths] = useAtom(processedFilePathsAtom);
   const [, setIsSaving] = useAtom(isSavingAtom);
-  const [quality, ] = useAtom(qualityAtom);
-  const [extensionType, ] = useAtom(extensionTypeAtom);
+  const [quality] = useAtom(qualityAtom);
+  const [extensionType] = useAtom(extensionTypeAtom);
   const [isProcessing, setIsProcessing] = useAtom(isProcessingAtom);
-  const [modal, ] = Modal.useModal();
-  const { styles, } = useStyles();
+  const [modal] = Modal.useModal();
 
   function removeResult() {
     setProcessedFilePathsSorted([]);
@@ -160,13 +156,13 @@ export default function FileMenu() {
 
   return (
     <Dropdown menu={{ items }} trigger={["click"]}>
-      <Button
+      <button
         ref={fileButtonRef}
         onClick={() => {}}
-        className={styles.button}
+        className="bg-primary text-white border-none h-[98%] p-[2px_8px] text-sm tracking-wide hover:bg-[#84ddb8] rounded-md transition-all duration-200"
       >
         File(F)
-      </Button>
+      </button>
     </Dropdown>
   );
 }
@@ -194,15 +190,13 @@ function FileOpen(): React.ReactNode {
 
 function FileRemoveAll(): React.ReactNode {
   const [filePaths, setFilePaths] = useAtom(filePathsAtom);
-  const [tabSelected, ] = useAtom(tabSelectedAtom);
+  const [tabSelected] = useAtom(tabSelectedAtom);
   const [, setFileInfos] = useAtom(fileInfosAtom);
   const [processedFilePathsSorted, setProcessedFilePathsSorted] = useAtom(
     processedFilePathsSortedAtom
   );
   const [, setCheckboxSelected] = useAtom(checkboxSelectedAtom);
-  const [, setProcessedFilePaths] = useAtom(
-    processedFilePathsAtom
-  );
+  const [, setProcessedFilePaths] = useAtom(processedFilePathsAtom);
 
   function removeAll() {
     setFilePaths([]);
@@ -255,10 +249,8 @@ function FileRemoveAll(): React.ReactNode {
 
 function FileSaveAll(): React.ReactNode {
   const [isSaving, setIsSaving] = useState(false);
-  const [processedFilePathsSorted, ] = useAtom(
-    processedFilePathsSortedAtom
-  );
-  const [modal, ] = Modal.useModal();
+  const [processedFilePathsSorted] = useAtom(processedFilePathsSortedAtom);
+  const [modal] = Modal.useModal();
   return (
     <button
       className={`flex items-center justify-between leading-5 w-full ${
@@ -285,11 +277,9 @@ function FileSaveAll(): React.ReactNode {
 
 function FileSaveSelected(): React.ReactNode {
   const [isSaving, setIsSaving] = useState(false);
-  const [processedFilePathsSorted, ] = useAtom(
-    processedFilePathsSortedAtom
-  );
-  const [checkboxSelected, ] = useAtom(checkboxSelectedAtom);
-  const [modal, ] = Modal.useModal();
+  const [processedFilePathsSorted] = useAtom(processedFilePathsSortedAtom);
+  const [checkboxSelected] = useAtom(checkboxSelectedAtom);
+  const [modal] = Modal.useModal();
   return (
     <button
       className={`flex items-center justify-between leading-5 w-full ${
@@ -328,14 +318,12 @@ function FileSaveSelected(): React.ReactNode {
 
 function FileConvert(): React.ReactNode {
   const [isProcessing, setIsProcessing] = useAtom(isProcessingAtom);
-  const [, setProcessedFilePaths] = useAtom(
-    processedFilePathsAtom
-  );
-  const [modal, ] = Modal.useModal();
-  const [filePaths, ] = useAtom(filePathsAtom);
-  const [fileInfos, ] = useAtom(fileInfosAtom);
-  const [quality, ] = useAtom(qualityAtom);
-  const [extensionType, ] = useAtom(extensionTypeAtom);
+  const [, setProcessedFilePaths] = useAtom(processedFilePathsAtom);
+  const [modal] = Modal.useModal();
+  const [filePaths] = useAtom(filePathsAtom);
+  const [fileInfos] = useAtom(fileInfosAtom);
+  const [quality] = useAtom(qualityAtom);
+  const [extensionType] = useAtom(extensionTypeAtom);
   const [, setTabSelected] = useAtom(tabSelectedAtom);
   return (
     <button

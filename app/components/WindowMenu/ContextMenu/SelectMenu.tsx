@@ -1,29 +1,36 @@
 "use client";
 
 import type { MenuProps } from "antd";
-import { Dropdown, Button } from "antd";
+import { Dropdown } from "antd";
 import { useAtom } from "jotai";
-import { checkboxSelectedAtom, isFocusedAtom, processedFilePathsSortedAtom } from "@/app/lib/atom";
+import {
+  checkboxSelectedAtom,
+  isFocusedAtom,
+  processedFilePathsSortedAtom,
+} from "@/app/lib/atom";
 import { useEffect, useRef } from "react";
 import "@ant-design/v5-patch-for-react-19";
-import { useStyles } from "@/app/components/WindowMenu/WindowMenu";
 
 const items: MenuProps["items"] = [
   {
     label: <SelectAll />,
     key: "0",
-  }
+  },
 ];
 
 export default function SelectMenu() {
-  const [isFocused, ] = useAtom(isFocusedAtom);
+  const [isFocused] = useAtom(isFocusedAtom);
   const [checkboxSelected, setCheckboxSelected] = useAtom(checkboxSelectedAtom);
-  const [processedFilePathsSorted, ] = useAtom(processedFilePathsSortedAtom);
+  const [processedFilePathsSorted] = useAtom(processedFilePathsSortedAtom);
   const selectButtonRef = useRef<HTMLButtonElement | null>(null);
-  const { styles, } = useStyles();
   useEffect(() => {
     const handleKeyDownSelectShortcut = async (event: KeyboardEvent) => {
-      if (event.key === "a" && event.ctrlKey && isFocused && processedFilePathsSorted.length > 0) {
+      if (
+        event.key === "a" &&
+        event.ctrlKey &&
+        isFocused &&
+        processedFilePathsSorted.length > 0
+      ) {
         event.preventDefault();
         setCheckboxSelected((prev) =>
           prev.map((item) => ({
@@ -47,29 +54,31 @@ export default function SelectMenu() {
 
   return (
     <Dropdown menu={{ items }} trigger={["click"]}>
-      <Button
+      <button
         onClick={() => {}}
-        className={styles.button}
         ref={selectButtonRef}
+        className="bg-primary text-white border-none h-[98%] p-[2px_8px] text-sm tracking-wide hover:bg-[#84ddb8] rounded-md transition-all duration-200"
       >
         Select(S)
-      </Button>
+      </button>
     </Dropdown>
   );
 }
 
 function SelectAll(): React.ReactNode {
   const [, setCheckboxSelected] = useAtom(checkboxSelectedAtom);
-  const [processedFilePathsSorted, ] = useAtom(processedFilePathsSortedAtom);
+  const [processedFilePathsSorted] = useAtom(processedFilePathsSortedAtom);
   return (
     <button
       title="Select all files."
-      onClick={() => setCheckboxSelected((prev) =>
+      onClick={() =>
+        setCheckboxSelected((prev) =>
           prev.map((item) => ({
             ...item,
             checked: !item.checked,
           }))
-        )}
+        )
+      }
       onKeyDown={(e) => {
         if (e.key === "Enter") {
           setCheckboxSelected((prev) =>
@@ -81,7 +90,11 @@ function SelectAll(): React.ReactNode {
         }
       }}
       disabled={processedFilePathsSorted.length === 0}
-      className={`flex items-center justify-between leading-5 ${processedFilePathsSorted.length === 0 ? "text-gray-300 cursor-not-allowed" : ""}`}
+      className={`flex items-center justify-between leading-5 ${
+        processedFilePathsSorted.length === 0
+          ? "text-gray-300 cursor-not-allowed"
+          : ""
+      }`}
     >
       Select All
       <span className="text-xs pl-4 flex items-center justify-center pt-[1px]">

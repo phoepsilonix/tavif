@@ -1,6 +1,5 @@
 "use client";
 
-import { Button } from "antd";
 import { useAtom } from "jotai";
 import {
   filePathsAtom,
@@ -14,20 +13,6 @@ import {
 import { Modal } from "antd";
 import { convert } from "@/app/lib/utils";
 import "@ant-design/v5-patch-for-react-19";
-import { createStyles } from 'antd-style';
-
-const useStyles = createStyles(({ token, css }) => {
-  return {
-    button: css`
-      padding: 20px 16px;
-      font-weight: bold;
-      text-transform: uppercase;
-      color: ${token.colorPrimary};
-      letter-spacing: 0.1em;
-      font-size: 18px;
-    `
-  };
-});
 
 export default function ConvertButton() {
   const [filePaths] = useAtom(filePathsAtom);
@@ -37,12 +22,11 @@ export default function ConvertButton() {
   const [isProcessing, setIsProcessing] = useAtom(isProcessingAtom);
   const [, setProcessedFilePaths] = useAtom(processedFilePathsAtom);
   const [, setTabSelected] = useAtom(tabSelectedAtom);
-  const { styles, } = useStyles();
   const [modal, contextHolder] = Modal.useModal();
 
   return (
     <>
-      <Button
+      <button
         onClick={() =>
           convert(
             setIsProcessing,
@@ -55,8 +39,8 @@ export default function ConvertButton() {
             setTabSelected
           )
         }
-        className={`${styles.button} ${
-          filePaths.length > 0 && !isProcessing ? "" : "cursor-not-allowed"
+        className={`bg-white font-bold text-lg uppercase text-primary border-none p-[8px_8px] tracking-wider hover:bg-[#b1fede] rounded-md transition-all duration-200 ${
+          filePaths.length > 0 && !isProcessing ? "" : "cursor-not-allowed opacity-50"
         }`}
         title={
           filePaths.length > 0 && !isProcessing
@@ -66,7 +50,7 @@ export default function ConvertButton() {
         disabled={filePaths.length === 0 || isProcessing}
       >
         Convert
-      </Button>
+      </button>
       {contextHolder}
     </>
   );

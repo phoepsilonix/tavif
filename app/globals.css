@@ -6,6 +6,7 @@
   --background: #ffffff;
   --foreground: #171717;
   --primary: #00b96b;
+  --primary-hover: #9df8d2;
   --secondary: #f6ffed;
 }
 
@@ -20,4 +21,24 @@ body {
   color: var(--foreground);
   background: var(--background);
   font-family: Arial, Helvetica, sans-serif;
+}
+
+.modal-open-animation {
+  transform-origin: center;
+  animation: modal-open 0.2s;
+}
+
+@keyframes modal-open {
+  0% {
+    scale: 0.8;
+  }
+  75% {
+    scale: 1.1;
+  }
+  90% {
+    scale: 0.98;
+  }
+  100% {
+    scale: 1;
+  }
 }

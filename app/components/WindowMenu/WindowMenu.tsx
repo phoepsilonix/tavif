@@ -13,16 +13,16 @@ import HelpMenu from "./ContextMenu/HelpMenu";
 import { BorderOutlined, MinusOutlined, CloseOutlined } from "@ant-design/icons";
 import { createStyles } from 'antd-style';
 
-export const useStyles = createStyles(({ token, css }) => ({
+export const useStyles = createStyles(({ css }) => ({
   button: css`
-    background-color: ${token.colorPrimary};
+    background-color: #00b96b;
     &:hover {
-      background-color: ${token.colorPrimaryHover};
-      color: ${token.colorPrimary};
+      background-color: #6cd9ac;
+      color: #00b96b;
     }
     color: white;
     border: none;
-    height: 99%;
+    height: 98%;
     padding: 2px 8px;
   `,
 }));

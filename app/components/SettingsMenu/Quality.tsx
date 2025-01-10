@@ -21,6 +21,7 @@ const IntegerStep: React.FC = () => {
           min={1}
           max={100}
           onChange={onChange}
+          defaultValue={75}
           value={typeof inputValue === "number" ? inputValue : 0}
         />
       </Col>
@@ -28,6 +29,7 @@ const IntegerStep: React.FC = () => {
         <InputNumber
           min={1}
           max={100}
+          defaultValue={75}
           style={{ margin: "0 16px" }}
           value={inputValue}
           onChange={onChange}
