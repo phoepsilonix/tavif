@@ -87,7 +87,7 @@ export default function WindowMenu() {
           className="titlebar-button hover:bg-red-400 w-[40px] h-[30px] flex justify-center items-center cursor-pointer transition-colors duration-150"
           id="titlebar-close"
         >
-          <CloseOutlined />
+          <CloseOutlined title="Close"/>
         </div>
       </div>
     </div>
