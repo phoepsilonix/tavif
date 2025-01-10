@@ -6,6 +6,7 @@ import { useAtom } from "jotai";
 import { isFocusedAtom } from "@/app/lib/atom";
 import { useEffect, useRef, useState } from "react";
 import "@ant-design/v5-patch-for-react-19";
+import { useStyles } from "@/app/components/WindowMenu/WindowMenu";
 
 const items: MenuProps["items"] = [
   {
@@ -17,6 +18,7 @@ const items: MenuProps["items"] = [
 export default function HelpMenu() {
   const [isFocused] = useAtom(isFocusedAtom);
   const helpButtonRef = useRef<HTMLButtonElement | null>(null);
+  const { styles, } = useStyles();
   useEffect(() => {
     const handleKeyDownSelectShortcut = async (event: KeyboardEvent) => {
       if (event.key === "h" && event.altKey && isFocused) {
@@ -37,7 +39,7 @@ export default function HelpMenu() {
     <Dropdown menu={{ items }} trigger={["click"]}>
       <Button
         onClick={() => {}}
-        className="px-2 text-white bg-[#00b96b] border-none h-[99%]"
+        className={styles.button}
         ref={helpButtonRef}
       >
         Help(H)

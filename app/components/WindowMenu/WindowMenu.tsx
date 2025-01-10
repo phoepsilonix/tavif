@@ -11,6 +11,21 @@ import { isFocusedAtom } from "@/app/lib/atom";
 import EditMenu from "./ContextMenu/SelectMenu";
 import HelpMenu from "./ContextMenu/HelpMenu";
 import { BorderOutlined, MinusOutlined, CloseOutlined } from "@ant-design/icons";
+import { createStyles } from 'antd-style';
+
+export const useStyles = createStyles(({ token, css }) => ({
+  button: css`
+    background-color: ${token.colorPrimary};
+    &:hover {
+      background-color: ${token.colorPrimaryHover};
+      color: ${token.colorPrimary};
+    }
+    color: white;
+    border: none;
+    height: 99%;
+    padding: 2px 8px;
+  `,
+}));
 
 export default function WindowMenu() {
   const [appWindow, setAppWindow] = useState<TauriWindow | null>(null);

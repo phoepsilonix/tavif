@@ -6,6 +6,7 @@ import { useAtom } from "jotai";
 import { checkboxSelectedAtom, isFocusedAtom, processedFilePathsSortedAtom } from "@/app/lib/atom";
 import { useEffect, useRef } from "react";
 import "@ant-design/v5-patch-for-react-19";
+import { useStyles } from "@/app/components/WindowMenu/WindowMenu";
 
 const items: MenuProps["items"] = [
   {
@@ -19,6 +20,7 @@ export default function SelectMenu() {
   const [checkboxSelected, setCheckboxSelected] = useAtom(checkboxSelectedAtom);
   const [processedFilePathsSorted, ] = useAtom(processedFilePathsSortedAtom);
   const selectButtonRef = useRef<HTMLButtonElement | null>(null);
+  const { styles, } = useStyles();
   useEffect(() => {
     const handleKeyDownSelectShortcut = async (event: KeyboardEvent) => {
       if (event.key === "a" && event.ctrlKey && isFocused && processedFilePathsSorted.length > 0) {
@@ -47,7 +49,7 @@ export default function SelectMenu() {
     <Dropdown menu={{ items }} trigger={["click"]}>
       <Button
         onClick={() => {}}
-        className="px-2 text-white bg-[#00b96b] border-none h-[99%]"
+        className={styles.button}
         ref={selectButtonRef}
       >
         Select(S)

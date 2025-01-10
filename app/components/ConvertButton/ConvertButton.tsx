@@ -14,6 +14,20 @@ import {
 import { Modal } from "antd";
 import { convert } from "@/app/lib/utils";
 import "@ant-design/v5-patch-for-react-19";
+import { createStyles } from 'antd-style';
+
+const useStyles = createStyles(({ token, css }) => {
+  return {
+    button: css`
+      padding: 20px 16px;
+      font-weight: bold;
+      text-transform: uppercase;
+      color: ${token.colorPrimary};
+      letter-spacing: 0.1em;
+      font-size: 18px;
+    `
+  };
+});
 
 export default function ConvertButton() {
   const [filePaths] = useAtom(filePathsAtom);
@@ -23,7 +37,7 @@ export default function ConvertButton() {
   const [isProcessing, setIsProcessing] = useAtom(isProcessingAtom);
   const [, setProcessedFilePaths] = useAtom(processedFilePathsAtom);
   const [, setTabSelected] = useAtom(tabSelectedAtom);
-
+  const { styles, } = useStyles();
   const [modal, contextHolder] = Modal.useModal();
 
   return (
@@ -41,7 +55,7 @@ export default function ConvertButton() {
             setTabSelected
           )
         }
-        className={`font-bold text-lg tracking-wider text-[#00b96b] py-5 mt-5 uppercase ${
+        className={`${styles.button} ${
           filePaths.length > 0 && !isProcessing ? "" : "cursor-not-allowed"
         }`}
         title={

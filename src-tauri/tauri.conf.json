@@ -29,7 +29,8 @@
         "Cross-Origin-Embedder-Policy": "require-corp",
         "X-Content-Type-Options": null
       },
-      "csp": "default-src 'self'; connect-src ipc: http://ipc.localhost"
+      "csp": "default-src 'self'; img-src 'self' blob: data:; connect-src ipc: http://ipc.localhost",
+      "dangerousDisableAssetCspModification": ["blob:"]
     }
   },
   "bundle": {

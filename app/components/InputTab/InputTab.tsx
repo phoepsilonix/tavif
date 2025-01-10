@@ -19,7 +19,7 @@ export default function InputTab() {
     >
       <div className="w-full h-full relative">
         <div
-          className={`bg-white/80 w-full h-full p-2 overflow-y-auto border-2 border-gray-300 border-b-white/80 ${
+          className={`bg-white/80 w-full h-full p-2 overflow-y-auto overflow-x-hidden border-2 border-gray-300 border-b-white/80 ${
             filePaths.length > 0 ? "pt-10" : ""
           }`}
         >

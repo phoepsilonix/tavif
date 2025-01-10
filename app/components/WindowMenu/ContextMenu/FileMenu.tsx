@@ -20,6 +20,7 @@ import { convert, openDialog, saveAll, saveSelected } from "@/app/lib/utils";
 import { useEffect, useRef, useState } from "react";
 import { Modal } from "antd";
 import "@ant-design/v5-patch-for-react-19";
+import { useStyles } from "@/app/components/WindowMenu/WindowMenu";
 
 const items: MenuProps["items"] = [
   {
@@ -68,6 +69,7 @@ export default function FileMenu() {
   const [extensionType, ] = useAtom(extensionTypeAtom);
   const [isProcessing, setIsProcessing] = useAtom(isProcessingAtom);
   const [modal, ] = Modal.useModal();
+  const { styles, } = useStyles();
 
   function removeResult() {
     setProcessedFilePathsSorted([]);
@@ -161,7 +163,7 @@ export default function FileMenu() {
       <Button
         ref={fileButtonRef}
         onClick={() => {}}
-        className="px-2 text-white bg-[#00b96b] border-none h-[99%]"
+        className={styles.button}
       >
         File(F)
       </Button>
@@ -233,7 +235,7 @@ function FileRemoveAll(): React.ReactNode {
         (filePaths.length === 0 && tabSelected === "input") ||
         (processedFilePathsSorted.length === 0 && tabSelected === "output")
       }
-      className={`flex items-center justify-between leading-5 ${
+      className={`flex items-center justify-between leading-5 w-full ${
         filePaths.length === 0 && tabSelected === "input"
           ? "text-gray-300 cursor-not-allowed"
           : ""

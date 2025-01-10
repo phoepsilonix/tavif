@@ -1,6 +1,5 @@
 "use client";
 
-import { ConfigProvider } from "antd";
 import SettingsMenu from "./components/SettingsMenu/SettingsMenu";
 import LoadingModal from "./components/LoadingModal/LoadingModal";
 import InputTab from "./components/InputTab/InputTab";
@@ -9,14 +8,7 @@ import InputTabButton, { OutputTabButton } from "./components/TabButton/TabButto
 
 export default function Home() {
   return (
-    <ConfigProvider
-      theme={{
-        token: {
-          colorPrimary: "#00b96b",
-          colorBgContainer: "#f6ffed",
-        },
-      }}
-    >
+    <>
       <LoadingModal />
       <div className="flex w-screen h-[calc(100vh-30px)] relative">
         <div className="min-w-[230px] h-[calc(100vh-30px)]">
@@ -29,6 +21,6 @@ export default function Home() {
           <OutputTab />
         </div>
       </div>
-    </ConfigProvider>
+    </>
   );
 }
