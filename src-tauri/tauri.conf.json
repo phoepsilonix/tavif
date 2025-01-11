@@ -26,7 +26,8 @@
     ],
     "security": {
       "csp": "default-src 'self'; img-src 'self' blob: data: asset: http://asset.localhost ; script-src 'self' blob: data: assets: ; connect-src ipc: http://ipc.localhost",
-      "dangerousDisableAssetCspModification": ["blob:"]
+      "dangerousDisableAssetCspModification": ["blob:"],
+      "capabilities": ["main-capability"]
     }
   },
   "bundle": {
