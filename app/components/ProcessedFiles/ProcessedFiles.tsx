@@ -22,7 +22,7 @@ export default function ProcessedFiles() {
   const [processedFilePathsSorted, setProcessedFilePathsSorted] = useAtom(
     processedFilePathsSortedAtom
   );
-  const [checkboxSelected, setCheckboxSelected] = useAtom(checkboxSelectedAtom);
+  const [, setCheckboxSelected] = useAtom(checkboxSelectedAtom);
 
   useEffect(() => {
     const fetchProcessedInfos = async () => {

@@ -1,6 +1,5 @@
 "use client";
 
-import { Button } from "antd";
 import { useAtom } from "jotai";
 import {
   filePathsAtom,
@@ -11,39 +10,33 @@ import {
   isProcessingAtom,
   tabSelectedAtom,
 } from "@/app/lib/atom";
-import { Modal } from "antd";
 import { convert } from "@/app/lib/utils";
+import "@ant-design/v5-patch-for-react-19";
+import { useState } from "react";
 
 export default function ConvertButton() {
-  const [filePaths, setFilePaths] = useAtom(filePathsAtom);
+  const [filePaths] = useAtom(filePathsAtom);
   const [fileInfos] = useAtom(fileInfosAtom);
   const [extensionType] = useAtom(extensionTypeAtom);
   const [quality] = useAtom(qualityAtom);
   const [isProcessing, setIsProcessing] = useAtom(isProcessingAtom);
-  const [processedFilePaths, setProcessedFilePaths] = useAtom(
-    processedFilePathsAtom
-  );
-  const [tabSelected, setTabSelected] = useAtom(tabSelectedAtom);
+  const [, setProcessedFilePaths] = useAtom(processedFilePathsAtom);
+  const [, setTabSelected] = useAtom(tabSelectedAtom);
+  const [dialog, setDialog] = useState<React.ReactNode | null>(null);
 
-  const [modal, contextHolder] = Modal.useModal();
+  const handleConvert = async () => {
+    const result = await convert(setIsProcessing, filePaths, quality, extensionType, fileInfos, setProcessedFilePaths, setTabSelected, setDialog);
+    if (result) {
+      setDialog(result);
+    }
+  };
 
   return (
     <>
-      <Button
-        onClick={() =>
-          convert(
-            setIsProcessing,
-            filePaths,
-            modal,
-            quality,
-            extensionType,
-            fileInfos,
-            setProcessedFilePaths,
-            setTabSelected
-          )
-        }
-        className={`font-bold text-lg tracking-wider text-[#00b96b] py-5 mt-5 uppercase ${
-          filePaths.length > 0 && !isProcessing ? "" : "cursor-not-allowed"
+      <button
+        onClick={handleConvert}
+        className={`bg-white font-bold text-lg uppercase text-primary border-none p-[8px_8px] tracking-wider hover:bg-[#b1fede] rounded-md transition-all duration-200 ${
+          filePaths.length > 0 && !isProcessing ? "" : "cursor-not-allowed opacity-50"
         }`}
         title={
           filePaths.length > 0 && !isProcessing
@@ -53,8 +46,9 @@ export default function ConvertButton() {
         disabled={filePaths.length === 0 || isProcessing}
       >
         Convert
-      </Button>
-      {contextHolder}
+      </button>
+      {dialog}
     </>
   );
 }
+

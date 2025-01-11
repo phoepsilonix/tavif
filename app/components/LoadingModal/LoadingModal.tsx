@@ -6,6 +6,7 @@ import {
   extensionTypeAtom,
 } from "@/app/lib/atom";
 import { Spin } from "antd";
+import "@ant-design/v5-patch-for-react-19";
 
 export default function LoadingModal() {
   const [isProcessing] = useAtom(isProcessingAtom);
@@ -17,7 +18,7 @@ export default function LoadingModal() {
         isProcessing || isSaving ? "block" : "hidden"
       }`}
     >
-      <div className="bg-white rounded-lg px-6 py-6 min-w-[300px] flex flex-col gap-4 justify-center items-center">
+      <div className="bg-white rounded-lg px-6 py-6 min-w-[300px] flex flex-col gap-4 justify-center items-center modal-open-animation">
         <div className="flex flex-col gap-2 justify-center items-center">
           <Spin size="large"></Spin>
           <p className="text-lg font-medium text-[#00b96b]">

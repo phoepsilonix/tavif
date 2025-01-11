@@ -72,7 +72,7 @@ export async function getProcessedFileInfo(processedFilePaths: string[], fileInf
   .filter((info) => info !== undefined) as ProcessedFileInfo[];
 
   // mime_typeを変換後のものに変更
-  sortedProcessedInfos.forEach((processedInfo, index) => {
+  sortedProcessedInfos.forEach((processedInfo) => {
     const extension: string = processedInfo.file_name_with_extension.split(".").pop()?.toLowerCase() || "";
     processedInfo.mime_type = `image/${extension}`;
   });

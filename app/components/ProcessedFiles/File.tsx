@@ -1,12 +1,13 @@
 "use client";
 import { ProcessedFilesProps } from ".";
 import RightArrow from "../icons/RightArrow";
-import { Checkbox } from "antd";
 import { useAtom } from "jotai";
 import { checkboxSelectedAtom, filePathsAtom } from "@/app/lib/atom";
 import { ProcessedFileInfo } from "@/app/index.d";
 import { useEffect, useState } from "react";
 import { readFile } from "@tauri-apps/plugin-fs";
+import "@ant-design/v5-patch-for-react-19";
+import CheckOutlined from "../icons/Check";
 
 function getCompressionRate(processedFileInfo: ProcessedFileInfo) {
   const compressionRate: number = parseFloat(
@@ -88,7 +89,10 @@ export default function File({
           </div>
         </div>
       </div>
-      <Checkbox
+      <div className="relative w-fit h-fit">
+        <input
+          title="Select this file"
+          type="checkbox"
         checked={checkboxSelected[index]?.checked || false}
         onChange={(e) => {
           setCheckboxSelected((prev) =>
@@ -99,8 +103,17 @@ export default function File({
             )
           );
         }}
-        className="z-1"
-      />
+          className={`cursor-pointer appearance-none w-5 h-5 border-2 rounded-sm border-gray-300 ${
+            checkboxSelected[index]?.checked ? "bg-[#00b96b]" : ""
+          }`}
+        />
+        <CheckOutlined
+          size="16"
+          className={`absolute top-[2px] left-[2px] fill-white pointer-events-none ${
+            checkboxSelected[index]?.checked ? "block" : "hidden"
+          }`}
+        />
+      </div>
     </li>
   );
 }

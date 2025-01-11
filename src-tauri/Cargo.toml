@@ -1,10 +1,10 @@
 [package]
-name = "app"
+name = "tavif"
 version = "0.1.0"
-description = "A Tauri App"
-authors = ["you"]
-license = ""
-repository = ""
+description = "This project is a lightweight and fast desktop application for converting images to AVIF/WEBP format, developed using the Rust Tauri framework and Next.js."
+authors = ["moriyaharumi"]
+license = "MIT"
+repository = "https://github.com/harumiWeb/tavif"
 edition = "2021"
 rust-version = "1.77.2"
 

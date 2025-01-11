@@ -19,8 +19,8 @@
 
 ### 1. このリポジトリをクローンします：
    ```bash
-   git clone https://github.com/harumiWeb/avif_conv_app.git
-   cd avif_conv_app
+   git clone https://github.com/harumiWeb/tavif.git
+   cd tavif
    ```
 
 ### 2. 依存関係をインストールします：

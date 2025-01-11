@@ -7,15 +7,31 @@ import {
 import { useEffect, useState } from "react";
 import FileMenu from "./ContextMenu/FileMenu";
 import { useAtom } from "jotai";
-import { isFocusedAtom } from "@/app/lib/atom";
+import { isFocusedAtom, windowMenuDialogAtom } from "@/app/lib/atom";
 import EditMenu from "./ContextMenu/SelectMenu";
 import HelpMenu from "./ContextMenu/HelpMenu";
+import { BorderOutlined, MinusOutlined, CloseOutlined } from "@ant-design/icons";
+import { createStyles } from 'antd-style';
 
+export const useStyles = createStyles(({ css }) => ({
+  button: css`
+    background-color: #00b96b;
+    &:hover {
+      background-color: #6cd9ac;
+      color: #00b96b;
+    }
+    color: white;
+    border: none;
+    height: 98%;
+    padding: 2px 8px;
+  `,
+}));
 
 export default function WindowMenu() {
   const [appWindow, setAppWindow] = useState<TauriWindow | null>(null);
 
-  const [isFocused, setIsFocused] = useAtom(isFocusedAtom);
+  const [, setIsFocused] = useAtom(isFocusedAtom);
+  const [windowMenuDialog,] = useAtom(windowMenuDialogAtom);
 
   useEffect(() => {
     const handleFocus = () => {
@@ -60,8 +76,9 @@ export default function WindowMenu() {
   return (
     <div
       data-tauri-drag-region
-      className="titlebar bg-[#00b96b] h-[30px] flex justify-between items-center pl-2 gap-5 border-b border-gray-300"
+      className="titlebar bg-[#00b96b] h-[30px] flex justify-between items-center pl-2 gap-5 border-b border-gray-300 z-[9999]"
     >
+      {windowMenuDialog}
       <div className="flex items-center gap-2">
         <img src="/128x128.png" alt="logo" className="w-5 h-5" loading="lazy"/>
         <div className="flex items-center">
@@ -75,25 +92,19 @@ export default function WindowMenu() {
           className="titlebar-button hover:bg-[#1adb8b] w-[40px] h-[30px] flex justify-center items-center cursor-pointer transition-colors duration-150"
           id="titlebar-minimize"
         >
-          <img
-            src="https://api.iconify.design/mdi:window-minimize.svg"
-            alt="minimize"
-          />
+          <MinusOutlined title="Minimize"/>
         </div>
         <div
           className="titlebar-button hover:bg-[#1adb8b] w-[40px] h-[30px] flex justify-center items-center cursor-pointer transition-colors duration-150"
           id="titlebar-maximize"
         >
-          <img
-            src="https://api.iconify.design/mdi:window-maximize.svg"
-            alt="maximize"
-          />
+          <BorderOutlined title="Maximize"/>
         </div>
         <div
           className="titlebar-button hover:bg-red-400 w-[40px] h-[30px] flex justify-center items-center cursor-pointer transition-colors duration-150"
           id="titlebar-close"
         >
-          <img src="https://api.iconify.design/mdi:close.svg" alt="close" />
+          <CloseOutlined title="Close"/>
         </div>
       </div>
     </div>

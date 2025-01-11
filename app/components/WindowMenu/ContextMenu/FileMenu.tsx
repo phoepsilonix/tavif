@@ -1,7 +1,7 @@
 "use client";
 
 import type { MenuProps } from "antd";
-import { Dropdown, Button } from "antd";
+import { Dropdown } from "antd";
 import { useAtom } from "jotai";
 import {
   fileInfosAtom,
@@ -15,10 +15,11 @@ import {
   processedFilePathsAtom,
   isSavingAtom,
   isProcessingAtom,
+  windowMenuDialogAtom,
 } from "@/app/lib/atom";
 import { convert, openDialog, saveAll, saveSelected } from "@/app/lib/utils";
 import { useEffect, useRef, useState } from "react";
-import { Modal } from "antd";
+import "@ant-design/v5-patch-for-react-19";
 
 const items: MenuProps["items"] = [
   {
@@ -51,7 +52,7 @@ const items: MenuProps["items"] = [
 
 export default function FileMenu() {
   const [filePaths, setFilePaths] = useAtom(filePathsAtom);
-  const [isFocused, setIsFocused] = useAtom(isFocusedAtom);
+  const [isFocused] = useAtom(isFocusedAtom);
   const fileButtonRef = useRef<HTMLButtonElement | null>(null);
   const [fileInfos, setFileInfos] = useAtom(fileInfosAtom);
   const [tabSelected, setTabSelected] = useAtom(tabSelectedAtom);
@@ -59,15 +60,34 @@ export default function FileMenu() {
     processedFilePathsSortedAtom
   );
   const [checkboxSelected, setCheckboxSelected] = useAtom(checkboxSelectedAtom);
-  const [processedFilePaths, setProcessedFilePaths] = useAtom(
-    processedFilePathsAtom
-  );
-  const [isSaving, setIsSaving] = useAtom(isSavingAtom);
-  const [quality, setQuality] = useAtom(qualityAtom);
-  const [extensionType, setExtensionType] = useAtom(extensionTypeAtom);
+  const [, setProcessedFilePaths] = useAtom(processedFilePathsAtom);
+  const [, setIsSaving] = useAtom(isSavingAtom);
+  const [quality] = useAtom(qualityAtom);
+  const [extensionType] = useAtom(extensionTypeAtom);
   const [isProcessing, setIsProcessing] = useAtom(isProcessingAtom);
-  const [modal, modalContextHolder] = Modal.useModal();
+  const [, setDialog] = useAtom(windowMenuDialogAtom);
 
+  const handleConvert = async () => {
+    const result = await convert(setIsProcessing, filePaths, quality, extensionType, fileInfos, setProcessedFilePaths, setTabSelected, setDialog);
+    if (result) {
+      setDialog(result);
+    }
+  };
+
+  const handleSaveAll = async () => {
+    const result = await saveAll(setIsSaving, processedFilePathsSorted, setDialog);
+    if (result) {
+      setDialog(result);
+    }
+  };
+
+  const handleSaveSelected = async () => {
+    const result = await saveSelected(setIsSaving, processedFilePathsSorted, checkboxSelected, setDialog);
+    if (result) {
+      setDialog(result);
+    }
+  };
+  
   function removeResult() {
     setProcessedFilePathsSorted([]);
     setCheckboxSelected([]);
@@ -113,7 +133,7 @@ export default function FileMenu() {
         processedFilePathsSorted.length > 0
       ) {
         event.preventDefault();
-        saveAll(setIsSaving, processedFilePathsSorted, modal);
+        handleSaveAll();
       } else if (
         event.key === "s" &&
         event.ctrlKey &&
@@ -122,12 +142,7 @@ export default function FileMenu() {
         processedFilePathsSorted.length > 0
       ) {
         event.preventDefault();
-        saveSelected(
-          setIsSaving,
-          processedFilePathsSorted,
-          checkboxSelected,
-          modal
-        );
+        handleSaveSelected();
       } else if (
         event.key === "Enter" &&
         isFocused &&
@@ -135,16 +150,7 @@ export default function FileMenu() {
         !isProcessing
       ) {
         event.preventDefault();
-        convert(
-          setIsProcessing,
-          filePaths,
-          modal,
-          quality,
-          extensionType,
-          fileInfos,
-          setProcessedFilePaths,
-          setTabSelected
-        );
+        handleConvert();
       }
     };
 
@@ -156,15 +162,17 @@ export default function FileMenu() {
   }, [isFocused, filePaths, tabSelected, processedFilePathsSorted]);
 
   return (
-    <Dropdown menu={{ items }} trigger={["click"]}>
-      <Button
-        ref={fileButtonRef}
-        onClick={() => {}}
-        className="px-2 text-white bg-[#00b96b] border-none h-[99%]"
-      >
-        File(F)
-      </Button>
-    </Dropdown>
+    <>
+      <Dropdown menu={{ items }} trigger={["click"]}>
+        <button
+          ref={fileButtonRef}
+          onClick={() => {}}
+          className="bg-primary text-white border-none h-[98%] p-[2px_8px] text-sm tracking-wide hover:bg-[#84ddb8] rounded-md transition-all duration-200"
+        >
+          File(F)
+        </button>
+      </Dropdown>
+    </>
   );
 }
 
@@ -191,15 +199,13 @@ function FileOpen(): React.ReactNode {
 
 function FileRemoveAll(): React.ReactNode {
   const [filePaths, setFilePaths] = useAtom(filePathsAtom);
-  const [tabSelected, setTabSelected] = useAtom(tabSelectedAtom);
-  const [fileInfos, setFileInfos] = useAtom(fileInfosAtom);
+  const [tabSelected] = useAtom(tabSelectedAtom);
+  const [, setFileInfos] = useAtom(fileInfosAtom);
   const [processedFilePathsSorted, setProcessedFilePathsSorted] = useAtom(
     processedFilePathsSortedAtom
   );
-  const [checkboxSelected, setCheckboxSelected] = useAtom(checkboxSelectedAtom);
-  const [processedFilePaths, setProcessedFilePaths] = useAtom(
-    processedFilePathsAtom
-  );
+  const [, setCheckboxSelected] = useAtom(checkboxSelectedAtom);
+  const [, setProcessedFilePaths] = useAtom(processedFilePathsAtom);
 
   function removeAll() {
     setFilePaths([]);
@@ -232,7 +238,7 @@ function FileRemoveAll(): React.ReactNode {
         (filePaths.length === 0 && tabSelected === "input") ||
         (processedFilePathsSorted.length === 0 && tabSelected === "output")
       }
-      className={`flex items-center justify-between leading-5 ${
+      className={`flex items-center justify-between leading-5 w-full ${
         filePaths.length === 0 && tabSelected === "input"
           ? "text-gray-300 cursor-not-allowed"
           : ""
@@ -252,128 +258,114 @@ function FileRemoveAll(): React.ReactNode {
 
 function FileSaveAll(): React.ReactNode {
   const [isSaving, setIsSaving] = useState(false);
-  const [processedFilePathsSorted, setProcessedFilePathsSorted] = useAtom(
-    processedFilePathsSortedAtom
-  );
-  const [modal, modalContextHolder] = Modal.useModal();
+  const [processedFilePathsSorted] = useAtom(processedFilePathsSortedAtom);
+  const [, setDialog] = useAtom(windowMenuDialogAtom);
+  const handleSaveAll = async () => {
+    const result = await saveAll(setIsSaving, processedFilePathsSorted, setDialog);
+    if (result) {
+      setDialog(result);
+    }
+  };
   return (
-    <button
-      className={`flex items-center justify-between leading-5 w-full ${
-        isSaving || processedFilePathsSorted.length === 0
-          ? "text-gray-300 cursor-not-allowed"
-          : ""
-      }`}
-      onClick={() => saveAll(setIsSaving, processedFilePathsSorted, modal)}
-      disabled={isSaving || processedFilePathsSorted.length === 0}
-      title="Save all files."
-      onKeyDown={(e) => {
-        if (e.key === "Enter") {
-          saveAll(setIsSaving, processedFilePathsSorted, modal);
-        }
-      }}
-    >
-      Save All
-      <span className="text-xs pl-4 flex items-center justify-center pt-[1px]">
-        Ctrl+S
-      </span>
-    </button>
+    <>
+      <button
+        className={`flex items-center justify-between leading-5 w-full ${
+          isSaving || processedFilePathsSorted.length === 0
+            ? "text-gray-300 cursor-not-allowed"
+            : ""
+        }`}
+        onClick={handleSaveAll}
+        disabled={isSaving || processedFilePathsSorted.length === 0}
+        title="Save all files."
+        onKeyDown={(e) => {
+          if (e.key === "Enter") {
+            handleSaveAll();
+          }
+        }}
+      >
+        Save All
+        <span className="text-xs pl-4 flex items-center justify-center pt-[1px]">
+          Ctrl+S
+        </span>
+      </button>
+    </>
   );
 }
 
 function FileSaveSelected(): React.ReactNode {
   const [isSaving, setIsSaving] = useState(false);
-  const [processedFilePathsSorted, setProcessedFilePathsSorted] = useAtom(
-    processedFilePathsSortedAtom
-  );
-  const [checkboxSelected, setCheckboxSelected] = useAtom(checkboxSelectedAtom);
-  const [modal, modalContextHolder] = Modal.useModal();
+  const [processedFilePathsSorted] = useAtom(processedFilePathsSortedAtom);
+  const [checkboxSelected] = useAtom(checkboxSelectedAtom);
+  const [, setDialog] = useAtom(windowMenuDialogAtom);
+  const handleSaveSelected = async () => {
+    const result = await saveSelected(setIsSaving, processedFilePathsSorted, checkboxSelected, setDialog);
+    if (result) {
+      setDialog(result);
+    }
+  };
   return (
-    <button
-      className={`flex items-center justify-between leading-5 w-full ${
-        isSaving || processedFilePathsSorted.length === 0
-          ? "text-gray-300 cursor-not-allowed"
-          : ""
-      }`}
-      onClick={() =>
-        saveSelected(
-          setIsSaving,
-          processedFilePathsSorted,
-          checkboxSelected,
-          modal
-        )
-      }
-      disabled={isSaving || processedFilePathsSorted.length === 0}
-      title="Save selected files."
-      onKeyDown={(e) => {
-        if (e.key === "Enter") {
-          saveSelected(
-            setIsSaving,
-            processedFilePathsSorted,
-            checkboxSelected,
-            modal
-          );
-        }
-      }}
-    >
-      Save Selected
-      <span className="text-xs pl-4 flex items-center justify-center pt-[1px]">
-        Ctrl+Alt+S
-      </span>
-    </button>
+    <>
+      <button
+        className={`flex items-center justify-between leading-5 w-full ${
+          isSaving || processedFilePathsSorted.length === 0
+            ? "text-gray-300 cursor-not-allowed"
+            : ""
+        }`}
+        onClick={handleSaveSelected}
+        disabled={isSaving || processedFilePathsSorted.length === 0}
+        title="Save selected files."
+        onKeyDown={(e) => {
+          if (e.key === "Enter") {
+            handleSaveSelected();
+          }
+        }}
+      >
+        Save Selected
+        <span className="text-xs pl-4 flex items-center justify-center pt-[1px]">
+          Ctrl+Alt+S
+        </span>
+      </button>
+    </>
   );
 }
 
 function FileConvert(): React.ReactNode {
   const [isProcessing, setIsProcessing] = useAtom(isProcessingAtom);
-  const [processedFilePaths, setProcessedFilePaths] = useAtom(
-    processedFilePathsAtom
-  );
-  const [modal, modalContextHolder] = Modal.useModal();
-  const [filePaths, setFilePaths] = useAtom(filePathsAtom);
-  const [fileInfos, setFileInfos] = useAtom(fileInfosAtom);
-  const [quality, setQuality] = useAtom(qualityAtom);
-  const [extensionType, setExtensionType] = useAtom(extensionTypeAtom);
-  const [tabSelected, setTabSelected] = useAtom(tabSelectedAtom);
+  const [, setProcessedFilePaths] = useAtom(processedFilePathsAtom);
+  const [, setDialog] = useAtom(windowMenuDialogAtom);
+  const [filePaths] = useAtom(filePathsAtom);
+  const [fileInfos] = useAtom(fileInfosAtom);
+  const [quality] = useAtom(qualityAtom);
+  const [extensionType] = useAtom(extensionTypeAtom);
+  const [, setTabSelected] = useAtom(tabSelectedAtom);
+  const handleConvert = async () => {
+    const result = await convert(setIsProcessing, filePaths, quality, extensionType, fileInfos, setProcessedFilePaths, setTabSelected, setDialog);
+    if (result) {
+      setDialog(result);
+    }
+  };
   return (
-    <button
-      className={`flex items-center justify-between leading-5 w-full ${
-        isProcessing || filePaths.length === 0
-          ? "text-gray-300 cursor-not-allowed"
-          : ""
-      }`}
-      onClick={() =>
-        convert(
-          setIsProcessing,
-          filePaths,
-          modal,
-          quality,
-          extensionType,
-          fileInfos,
-          setProcessedFilePaths,
-          setTabSelected
-        )
-      }
-      disabled={isProcessing || filePaths.length === 0}
-      title="Convert files."
-      onKeyDown={(e) => {
-        if (e.key === "Enter") {
-          convert(
-            setIsProcessing,
-            filePaths,
-            modal,
-            quality,
-            extensionType,
-            fileInfos,
-            setProcessedFilePaths,
-            setTabSelected
-          );
-        }
-      }}
-    >
-      Convert
-      <span className="text-xs pl-4 flex items-center justify-center pt-[1px]">
-        Ctrl+Enter
-      </span>
-    </button>
+    <>
+      <button
+        className={`flex items-center justify-between leading-5 w-full ${
+          isProcessing || filePaths.length === 0
+            ? "text-gray-300 cursor-not-allowed"
+            : ""
+        }`}
+        onClick={handleConvert}
+        disabled={isProcessing || filePaths.length === 0}
+        title="Convert files."
+        onKeyDown={(e) => {
+          if (e.key === "Enter") {
+            handleConvert();
+          }
+        }}
+      >
+        Convert
+        <span className="text-xs pl-4 flex items-center justify-center pt-[1px]">
+          Ctrl+Enter
+        </span>
+      </button>
+    </>
   );
 }

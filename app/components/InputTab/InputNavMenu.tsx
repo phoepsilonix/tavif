@@ -6,8 +6,8 @@ import { useAtom } from "jotai";
 import { filePathsAtom, fileInfosAtom } from "../../lib/atom";
 
 export default function InputNubMenu() {
-  const [filePaths, setFilePaths] = useAtom(filePathsAtom);
-  const [fileInfos, setFileInfos] = useAtom(fileInfosAtom);
+  const [, setFilePaths] = useAtom(filePathsAtom);
+  const [, setFileInfos] = useAtom(fileInfosAtom);
 
   const removeAll = () => {
     setFilePaths([]);
@@ -15,7 +15,7 @@ export default function InputNubMenu() {
   };
 
   return (
-    <div className="absolute top-1 left-0 w-full h-fit p-2 flex items-center justify-between gap-2 bg-gray-50/50 backdrop-blur-sm border-l-2 border-r-2 border-gray-300 z-10">
+    <div className="w-full h-fit pb-2 flex items-center justify-between gap-2">
       <div className="flex items-center gap-2">
         <FileDialog />
         <Button

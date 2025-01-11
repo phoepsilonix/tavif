@@ -1,23 +1,19 @@
 "use client";
 
-import { ConfigProvider } from "antd";
 import SettingsMenu from "./components/SettingsMenu/SettingsMenu";
 import LoadingModal from "./components/LoadingModal/LoadingModal";
 import InputTab from "./components/InputTab/InputTab";
 import OutputTab from "./components/OutputTab/OutputTab";
-import InputTabButton, { OutputTabButton } from "./components/TabButton/TabButton";
+import InputTabButton, {
+  OutputTabButton,
+} from "./components/TabButton/TabButton";
+import { LicenseDialog } from "./components/Dialog/Dialog";
 
 export default function Home() {
   return (
-    <ConfigProvider
-      theme={{
-        token: {
-          colorPrimary: "#00b96b",
-          colorBgContainer: "#f6ffed",
-        },
-      }}
-    >
+    <>
       <LoadingModal />
+      <LicenseDialog />
       <div className="flex w-screen h-[calc(100vh-30px)] relative">
         <div className="min-w-[230px] h-[calc(100vh-30px)]">
           <SettingsMenu />
@@ -29,6 +25,6 @@ export default function Home() {
           <OutputTab />
         </div>
       </div>
-    </ConfigProvider>
+    </>
   );
 }

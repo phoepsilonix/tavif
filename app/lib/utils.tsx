@@ -1,8 +1,8 @@
 import { invoke } from "@tauri-apps/api/core";
 import { open } from "@tauri-apps/plugin-dialog";
-import type { ModalType } from "antd/es/modal/index.d";
 import type { CheckboxSelected, FileInfo } from "@/app/index.d";
 import { readFileAsync } from "../components/FileDialog/utils";
+import { SuccessDialog, ErrorDialog } from "../components/Dialog/Dialog";
 
 export async function openDialog(
   setFilePaths: (paths: string[]) => void,
@@ -28,8 +28,8 @@ export async function openDialog(
 export async function saveAll(
   setIsSaving: (isSaving: boolean) => void,
   processedFilePathsSorted: string[],
-  modal: ModalType
-) {
+  setDialog: (dialog: React.ReactNode) => void
+): Promise<React.ReactNode> {
   setIsSaving(true);
   const outputDir = await open({
     title: "Select Output Directory",
@@ -38,7 +38,11 @@ export async function saveAll(
   });
   if (!outputDir) {
     setIsSaving(false);
-    return;
+    return (
+      <ErrorDialog>
+        <p>Please select the output directory</p>
+      </ErrorDialog>
+    )
   }
 
   await invoke("save_files", {
@@ -46,19 +50,28 @@ export async function saveAll(
     outputDir: outputDir,
   });
   setIsSaving(false);
-  modal.success({
-    title: "Success",
-    centered: true,
-    content: "Saved successfully",
-  });
+
+  return (
+    <SuccessDialog>
+      <p>Saved successfully</p>
+      <div className="flex flex-row-reverse w-full pr-2">
+        <button
+          className="bg-primary text-white border-none h-[98%] p-[6px_16px] text-md tracking-wider hover:bg-[#84ddb8] rounded-md transition-all duration-200"
+          onClick={() => setDialog(null)}
+        >
+          Close
+        </button>
+      </div>
+    </SuccessDialog>
+  );
 }
 
 export async function saveSelected(
   setIsSaving: (isSaving: boolean) => void,
   processedFilePathsSorted: string[],
   checkboxSelected: CheckboxSelected[],
-  modal: ModalType
-) {
+  setDialog: (dialog: React.ReactNode) => void
+): Promise<React.ReactNode> {
   setIsSaving(true);
   const outputDir = await open({
     title: "Select Output Directory",
@@ -67,7 +80,11 @@ export async function saveSelected(
   });
   if (!outputDir) {
     setIsSaving(false);
-    return;
+    return (
+      <ErrorDialog>
+        <p>Please select the output directory</p>
+      </ErrorDialog>
+    );
   }
 
   const selectedFilePaths = checkboxSelected
@@ -79,36 +96,63 @@ export async function saveSelected(
     outputDir: outputDir,
   });
   setIsSaving(false);
-  modal.success({
-    title: "Success",
-    centered: true,
-    content: "Saved successfully",
-  });
+  setDialog(
+    <SuccessDialog>
+      <p>Saved successfully</p>
+      <div className="flex flex-row-reverse w-full pr-2">
+        <button
+          className="bg-primary text-white border-none h-[98%] p-[6px_16px] text-md tracking-wider hover:bg-[#84ddb8] rounded-md transition-all duration-200"
+          onClick={() => setDialog(null)}
+        >
+          Close
+        </button>
+      </div>
+    </SuccessDialog>
+  );
 }
 
 export async function convert(
   setIsProcessing: (isProcessing: boolean) => void,
   filePaths: string[],
-  modal: ModalType,
   quality: number,
   extensionType: string,
   fileInfos: FileInfo[],
   setProcessedFilePaths: (processedFilePaths: string[]) => void,
-  setTabSelected: (tabSelected: "output" | "input") => void
-) {
+  setTabSelected: (tabSelected: "output" | "input") => void,
+  setDialog: (dialog: React.ReactNode) => void
+): Promise<React.ReactNode> {
   setIsProcessing(true);
   const binarys = await readFileAsync(filePaths);
   if (!binarys) {
     console.error("filesBinary is undefined");
-    return;
+    return (
+      <ErrorDialog>
+        <p>filesBinary is undefined</p>
+        <div className="flex flex-row-reverse w-full pr-2">
+          <button
+            className="bg-primary text-white border-none h-[98%] p-[6px_16px] text-md tracking-wider hover:bg-red-500 rounded-md transition-all duration-200"
+            onClick={() => setDialog(null)}
+          >
+            Close
+          </button>
+        </div>
+      </ErrorDialog>
+    );
   }
   if (!quality) {
-    modal.error({
-      title: "Quality is not set",
-      centered: true,
-      content: "Please set the quality",
-    });
-    return;
+    return (
+      <ErrorDialog>
+        <p>Please set the quality</p>
+        <div className="flex flex-row-reverse w-full pr-2">
+          <button
+            className="bg-primary text-white border-none h-[98%] p-[6px_16px] text-md tracking-wider hover:bg-red-500 rounded-md transition-all duration-200"
+            onClick={() => setDialog(null)}
+          >
+            Close
+          </button>
+        </div>
+      </ErrorDialog>
+    );
   }
 
   const sendData = await createSendData(binarys);

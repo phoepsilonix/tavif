@@ -1,10 +1,12 @@
 "use client";
 
 import type { MenuProps } from "antd";
-import { Dropdown, Button, Modal } from "antd";
+import { Dropdown } from "antd";
 import { useAtom } from "jotai";
-import { isFocusedAtom } from "@/app/lib/atom";
-import { useEffect, useRef, useState } from "react";
+import { isFocusedAtom, isLicenseDialogOpenAtom } from "@/app/lib/atom";
+import { useEffect, useRef } from "react";
+import "@ant-design/v5-patch-for-react-19";
+import "antd/dist/reset.css";
 
 const items: MenuProps["items"] = [
   {
@@ -14,7 +16,7 @@ const items: MenuProps["items"] = [
 ];
 
 export default function HelpMenu() {
-  const [isFocused, setIsFocused] = useAtom(isFocusedAtom);
+  const [isFocused] = useAtom(isFocusedAtom);
   const helpButtonRef = useRef<HTMLButtonElement | null>(null);
   useEffect(() => {
     const handleKeyDownSelectShortcut = async (event: KeyboardEvent) => {
@@ -34,64 +36,28 @@ export default function HelpMenu() {
 
   return (
     <Dropdown menu={{ items }} trigger={["click"]}>
-      <Button
+      <button
         onClick={() => {}}
-        className="px-2 text-white bg-[#00b96b] border-none h-[99%]"
+        className="bg-primary text-white border-none h-[98%] p-[2px_8px] text-sm tracking-wide hover:bg-[#84ddb8] rounded-md transition-all duration-200"
         ref={helpButtonRef}
       >
         Help(H)
-      </Button>
+      </button>
     </Dropdown>
   );
 }
 
 function Help(): React.ReactNode {
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [, setIsLicenseDialogOpen] = useAtom(isLicenseDialogOpenAtom);
   return (
     <>
       <button
         onClick={() => {
-          setIsModalOpen(true);
+          setIsLicenseDialogOpen(true);
         }}
       >
         Show License
       </button>
-      <Modal
-        open={isModalOpen}
-        onOk={() => {
-          setIsModalOpen(false);
-        }}
-        centered
-        cancelButtonProps={{ hidden: true }}
-        maskClosable={true}
-        closable={false}
-      >
-        <section className="max-h-[80vh] overflow-y-auto p-2">
-          <h1 className="text-2xl font-bold w-full text-center">License</h1>
-          <p>
-            MIT License
-            <span className="pt-2 block" />
-            Copyright (c) 2025 Moriya Harumi
-            <span className="pt-2 block" />
-            Permission is hereby granted, free of charge, to any person obtaining
-a copy of this software and associated documentation files (the
-"Software"), to deal in the Software without restriction, including
-without limitation the rights to use, copy, modify, merge, publish,
-distribute, sublicense, and/or sell copies of the Software, and to
-permit persons to whom the Software is furnished to do so, subject to
-the following conditions:<span className="pt-2 block" />
-The above copyright notice and this permission notice shall be
-included in all copies or substantial portions of the Software.<span className="pt-2 block"   />
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
-LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
-OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
-WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-          </p>
-        </section>
-      </Modal>
     </>
   );
 }

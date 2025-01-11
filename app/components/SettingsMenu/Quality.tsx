@@ -2,9 +2,11 @@
 
 import React from "react";
 import type { InputNumberProps } from "antd";
-import { Col, InputNumber, Row, Slider } from "antd";
+import { InputNumber, Slider } from "antd";
 import { useAtom } from "jotai";
 import { qualityAtom } from "@/app/lib/atom";
+import "@ant-design/v5-patch-for-react-19";
+import { useEffect } from "react";
 
 const IntegerStep: React.FC = () => {
   const [inputValue, setInputValue] = useAtom(qualityAtom);
@@ -13,22 +15,35 @@ const IntegerStep: React.FC = () => {
     setInputValue(newValue as number);
   };
 
+  //antd のスライダー読み込み不具合に対応する処理
+  useEffect(() => {
+    const sliderTrack =
+      document.querySelector<HTMLElement>(".ant-slider-track");
+    if (sliderTrack) {
+      sliderTrack.style.width = "75%";
+    }
+    const sliderHandle =
+      document.querySelector<HTMLElement>(".ant-slider-handle");
+    if (sliderHandle) {
+      sliderHandle.style.left = "75%";
+    }
+  }, []);
+
   return (
-    <Row>
-      <Col span={12}>
+    <div className="flex flex-row gap-3">
+      <div className="w-[65%]">
         <Slider
           min={1}
           max={100}
           onChange={onChange}
-          value={typeof inputValue === "number" ? inputValue : 0}
+          value={inputValue || 75}
         />
-      </Col>
-      <Col span={4}>
+      </div>
+      <div>
         <InputNumber
           min={1}
           max={100}
-          style={{ margin: "0 16px" }}
-          value={inputValue}
+          value={inputValue || 75}
           onChange={onChange}
           onBlur={() => {
             if (!inputValue) {
@@ -36,8 +51,8 @@ const IntegerStep: React.FC = () => {
             }
           }}
         />
-      </Col>
-    </Row>
+      </div>
+    </div>
   );
 };
 

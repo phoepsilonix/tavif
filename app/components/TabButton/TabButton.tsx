@@ -1,4 +1,4 @@
-import { FileAddTwoTone, FileImageTwoTone } from "@ant-design/icons";
+import { PictureOutlined } from "@ant-design/icons";
 import { useAtom } from "jotai";
 import { tabSelectedAtom } from "../../lib/atom";
 
@@ -13,7 +13,7 @@ export default function InputTabButton() {
       }`}
       onClick={() => setTabSelected("input")}
     >
-      <FileAddTwoTone
+      <PictureOutlined
         twoToneColor={tabSelected === "input" ? "#ff8a33" : "#7c7c7c"}
       />
       INPUT
@@ -32,7 +32,7 @@ export function OutputTabButton() {
       }`}
       onClick={() => setTabSelected("output")}
     >
-      <FileImageTwoTone
+      <PictureOutlined
         twoToneColor={tabSelected === "output" ? "#ff8a33" : "#7c7c7c"}
       />
       OUTPUT
