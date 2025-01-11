@@ -18,11 +18,9 @@ export default function InputTab() {
       }`}
       data-tauri-drag-region
     >
-      <div className="w-full h-full relative">
+      <div className="w-full h-full pb-2 bg-white/80">
         <div
-          className={`bg-white/80 w-full h-full p-2 overflow-y-auto overflow-x-hidden border-2 border-gray-300 border-b-white/80 ${
-            filePaths.length > 0 ? "pt-10" : ""
-          }`}
+          className={`w-full h-full p-2 overflow-hidden border-2 border-gray-300 border-b-white/80`}
         >
           <Dropzone />
           {filePaths.length > 0 && <InputNubMenu />}

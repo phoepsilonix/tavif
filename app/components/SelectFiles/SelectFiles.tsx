@@ -23,8 +23,8 @@ export default function SelectFiles() {
   }, [filePaths]);
 
   return (
-    <div>
-      <ul>
+    <div className="h-full w-full pb-2 overflow-hidden">
+      <ul className="overflow-y-auto overflow-x-hidden h-[95%] w-full">
         {fileInfos.length > 0 &&
           fileInfos.map((fileInfo, index) => (
             <File

@@ -9,13 +9,15 @@ export default function OutputTab() {
   const [tabSelected] = useAtom(tabSelectedAtom);
   return (
     <div
-      className={`flex flex-col w-full h-full relative ${
+      className={`flex flex-col w-full h-full relative pb-2 bg-white/80 ${
         tabSelected === "input" ? "hidden" : ""
       }`}
     >
-      <div className="bg-white/80 w-full h-full p-2 pt-10 overflow-y-auto overflow-x-hidden border-2 border-gray-300 border-b-white/80">
+      <div className="w-full h-full p-2 border-2 overflow-hidden border-gray-300 border-b-white/80">
         <OutputNavMenu />
-        <ProcessedFiles />
+        <div className="h-[95%] w-full overflow-y-auto">
+          <ProcessedFiles />
+        </div>
       </div>
     </div>
   );
