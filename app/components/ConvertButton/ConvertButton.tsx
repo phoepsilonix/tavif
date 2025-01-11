@@ -9,6 +9,7 @@ import {
   processedFilePathsAtom,
   isProcessingAtom,
   tabSelectedAtom,
+  outputTempDirAtom,
 } from "@/app/lib/atom";
 import { convert } from "@/app/lib/utils";
 import "@ant-design/v5-patch-for-react-19";
@@ -23,11 +24,22 @@ export default function ConvertButton() {
   const [, setProcessedFilePaths] = useAtom(processedFilePathsAtom);
   const [, setTabSelected] = useAtom(tabSelectedAtom);
   const [dialog, setDialog] = useState<React.ReactNode | null>(null);
+  const [, setOutputTempDir] = useAtom(outputTempDirAtom);
 
   const handleConvert = async () => {
-    const result = await convert(setIsProcessing, filePaths, quality, extensionType, fileInfos, setProcessedFilePaths, setTabSelected, setDialog);
-    if (result) {
-      setDialog(result);
+    const errorDialog = await convert(
+      setIsProcessing,
+      filePaths,
+      quality,
+      extensionType,
+      fileInfos,
+      setProcessedFilePaths,
+      setTabSelected,
+      setDialog,
+      setOutputTempDir
+    );
+    if (errorDialog) {
+      setDialog(errorDialog); // エラーがある場合はエラーダイアログを表示
     }
   };
 
@@ -36,7 +48,9 @@ export default function ConvertButton() {
       <button
         onClick={handleConvert}
         className={`bg-white font-bold text-lg uppercase text-primary border-none p-[8px_8px] tracking-wider hover:bg-[#b1fede] rounded-md transition-all duration-200 ${
-          filePaths.length > 0 && !isProcessing ? "" : "cursor-not-allowed opacity-50"
+          filePaths.length > 0 && !isProcessing
+            ? ""
+            : "cursor-not-allowed opacity-50"
         }`}
         title={
           filePaths.length > 0 && !isProcessing
@@ -51,4 +65,3 @@ export default function ConvertButton() {
     </>
   );
 }
-

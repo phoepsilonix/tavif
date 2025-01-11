@@ -42,3 +42,6 @@ export const isLicenseDialogOpenAtom = atom<boolean>(false);
 
 // ウィンドウメニューのダイアログの内容
 export const windowMenuDialogAtom = atom<React.ReactNode | null>(null);
+
+// 出力Tempディレクトリ
+export const outputTempDirAtom = atom<string | null>(null);

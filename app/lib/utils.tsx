@@ -111,7 +111,8 @@ export async function convert(
   fileInfos: FileInfo[],
   setProcessedFilePaths: (processedFilePaths: string[]) => void,
   setTabSelected: (tabSelected: "output" | "input") => void,
-  setDialog: (dialog: React.ReactNode) => void
+  setDialog: (dialog: React.ReactNode) => void,
+  setOutputTempDir: (outputTempDir: string) => void
 ): Promise<React.ReactNode | null> {
   setIsProcessing(true);
   const binarys = await readFileAsync(filePaths);
@@ -148,12 +149,29 @@ export async function convert(
   }
 
   const sendData = await createSendData(binarys);
-  const result: string[] = await invoke("convert", {
+  const [result, outputTempDir] = await invoke<[string[], string]>("convert", {
     filesBinary: sendData,
     fileInfos: fileInfos,
     extensionType: extensionType,
     quality: quality,
   });
+  if (!result || !outputTempDir) {
+    setIsProcessing(false);
+    return (
+      <ErrorDialog>
+        <p>Failed to convert</p>
+        <div className="flex flex-row-reverse w-full pr-2">
+          <button
+            className="bg-primary text-white border-none h-[98%] p-[6px_16px] text-md tracking-wider hover:bg-red-500 rounded-md transition-all duration-200"
+            onClick={() => setDialog(null)}
+          >
+            Close
+          </button>
+        </div>
+      </ErrorDialog>
+    );
+  }
+  setOutputTempDir(outputTempDir);
   setProcessedFilePaths(result);
   setIsProcessing(false);
   setTabSelected("output");
