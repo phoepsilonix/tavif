@@ -55,6 +55,7 @@ pub fn run() {
             convert,
             get_files_binary,
             save_files,
+            remove_temp_dir,
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
@@ -80,8 +81,14 @@ fn convert(
     file_infos: Vec<FileInfo>,
     extension_type: ExtensionType,
     quality: u8,
-) -> Result<Vec<String>, Error> {
+) -> Result<(Vec<String>, String), Error> {
+    // 一時ディレクトリを取得
     let temp_dir = std::env::temp_dir();
+    // 一意なディレクトリ名を生成
+    let unique_dir_name = uuid::Uuid::new_v4().to_string();
+    // 一時ファイルを保存する一時ディレクトリを作成
+    let output_dir = temp_dir.join(format!("tavif_{}", unique_dir_name));
+    std::fs::create_dir_all(&output_dir)?;
     let output_paths = Arc::new(Mutex::new(Vec::new()));
 
     files_binary
@@ -94,7 +101,7 @@ fn convert(
             };
 
             let output_path =
-                temp_dir.join(format!("{}.{}", file_infos[i].file_name, extension_str)); // 一時ディレクトリにファイル名を作成
+                output_dir.join(format!("{}.{}", file_infos[i].file_name, extension_str)); // 一時ディレクトリにファイル名を作成
 
             if extension_type == ExtensionType::Webp {
                 encode_to_webp(file_binary.clone(), output_path.to_str().unwrap(), quality)
@@ -112,7 +119,10 @@ fn convert(
 
     // output_pathsのロックを取得
     let output_paths_locked = output_paths.lock().unwrap();
-    Ok(output_paths_locked.clone()) // ロックを保持したまま値を返す
+    Ok((
+        output_paths_locked.clone(),
+        output_dir.to_str().unwrap().to_string(),
+    )) // ロックを保持したまま値を返す
 }
 
 fn encode_to_avif(img_binary: Vec<u8>, output_path: &str, quality: u8) -> Result<()> {
@@ -175,6 +185,18 @@ fn save_files(file_paths: Vec<String>, output_dir: String) -> Result<(), Error> 
     Ok(())
 }
 
+#[tauri::command]
+fn remove_temp_dir(output_temp_dir: String) -> Result<(), Error> {
+    // ディレクトリが存在する場合は削除
+    if std::fs::remove_dir_all(&output_temp_dir).is_ok() {
+        Ok(())
+    } else {
+        return Err(Error::from(anyhow::anyhow!(
+            "Failed to remove temp directory"
+        )));
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -199,9 +221,10 @@ mod tests {
 
         // 結果を検証
         assert!(result.is_ok());
-        let output_paths = result.unwrap();
+        let (output_paths, output_dir) = result.unwrap();
         assert_eq!(output_paths.len(), 1);
         assert!(Path::new(&output_paths[0]).exists()); // 出力ファイルが存在することを確認
+        assert!(Path::new(&output_dir).exists()); // 出力ディレクトリが存在することを確認
     }
 
     #[test]
@@ -239,5 +262,13 @@ mod tests {
 
         // テスト用のファイルを削除
         fs::remove_file(test_file_path).unwrap();
+    }
+
+    #[test]
+    fn test_remove_temp_dir() {
+        let output_dir = "test_remove_temp_dir";
+        std::fs::create_dir_all(output_dir).unwrap();
+        let result = remove_temp_dir(output_dir.to_string());
+        assert!(result.is_ok());
     }
 }

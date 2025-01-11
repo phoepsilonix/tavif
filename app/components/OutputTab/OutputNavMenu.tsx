@@ -5,6 +5,7 @@ import {
   checkboxSelectedAtom,
   processedFilePathsAtom,
   isSavingAtom,
+  outputTempDirAtom,
 } from "@/app/lib/atom";
 import DownloadOutlined from "../icons/Download";
 import CheckOutlined from "../icons/Check";
@@ -13,6 +14,7 @@ import Null from "./Null";
 import "@ant-design/v5-patch-for-react-19";
 import { saveAll, saveSelected } from "@/app/lib/utils";
 import { useState } from "react";
+import { invoke } from "@tauri-apps/api/core";
 
 export default function OutputNavMenu() {
   const [processedFilePathsSorted, setProcessedFilePathsSorted] = useAtom(
@@ -22,6 +24,7 @@ export default function OutputNavMenu() {
   const [, setProcessedFilePaths] = useAtom(processedFilePathsAtom);
   const [, setIsSaving] = useAtom(isSavingAtom);
   const [dialog, setDialog] = useState<React.ReactNode | null>(null);
+  const [outputTempDir,] = useAtom(outputTempDirAtom);
 
   const handleSaveAll = async () => {
     const result = await saveAll(setIsSaving, processedFilePathsSorted, setDialog);
@@ -30,11 +33,15 @@ export default function OutputNavMenu() {
     }
   };
 
-  function removeResult() {
+  const removeResult = async () => {
     setProcessedFilePathsSorted([]);
     setCheckboxSelected([]);
     setProcessedFilePaths([]);
-  }
+    if (outputTempDir) {
+      await invoke("remove_temp_dir", { outputTempDir: outputTempDir });
+    }
+  };
+
 
   function handleCheckboxChange(e: React.ChangeEvent<HTMLInputElement>) {
     setCheckboxSelected((prev) =>

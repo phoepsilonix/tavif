@@ -14,7 +14,7 @@ export default function LoadingModal() {
   const [extensionType] = useAtom(extensionTypeAtom);
   return (
     <div
-      className={`fixed bottom-0 left-0 right-0 top-0 bg-black/50 flex justify-center items-center z-50 ${
+      className={`fixed h-[calc(100vh-30px)] bottom-0 left-0 right-0 top-[30px] bg-black/50 flex justify-center items-center z-50 ${
         isProcessing || isSaving ? "block" : "hidden"
       }`}
     >

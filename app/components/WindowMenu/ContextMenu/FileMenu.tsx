@@ -16,6 +16,7 @@ import {
   isSavingAtom,
   isProcessingAtom,
   windowMenuDialogAtom,
+  outputTempDirAtom,
 } from "@/app/lib/atom";
 import { convert, openDialog, saveAll, saveSelected } from "@/app/lib/utils";
 import { useEffect, useRef, useState } from "react";
@@ -61,33 +62,53 @@ export default function FileMenu() {
   );
   const [checkboxSelected, setCheckboxSelected] = useAtom(checkboxSelectedAtom);
   const [, setProcessedFilePaths] = useAtom(processedFilePathsAtom);
-  const [, setIsSaving] = useAtom(isSavingAtom);
+  const [isSaving, setIsSaving] = useAtom(isSavingAtom);
   const [quality] = useAtom(qualityAtom);
   const [extensionType] = useAtom(extensionTypeAtom);
   const [isProcessing, setIsProcessing] = useAtom(isProcessingAtom);
   const [, setDialog] = useAtom(windowMenuDialogAtom);
+  const [, setOutputTempDir] = useAtom(outputTempDirAtom);
 
   const handleConvert = async () => {
-    const result = await convert(setIsProcessing, filePaths, quality, extensionType, fileInfos, setProcessedFilePaths, setTabSelected, setDialog);
+    const result = await convert(
+      setIsProcessing,
+      filePaths,
+      quality,
+      extensionType,
+      fileInfos,
+      setProcessedFilePaths,
+      setTabSelected,
+      setDialog,
+      setOutputTempDir
+    );
     if (result) {
       setDialog(result);
     }
   };
 
   const handleSaveAll = async () => {
-    const result = await saveAll(setIsSaving, processedFilePathsSorted, setDialog);
+    const result = await saveAll(
+      setIsSaving,
+      processedFilePathsSorted,
+      setDialog
+    );
     if (result) {
       setDialog(result);
     }
   };
 
   const handleSaveSelected = async () => {
-    const result = await saveSelected(setIsSaving, processedFilePathsSorted, checkboxSelected, setDialog);
+    const result = await saveSelected(
+      setIsSaving,
+      processedFilePathsSorted,
+      checkboxSelected,
+      setDialog
+    );
     if (result) {
       setDialog(result);
     }
   };
-  
+
   function removeResult() {
     setProcessedFilePathsSorted([]);
     setCheckboxSelected([]);
@@ -166,8 +187,12 @@ export default function FileMenu() {
       <Dropdown menu={{ items }} trigger={["click"]}>
         <button
           ref={fileButtonRef}
+          title="File menu"
+          disabled={isProcessing || isSaving}
           onClick={() => {}}
-          className="bg-primary text-white border-none h-[98%] p-[2px_8px] text-sm tracking-wide hover:bg-[#84ddb8] rounded-md transition-all duration-200"
+          className={`bg-primary text-white border-none h-[98%] p-[2px_8px] text-sm tracking-wide hover:bg-[#84ddb8] rounded-md transition-all duration-200 ${
+            isProcessing || isSaving ? "text-[#84ddb8] cursor-not-allowed" : ""
+          }`}
         >
           File(F)
         </button>
@@ -261,7 +286,11 @@ function FileSaveAll(): React.ReactNode {
   const [processedFilePathsSorted] = useAtom(processedFilePathsSortedAtom);
   const [, setDialog] = useAtom(windowMenuDialogAtom);
   const handleSaveAll = async () => {
-    const result = await saveAll(setIsSaving, processedFilePathsSorted, setDialog);
+    const result = await saveAll(
+      setIsSaving,
+      processedFilePathsSorted,
+      setDialog
+    );
     if (result) {
       setDialog(result);
     }
@@ -298,7 +327,12 @@ function FileSaveSelected(): React.ReactNode {
   const [checkboxSelected] = useAtom(checkboxSelectedAtom);
   const [, setDialog] = useAtom(windowMenuDialogAtom);
   const handleSaveSelected = async () => {
-    const result = await saveSelected(setIsSaving, processedFilePathsSorted, checkboxSelected, setDialog);
+    const result = await saveSelected(
+      setIsSaving,
+      processedFilePathsSorted,
+      checkboxSelected,
+      setDialog
+    );
     if (result) {
       setDialog(result);
     }
@@ -338,8 +372,19 @@ function FileConvert(): React.ReactNode {
   const [quality] = useAtom(qualityAtom);
   const [extensionType] = useAtom(extensionTypeAtom);
   const [, setTabSelected] = useAtom(tabSelectedAtom);
+  const [, setOutputTempDir] = useAtom(outputTempDirAtom);
   const handleConvert = async () => {
-    const result = await convert(setIsProcessing, filePaths, quality, extensionType, fileInfos, setProcessedFilePaths, setTabSelected, setDialog);
+    const result = await convert(
+      setIsProcessing,
+      filePaths,
+      quality,
+      extensionType,
+      fileInfos,
+      setProcessedFilePaths,
+      setTabSelected,
+      setDialog,
+      setOutputTempDir
+    );
     if (result) {
       setDialog(result);
     }

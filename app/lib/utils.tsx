@@ -29,7 +29,7 @@ export async function saveAll(
   setIsSaving: (isSaving: boolean) => void,
   processedFilePathsSorted: string[],
   setDialog: (dialog: React.ReactNode) => void
-): Promise<React.ReactNode> {
+): Promise<React.ReactNode | null> {
   setIsSaving(true);
   const outputDir = await open({
     title: "Select Output Directory",
@@ -38,11 +38,7 @@ export async function saveAll(
   });
   if (!outputDir) {
     setIsSaving(false);
-    return (
-      <ErrorDialog>
-        <p>Please select the output directory</p>
-      </ErrorDialog>
-    )
+    return null;
   }
 
   await invoke("save_files", {
@@ -71,7 +67,7 @@ export async function saveSelected(
   processedFilePathsSorted: string[],
   checkboxSelected: CheckboxSelected[],
   setDialog: (dialog: React.ReactNode) => void
-): Promise<React.ReactNode> {
+): Promise<React.ReactNode | null> {
   setIsSaving(true);
   const outputDir = await open({
     title: "Select Output Directory",
@@ -80,11 +76,7 @@ export async function saveSelected(
   });
   if (!outputDir) {
     setIsSaving(false);
-    return (
-      <ErrorDialog>
-        <p>Please select the output directory</p>
-      </ErrorDialog>
-    );
+    return null;
   }
 
   const selectedFilePaths = checkboxSelected
@@ -119,8 +111,9 @@ export async function convert(
   fileInfos: FileInfo[],
   setProcessedFilePaths: (processedFilePaths: string[]) => void,
   setTabSelected: (tabSelected: "output" | "input") => void,
-  setDialog: (dialog: React.ReactNode) => void
-): Promise<React.ReactNode> {
+  setDialog: (dialog: React.ReactNode) => void,
+  setOutputTempDir: (outputTempDir: string) => void
+): Promise<React.ReactNode | null> {
   setIsProcessing(true);
   const binarys = await readFileAsync(filePaths);
   if (!binarys) {
@@ -156,12 +149,29 @@ export async function convert(
   }
 
   const sendData = await createSendData(binarys);
-  const result: string[] = await invoke("convert", {
+  const [result, outputTempDir] = await invoke<[string[], string]>("convert", {
     filesBinary: sendData,
     fileInfos: fileInfos,
     extensionType: extensionType,
     quality: quality,
   });
+  if (!result || !outputTempDir) {
+    setIsProcessing(false);
+    return (
+      <ErrorDialog>
+        <p>Failed to convert</p>
+        <div className="flex flex-row-reverse w-full pr-2">
+          <button
+            className="bg-primary text-white border-none h-[98%] p-[6px_16px] text-md tracking-wider hover:bg-red-500 rounded-md transition-all duration-200"
+            onClick={() => setDialog(null)}
+          >
+            Close
+          </button>
+        </div>
+      </ErrorDialog>
+    );
+  }
+  setOutputTempDir(outputTempDir);
   setProcessedFilePaths(result);
   setIsProcessing(false);
   setTabSelected("output");

@@ -3,7 +3,12 @@
 import type { MenuProps } from "antd";
 import { Dropdown } from "antd";
 import { useAtom } from "jotai";
-import { isFocusedAtom, isLicenseDialogOpenAtom } from "@/app/lib/atom";
+import {
+  isFocusedAtom,
+  isLicenseDialogOpenAtom,
+  isProcessingAtom,
+  isSavingAtom,
+} from "@/app/lib/atom";
 import { useEffect, useRef } from "react";
 import "@ant-design/v5-patch-for-react-19";
 import "antd/dist/reset.css";
@@ -17,6 +22,8 @@ const items: MenuProps["items"] = [
 
 export default function HelpMenu() {
   const [isFocused] = useAtom(isFocusedAtom);
+  const [isProcessing] = useAtom(isProcessingAtom);
+  const [isSaving] = useAtom(isSavingAtom);
   const helpButtonRef = useRef<HTMLButtonElement | null>(null);
   useEffect(() => {
     const handleKeyDownSelectShortcut = async (event: KeyboardEvent) => {
@@ -38,7 +45,9 @@ export default function HelpMenu() {
     <Dropdown menu={{ items }} trigger={["click"]}>
       <button
         onClick={() => {}}
-        className="bg-primary text-white border-none h-[98%] p-[2px_8px] text-sm tracking-wide hover:bg-[#84ddb8] rounded-md transition-all duration-200"
+        className={`bg-primary text-white border-none h-[98%] p-[2px_8px] text-sm tracking-wide hover:bg-[#84ddb8] rounded-md transition-all duration-200 ${
+          isProcessing || isSaving ? "text-[#84ddb8] cursor-not-allowed" : ""
+        }`}
         ref={helpButtonRef}
       >
         Help(H)

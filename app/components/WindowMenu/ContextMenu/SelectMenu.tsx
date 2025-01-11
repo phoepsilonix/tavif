@@ -7,6 +7,8 @@ import {
   checkboxSelectedAtom,
   isFocusedAtom,
   processedFilePathsSortedAtom,
+  isProcessingAtom,
+  isSavingAtom,
 } from "@/app/lib/atom";
 import { useEffect, useRef } from "react";
 import "@ant-design/v5-patch-for-react-19";
@@ -22,6 +24,8 @@ export default function SelectMenu() {
   const [isFocused] = useAtom(isFocusedAtom);
   const [checkboxSelected, setCheckboxSelected] = useAtom(checkboxSelectedAtom);
   const [processedFilePathsSorted] = useAtom(processedFilePathsSortedAtom);
+  const [isProcessing] = useAtom(isProcessingAtom);
+  const [isSaving] = useAtom(isSavingAtom);
   const selectButtonRef = useRef<HTMLButtonElement | null>(null);
   useEffect(() => {
     const handleKeyDownSelectShortcut = async (event: KeyboardEvent) => {
@@ -57,7 +61,9 @@ export default function SelectMenu() {
       <button
         onClick={() => {}}
         ref={selectButtonRef}
-        className="bg-primary text-white border-none h-[98%] p-[2px_8px] text-sm tracking-wide hover:bg-[#84ddb8] rounded-md transition-all duration-200"
+        className={`bg-primary text-white border-none h-[98%] p-[2px_8px] text-sm tracking-wide hover:bg-[#84ddb8] rounded-md transition-all duration-200 ${
+          isProcessing || isSaving ? "text-[#84ddb8] cursor-not-allowed" : ""
+        }`}
       >
         Select(S)
       </button>
