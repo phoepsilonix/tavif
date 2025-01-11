@@ -20,16 +20,12 @@
         "resizable": true,
         "fullscreen": false,
         "label": "main",
-        "decorations": false
+        "decorations": false,
+        "dragDropEnabled": true
       }
     ],
     "security": {
-      "headers": {
-        "Cross-Origin-Opener-Policy": "same-origin",
-        "Cross-Origin-Embedder-Policy": "require-corp",
-        "X-Content-Type-Options": null
-      },
-      "csp": "default-src 'self'; img-src 'self' blob: data:; connect-src ipc: http://ipc.localhost",
+      "csp": "default-src 'self'; img-src 'self' blob: data: asset: http://asset.localhost ; script-src 'self' blob: data: assets: ; connect-src ipc: http://ipc.localhost",
       "dangerousDisableAssetCspModification": ["blob:"]
     }
   },

@@ -75,7 +75,7 @@ export default function WindowMenu() {
   return (
     <div
       data-tauri-drag-region
-      className="titlebar bg-[#00b96b] h-[30px] flex justify-between items-center pl-2 gap-5 border-b border-gray-300"
+      className="titlebar bg-[#00b96b] h-[30px] flex justify-between items-center pl-2 gap-5 border-b border-gray-300 z-[9999]"
     >
       <div className="flex items-center gap-2">
         <img src="/128x128.png" alt="logo" className="w-5 h-5" loading="lazy"/>

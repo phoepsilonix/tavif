@@ -37,3 +37,5 @@ export const checkboxSelectedAtom = atom<CheckboxSelected[]>([]);
 // アプリにフォーカスされているか
 export const isFocusedAtom = atom<boolean>(false);
 
+// ライセンスダイアログの表示状態
+export const isLicenseDialogOpenAtom = atom<boolean>(false);

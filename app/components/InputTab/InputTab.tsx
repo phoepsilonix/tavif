@@ -1,11 +1,11 @@
 "use client";
 
-import Dropzone from "../Dropzone/Dropzone";
 import SelectFiles from "../SelectFiles/SelectFiles";
 import { useAtom } from "jotai";
 import { tabSelectedAtom, filePathsAtom } from "../../lib/atom";
 import InputNubMenu from "./InputNavMenu";
 import Null from "./Null";
+import Dropzone from "../Dropzone/Dropzone";
 
 export default function InputTab() {
   const [tabSelected] = useAtom(tabSelectedAtom);
@@ -16,6 +16,7 @@ export default function InputTab() {
       className={`flex flex-col w-full h-full ${
         tabSelected === "output" ? "hidden" : ""
       }`}
+      data-tauri-drag-region
     >
       <div className="w-full h-full relative">
         <div
