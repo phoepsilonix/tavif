@@ -19,8 +19,8 @@ You can install the application by following these steps:
 
 ### 1. Clone this repository:
    ```bash
-   git clone https://github.com/harumiWeb/avif_conv_app.git
-   cd avif_conv_app
+   git clone https://github.com/harumiWeb/tavif.git
+   cd tavif
    ```
 
 ### 2. Install dependencies:
