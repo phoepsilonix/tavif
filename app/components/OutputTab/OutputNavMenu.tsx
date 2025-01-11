@@ -11,8 +11,8 @@ import CheckOutlined from "../icons/Check";
 import { DeleteOutlined } from "@ant-design/icons";
 import Null from "./Null";
 import "@ant-design/v5-patch-for-react-19";
-import { Modal } from "antd";
 import { saveAll, saveSelected } from "@/app/lib/utils";
+import { useState } from "react";
 
 export default function OutputNavMenu() {
   const [processedFilePathsSorted, setProcessedFilePathsSorted] = useAtom(
@@ -21,7 +21,14 @@ export default function OutputNavMenu() {
   const [checkboxSelected, setCheckboxSelected] = useAtom(checkboxSelectedAtom);
   const [, setProcessedFilePaths] = useAtom(processedFilePathsAtom);
   const [, setIsSaving] = useAtom(isSavingAtom);
-  const [modal, modalContextHolder] = Modal.useModal();
+  const [dialog, setDialog] = useState<React.ReactNode | null>(null);
+
+  const handleSaveAll = async () => {
+    const result = await saveAll(setIsSaving, processedFilePathsSorted, setDialog);
+    if (result) {
+      setDialog(result);
+    }
+  };
 
   function removeResult() {
     setProcessedFilePathsSorted([]);
@@ -42,11 +49,11 @@ export default function OutputNavMenu() {
 
   return (
     <div className="w-full h-fit flex items-center justify-between gap-2">
-      {modalContextHolder}
+      {dialog}
       <div className="flex items-center gap-2">
         <Button
           type="primary"
-          onClick={() => saveAll(setIsSaving, processedFilePathsSorted, modal)}
+          onClick={handleSaveAll}
           title="Save all files."
         >
           <DownloadOutlined size={16} className="fill-white" />
@@ -59,7 +66,7 @@ export default function OutputNavMenu() {
               setIsSaving,
               processedFilePathsSorted,
               checkboxSelected,
-              modal
+              setDialog
             )
           }
           disabled={checkboxSelected.every((item) => !item.checked)}

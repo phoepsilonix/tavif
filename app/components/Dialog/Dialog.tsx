@@ -1,12 +1,26 @@
 import BaseModal from "../BaseModal/BaseModal";
-import { ExclamationCircleOutlined } from "@ant-design/icons";
+import { ExclamationCircleOutlined, CheckCircleOutlined } from "@ant-design/icons";
 import { useAtom } from "jotai";
 import { isLicenseDialogOpenAtom } from "../../lib/atom";
+
+function SuccessDialog({ children }: { children: React.ReactNode }) {
+  return (
+    <BaseModal>
+      <div className="flex flex-col gap-2 justify-center items-center w-full">
+        <p className="text-lg font-medium text-green-500 w-full justify-center flex items-center gap-2">
+          <CheckCircleOutlined twoToneColor="#00b96b" />
+          Success
+        </p>
+        {children}
+      </div>
+    </BaseModal>
+  );
+}
 
 function WarningDialog({ children }: { children: React.ReactNode }) {
   return (
     <BaseModal>
-      <div className="flex flex-col gap-2 justify-center items-center">
+      <div className="flex flex-col gap-2 justify-center items-center w-full">
         <p className="text-lg font-medium text-yellow-500 w-full justify-center flex items-center gap-2">
           <ExclamationCircleOutlined twoToneColor="#eab308" />
           Warning
@@ -20,9 +34,9 @@ function WarningDialog({ children }: { children: React.ReactNode }) {
 function ErrorDialog({ children }: { children: React.ReactNode }) {
   return (
     <BaseModal>
-      <div className="flex flex-col gap-2 justify-center items-center">
+      <div className="flex flex-col gap-2 justify-center items-center w-full">
         <p className="text-lg font-medium text-red-500 w-full justify-center flex items-center gap-2">
-          <ExclamationCircleOutlined twoToneColor="#eab308" />
+          <ExclamationCircleOutlined twoToneColor="#ea3508" />
           Error
         </p>
         {children}
@@ -79,4 +93,4 @@ function LicenseDialog() {
   );
 }
 
-export { WarningDialog, ErrorDialog, LicenseDialog };
+export { SuccessDialog, WarningDialog, ErrorDialog, LicenseDialog };

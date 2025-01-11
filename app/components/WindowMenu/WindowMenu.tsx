@@ -7,7 +7,7 @@ import {
 import { useEffect, useState } from "react";
 import FileMenu from "./ContextMenu/FileMenu";
 import { useAtom } from "jotai";
-import { isFocusedAtom } from "@/app/lib/atom";
+import { isFocusedAtom, windowMenuDialogAtom } from "@/app/lib/atom";
 import EditMenu from "./ContextMenu/SelectMenu";
 import HelpMenu from "./ContextMenu/HelpMenu";
 import { BorderOutlined, MinusOutlined, CloseOutlined } from "@ant-design/icons";
@@ -31,6 +31,7 @@ export default function WindowMenu() {
   const [appWindow, setAppWindow] = useState<TauriWindow | null>(null);
 
   const [, setIsFocused] = useAtom(isFocusedAtom);
+  const [windowMenuDialog,] = useAtom(windowMenuDialogAtom);
 
   useEffect(() => {
     const handleFocus = () => {
@@ -77,6 +78,7 @@ export default function WindowMenu() {
       data-tauri-drag-region
       className="titlebar bg-[#00b96b] h-[30px] flex justify-between items-center pl-2 gap-5 border-b border-gray-300 z-[9999]"
     >
+      {windowMenuDialog}
       <div className="flex items-center gap-2">
         <img src="/128x128.png" alt="logo" className="w-5 h-5" loading="lazy"/>
         <div className="flex items-center">

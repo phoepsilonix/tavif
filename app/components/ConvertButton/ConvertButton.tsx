@@ -10,9 +10,9 @@ import {
   isProcessingAtom,
   tabSelectedAtom,
 } from "@/app/lib/atom";
-import { Modal } from "antd";
 import { convert } from "@/app/lib/utils";
 import "@ant-design/v5-patch-for-react-19";
+import { useState } from "react";
 
 export default function ConvertButton() {
   const [filePaths] = useAtom(filePathsAtom);
@@ -22,23 +22,19 @@ export default function ConvertButton() {
   const [isProcessing, setIsProcessing] = useAtom(isProcessingAtom);
   const [, setProcessedFilePaths] = useAtom(processedFilePathsAtom);
   const [, setTabSelected] = useAtom(tabSelectedAtom);
-  const [modal, contextHolder] = Modal.useModal();
+  const [dialog, setDialog] = useState<React.ReactNode | null>(null);
+
+  const handleConvert = async () => {
+    const result = await convert(setIsProcessing, filePaths, quality, extensionType, fileInfos, setProcessedFilePaths, setTabSelected, setDialog);
+    if (result) {
+      setDialog(result);
+    }
+  };
 
   return (
     <>
       <button
-        onClick={() =>
-          convert(
-            setIsProcessing,
-            filePaths,
-            modal,
-            quality,
-            extensionType,
-            fileInfos,
-            setProcessedFilePaths,
-            setTabSelected
-          )
-        }
+        onClick={handleConvert}
         className={`bg-white font-bold text-lg uppercase text-primary border-none p-[8px_8px] tracking-wider hover:bg-[#b1fede] rounded-md transition-all duration-200 ${
           filePaths.length > 0 && !isProcessing ? "" : "cursor-not-allowed opacity-50"
         }`}
@@ -51,7 +47,8 @@ export default function ConvertButton() {
       >
         Convert
       </button>
-      {contextHolder}
+      {dialog}
     </>
   );
 }
+

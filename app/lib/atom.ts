@@ -39,3 +39,6 @@ export const isFocusedAtom = atom<boolean>(false);
 
 // ライセンスダイアログの表示状態
 export const isLicenseDialogOpenAtom = atom<boolean>(false);
+
+// ウィンドウメニューのダイアログの内容
+export const windowMenuDialogAtom = atom<React.ReactNode | null>(null);
