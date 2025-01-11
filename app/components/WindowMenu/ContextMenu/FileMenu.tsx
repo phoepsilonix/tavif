@@ -61,7 +61,7 @@ export default function FileMenu() {
   );
   const [checkboxSelected, setCheckboxSelected] = useAtom(checkboxSelectedAtom);
   const [, setProcessedFilePaths] = useAtom(processedFilePathsAtom);
-  const [, setIsSaving] = useAtom(isSavingAtom);
+  const [isSaving, setIsSaving] = useAtom(isSavingAtom);
   const [quality] = useAtom(qualityAtom);
   const [extensionType] = useAtom(extensionTypeAtom);
   const [isProcessing, setIsProcessing] = useAtom(isProcessingAtom);
@@ -166,8 +166,12 @@ export default function FileMenu() {
       <Dropdown menu={{ items }} trigger={["click"]}>
         <button
           ref={fileButtonRef}
+          title="File menu"
+          disabled={isProcessing || isSaving}
           onClick={() => {}}
-          className="bg-primary text-white border-none h-[98%] p-[2px_8px] text-sm tracking-wide hover:bg-[#84ddb8] rounded-md transition-all duration-200"
+          className={`bg-primary text-white border-none h-[98%] p-[2px_8px] text-sm tracking-wide hover:bg-[#84ddb8] rounded-md transition-all duration-200 ${
+            isProcessing || isSaving ? "text-[#84ddb8] cursor-not-allowed" : ""
+          }`}
         >
           File(F)
         </button>
