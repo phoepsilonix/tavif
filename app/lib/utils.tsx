@@ -29,7 +29,7 @@ export async function saveAll(
   setIsSaving: (isSaving: boolean) => void,
   processedFilePathsSorted: string[],
   setDialog: (dialog: React.ReactNode) => void
-): Promise<React.ReactNode> {
+): Promise<React.ReactNode | null> {
   setIsSaving(true);
   const outputDir = await open({
     title: "Select Output Directory",
@@ -38,11 +38,7 @@ export async function saveAll(
   });
   if (!outputDir) {
     setIsSaving(false);
-    return (
-      <ErrorDialog>
-        <p>Please select the output directory</p>
-      </ErrorDialog>
-    )
+    return null;
   }
 
   await invoke("save_files", {
@@ -71,7 +67,7 @@ export async function saveSelected(
   processedFilePathsSorted: string[],
   checkboxSelected: CheckboxSelected[],
   setDialog: (dialog: React.ReactNode) => void
-): Promise<React.ReactNode> {
+): Promise<React.ReactNode | null> {
   setIsSaving(true);
   const outputDir = await open({
     title: "Select Output Directory",
@@ -80,11 +76,7 @@ export async function saveSelected(
   });
   if (!outputDir) {
     setIsSaving(false);
-    return (
-      <ErrorDialog>
-        <p>Please select the output directory</p>
-      </ErrorDialog>
-    );
+    return null;
   }
 
   const selectedFilePaths = checkboxSelected
@@ -120,7 +112,7 @@ export async function convert(
   setProcessedFilePaths: (processedFilePaths: string[]) => void,
   setTabSelected: (tabSelected: "output" | "input") => void,
   setDialog: (dialog: React.ReactNode) => void
-): Promise<React.ReactNode> {
+): Promise<React.ReactNode | null> {
   setIsProcessing(true);
   const binarys = await readFileAsync(filePaths);
   if (!binarys) {
