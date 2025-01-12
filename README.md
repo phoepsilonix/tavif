@@ -11,11 +11,8 @@ This project is a lightweight and fast desktop application for converting images
 
 ## Screenshots
 
-![screenshot](https://github.com/user-attachments/assets/f76f478f-1467-4c7a-a123-e3f9f74a62bb)
+![スクリーンショット 2025-01-12 160033](https://github.com/user-attachments/assets/6953e347-16a3-4f31-84d0-c0cd9d4f14c4)
 
-## Installation
-
-You can install the application by following these steps:
 
 ### 1. Clone this repository:
    ```bash
