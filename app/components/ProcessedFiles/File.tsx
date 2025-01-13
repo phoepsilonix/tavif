@@ -50,13 +50,13 @@ export default function File({
   return (
     <li
       key={processedFileInfo.file_name_with_extension}
-      className="flex items-center justify-between pr-3 gap-3 text-sm border-b border-gray-300"
+      className="flex items-center justify-between pr-3 gap-3 text-sm border-b border-gray-300 py-3"
     >
-      <div className="flex items-center gap-3">
+      <div className="flex items-center gap-5">
         <span className="text-sm font-medium tracking-wider text-gray-700 px-1">
           {index + 1}
         </span>
-        <div className="flex items-center aspect-square w-20 h-auto">
+        <div className="flex items-center aspect-square w-20 h-auto min-w-[90px]">
           {imageSrc && (
             <img
               src={imageSrc}
@@ -66,7 +66,7 @@ export default function File({
           )}
         </div>
         <div className="flex flex-col gap-1">
-          <span className="text-sm font-bold text-gray-700 tracking-wider">
+          <span className="text-sm font-bold text-gray-700 tracking-wider max-w-full break-all">
             {processedFileInfo.file_name_with_extension}
           </span>
           <div className="flex items-center gap-3">

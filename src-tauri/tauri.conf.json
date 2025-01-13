@@ -15,7 +15,7 @@
         "title": "Tavif",
         "width": 800,
         "height": 600,
-        "minWidth": 720,
+        "minWidth": 735,
         "minHeight": 280,
         "resizable": true,
         "fullscreen": false,
