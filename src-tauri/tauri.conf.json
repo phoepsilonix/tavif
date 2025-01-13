@@ -1,7 +1,7 @@
 {
   "$schema": "../node_modules/@tauri-apps/cli/config.schema.json",
   "productName": "Tavif",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "identifier": "com.harumi.tavif",
   "build": {
     "frontendDist": "../out",
@@ -15,7 +15,7 @@
         "title": "Tavif",
         "width": 800,
         "height": 600,
-        "minWidth": 720,
+        "minWidth": 735,
         "minHeight": 280,
         "resizable": true,
         "fullscreen": false,
