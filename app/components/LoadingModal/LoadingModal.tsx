@@ -1,5 +1,5 @@
 "use client";
-import { useAtom } from "jotai";
+import { useAtomValue } from "jotai";
 import {
   isProcessingAtom,
   isSavingAtom,
@@ -9,9 +9,9 @@ import { Spin } from "antd";
 import "@ant-design/v5-patch-for-react-19";
 
 export default function LoadingModal() {
-  const [isProcessing] = useAtom(isProcessingAtom);
-  const [isSaving] = useAtom(isSavingAtom);
-  const [extensionType] = useAtom(extensionTypeAtom);
+  const isProcessing = useAtomValue(isProcessingAtom);
+  const isSaving = useAtomValue(isSavingAtom);
+  const extensionType = useAtomValue(extensionTypeAtom);
   return (
     <div
       className={`fixed h-[calc(100vh-30px)] bottom-0 left-0 right-0 top-[30px] bg-black/50 flex justify-center items-center z-50 ${

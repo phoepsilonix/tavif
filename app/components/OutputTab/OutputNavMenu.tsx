@@ -1,5 +1,5 @@
 import { Button } from "antd";
-import { useAtom } from "jotai";
+import { useAtom, useAtomValue, useSetAtom } from "jotai";
 import {
   processedFilePathsSortedAtom,
   checkboxSelectedAtom,
@@ -21,10 +21,10 @@ export default function OutputNavMenu() {
     processedFilePathsSortedAtom
   );
   const [checkboxSelected, setCheckboxSelected] = useAtom(checkboxSelectedAtom);
-  const [, setProcessedFilePaths] = useAtom(processedFilePathsAtom);
-  const [, setIsSaving] = useAtom(isSavingAtom);
+  const setProcessedFilePaths = useSetAtom(processedFilePathsAtom);
+  const setIsSaving = useSetAtom(isSavingAtom);
   const [dialog, setDialog] = useState<React.ReactNode | null>(null);
-  const [outputTempDir,] = useAtom(outputTempDirAtom);
+  const outputTempDir = useAtomValue(outputTempDirAtom);
 
   const handleSaveAll = async () => {
     const result = await saveAll(setIsSaving, processedFilePathsSorted, setDialog);

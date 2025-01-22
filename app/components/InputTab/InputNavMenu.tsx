@@ -2,12 +2,12 @@ import "@ant-design/v5-patch-for-react-19";
 import FileDialog from "../FileDialog/FileDialog";
 import { Button } from "antd";
 import { DeleteOutlined } from "@ant-design/icons";
-import { useAtom } from "jotai";
+import { useSetAtom } from "jotai";
 import { filePathsAtom, fileInfosAtom } from "../../lib/atom";
 
 export default function InputNubMenu() {
-  const [, setFilePaths] = useAtom(filePathsAtom);
-  const [, setFileInfos] = useAtom(fileInfosAtom);
+  const setFilePaths = useSetAtom(filePathsAtom);
+  const setFileInfos = useSetAtom(fileInfosAtom);
 
   const removeAll = () => {
     setFilePaths([]);

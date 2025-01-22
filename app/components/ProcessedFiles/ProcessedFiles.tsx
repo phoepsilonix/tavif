@@ -1,6 +1,6 @@
 "use client";
 
-import { useAtom } from "jotai";
+import { useAtom, useAtomValue, useSetAtom } from "jotai";
 import {
   fileInfosAtom,
   processedFilePathsAtom,
@@ -14,15 +14,15 @@ import { getProcessedFileInfo } from "../SelectFiles/utils";
 import type { ProcessedFileInfo } from "@/app/index.d";
 
 export default function ProcessedFiles() {
-  const [fileInfos] = useAtom(fileInfosAtom);
-  const [processedFilePaths] = useAtom(processedFilePathsAtom);
+  const fileInfos = useAtomValue(fileInfosAtom);
+  const processedFilePaths = useAtomValue(processedFilePathsAtom);
   const [processedFileInfos, setProcessedFileInfos] = useAtom(
     processedFileInfosAtom
   );
   const [processedFilePathsSorted, setProcessedFilePathsSorted] = useAtom(
     processedFilePathsSortedAtom
   );
-  const [, setCheckboxSelected] = useAtom(checkboxSelectedAtom);
+  const setCheckboxSelected = useSetAtom(checkboxSelectedAtom);
 
   useEffect(() => {
     const fetchProcessedInfos = async () => {
