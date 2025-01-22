@@ -4,35 +4,12 @@ import { Button } from "antd";
 import { DeleteOutlined } from "@ant-design/icons";
 import { useAtom, useSetAtom } from "jotai";
 import { filePathsAtom, fileInfosAtom } from "../../lib/atom";
-import { useState, useEffect } from "react";
-import { readFile } from "@tauri-apps/plugin-fs";
+import { convertFileSrc } from "@tauri-apps/api/core";
 import "@ant-design/v5-patch-for-react-19";
 
 export default function File({ fileInfo, index }: FileProps) {
   const [filePaths, setFilePaths] = useAtom(filePathsAtom);
   const setFileInfos = useSetAtom(fileInfosAtom);
-  const [imageSrc, setImageSrc] = useState<string | null>(null);
-
-  useEffect(() => {
-    const handleImageLoad = async (filePath: string) => {
-      try {
-        const data = await readFile(filePath);
-        const blob = new Blob([data], { type: "image/jpeg" });
-        const url = URL.createObjectURL(blob);
-        setImageSrc(url);
-      } catch (error) {
-        console.error("ファイルの読み込みに失敗しました:", error);
-      }
-    };
-
-    handleImageLoad(filePaths[index]);
-
-    return () => {
-      if (imageSrc) {
-        URL.revokeObjectURL(imageSrc);
-      }
-    };
-  }, [fileInfo.file_name_with_extension]);
 
   const extension =
     fileInfo.file_name_with_extension.split(".").pop()?.toLowerCase() || "";
@@ -52,9 +29,9 @@ export default function File({ fileInfo, index }: FileProps) {
           {index + 1}
         </span>
         <div className="flex items-center aspect-square w-20 h-auto min-w-[90px]">
-          {imageSrc && (
+          {filePaths[index] && (
             <img
-              src={imageSrc}
+              src={convertFileSrc(filePaths[index])}
               alt={fileInfo.file_name_with_extension}
               loading="lazy"
             />

@@ -4,10 +4,9 @@ import RightArrow from "../icons/RightArrow";
 import { useAtom, useAtomValue } from "jotai";
 import { checkboxSelectedAtom, filePathsAtom } from "@/app/lib/atom";
 import { ProcessedFileInfo } from "@/app/index.d";
-import { useEffect, useState } from "react";
-import { readFile } from "@tauri-apps/plugin-fs";
 import "@ant-design/v5-patch-for-react-19";
 import CheckOutlined from "../icons/Check";
+import { convertFileSrc } from "@tauri-apps/api/core";
 
 function getCompressionRate(processedFileInfo: ProcessedFileInfo) {
   const compressionRate: number = parseFloat(
@@ -28,29 +27,6 @@ export default function File({
   const [checkboxSelected, setCheckboxSelected] = useAtom(checkboxSelectedAtom);
   const filePaths = useAtomValue(filePathsAtom);
 
-  const [imageSrc, setImageSrc] = useState<string | null>(null);
-
-  useEffect(() => {
-    const handleImageLoad = async (filePath: string) => {
-      try {
-        const data = await readFile(filePath);
-        const blob = new Blob([data], { type: "image/jpeg" });
-        const url = URL.createObjectURL(blob);
-        setImageSrc(url);
-      } catch (error) {
-        console.error("ファイルの読み込みに失敗しました:", error);
-      }
-    };
-
-    handleImageLoad(filePaths[index]);
-
-    return () => {
-      if (imageSrc) {
-        URL.revokeObjectURL(imageSrc);
-      }
-    };
-  }, [processedFileInfo.file_name_with_extension]);
-
   const compressionRate = getCompressionRate(processedFileInfo);
 
   return (
@@ -63,9 +39,9 @@ export default function File({
           {index + 1}
         </span>
         <div className="flex items-center aspect-square w-20 h-auto min-w-[90px]">
-          {imageSrc && (
+          {filePaths[index] && (
             <img
-              src={imageSrc}
+              src={convertFileSrc(filePaths[index])}
               alt={processedFileInfo.file_name_with_extension}
               loading="lazy"
             />
