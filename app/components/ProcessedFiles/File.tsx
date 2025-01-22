@@ -1,7 +1,7 @@
 "use client";
 import { ProcessedFilesProps } from ".";
 import RightArrow from "../icons/RightArrow";
-import { useAtom } from "jotai";
+import { useAtom, useAtomValue } from "jotai";
 import { checkboxSelectedAtom, filePathsAtom } from "@/app/lib/atom";
 import { ProcessedFileInfo } from "@/app/index.d";
 import { useEffect, useState } from "react";
@@ -26,7 +26,7 @@ export default function File({
   processedFileInfo,
 }: ProcessedFilesProps) {
   const [checkboxSelected, setCheckboxSelected] = useAtom(checkboxSelectedAtom);
-  const [filePaths] = useAtom(filePathsAtom);
+  const filePaths = useAtomValue(filePathsAtom);
 
   const [imageSrc, setImageSrc] = useState<string | null>(null);
 
@@ -43,6 +43,12 @@ export default function File({
     };
 
     handleImageLoad(filePaths[index]);
+
+    return () => {
+      if (imageSrc) {
+        URL.revokeObjectURL(imageSrc);
+      }
+    };
   }, [processedFileInfo.file_name_with_extension]);
 
   const compressionRate = getCompressionRate(processedFileInfo);

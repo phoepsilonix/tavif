@@ -2,7 +2,7 @@
 
 import type { MenuProps } from "antd";
 import { Dropdown } from "antd";
-import { useAtom } from "jotai";
+import { useAtomValue, useSetAtom } from "jotai";
 import {
   isFocusedAtom,
   isLicenseDialogOpenAtom,
@@ -21,9 +21,9 @@ const items: MenuProps["items"] = [
 ];
 
 export default function HelpMenu() {
-  const [isFocused] = useAtom(isFocusedAtom);
-  const [isProcessing] = useAtom(isProcessingAtom);
-  const [isSaving] = useAtom(isSavingAtom);
+  const isFocused = useAtomValue(isFocusedAtom);
+  const isProcessing = useAtomValue(isProcessingAtom);
+  const isSaving = useAtomValue(isSavingAtom);
   const helpButtonRef = useRef<HTMLButtonElement | null>(null);
   useEffect(() => {
     const handleKeyDownSelectShortcut = async (event: KeyboardEvent) => {
@@ -57,7 +57,7 @@ export default function HelpMenu() {
 }
 
 function Help(): React.ReactNode {
-  const [, setIsLicenseDialogOpen] = useAtom(isLicenseDialogOpenAtom);
+  const setIsLicenseDialogOpen = useSetAtom(isLicenseDialogOpenAtom);
   return (
     <>
       <button

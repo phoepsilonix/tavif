@@ -1,6 +1,6 @@
 "use client";
 
-import { useAtom } from "jotai";
+import { useAtom, useAtomValue, useSetAtom } from "jotai";
 import {
   filePathsAtom,
   fileInfosAtom,
@@ -16,15 +16,15 @@ import "@ant-design/v5-patch-for-react-19";
 import { useState } from "react";
 
 export default function ConvertButton() {
-  const [filePaths] = useAtom(filePathsAtom);
-  const [fileInfos] = useAtom(fileInfosAtom);
-  const [extensionType] = useAtom(extensionTypeAtom);
-  const [quality] = useAtom(qualityAtom);
+  const filePaths = useAtomValue(filePathsAtom);
+  const fileInfos = useAtomValue(fileInfosAtom);
+  const extensionType = useAtomValue(extensionTypeAtom);
+  const quality = useAtomValue(qualityAtom);
   const [isProcessing, setIsProcessing] = useAtom(isProcessingAtom);
-  const [, setProcessedFilePaths] = useAtom(processedFilePathsAtom);
-  const [, setTabSelected] = useAtom(tabSelectedAtom);
+  const setProcessedFilePaths = useSetAtom(processedFilePathsAtom);
+  const setTabSelected = useSetAtom(tabSelectedAtom);
   const [dialog, setDialog] = useState<React.ReactNode | null>(null);
-  const [, setOutputTempDir] = useAtom(outputTempDirAtom);
+  const setOutputTempDir = useSetAtom(outputTempDirAtom);
 
   const handleConvert = async () => {
     const errorDialog = await convert(

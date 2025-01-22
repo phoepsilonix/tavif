@@ -1,13 +1,13 @@
 "use client";
 import { useEffect, useState } from "react";
-import { useAtom } from "jotai";
+import { useSetAtom } from "jotai";
 import { filePathsAtom, tabSelectedAtom } from "../../lib/atom";
 import { WarningDialog, ErrorDialog } from "../Dialog/Dialog";
 import { listen } from "@tauri-apps/api/event";
 
 export default function Dropzone() {
-  const [, setFilePaths] = useAtom(filePathsAtom);
-  const [, setTabSelected] = useAtom(tabSelectedAtom);
+  const setFilePaths = useSetAtom(filePathsAtom);
+  const setTabSelected = useSetAtom(tabSelectedAtom);
   const [warningModalOpen, setWarningModalOpen] = useState(false);
   const [errorModalOpen, setErrorModalOpen] = useState(false);
   const [extensions, setExtensions] = useState<string[]>([]);

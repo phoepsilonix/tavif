@@ -2,7 +2,7 @@
 import { FileProps } from "./index.d";
 import { Button } from "antd";
 import { DeleteOutlined } from "@ant-design/icons";
-import { useAtom } from "jotai";
+import { useAtom, useSetAtom } from "jotai";
 import { filePathsAtom, fileInfosAtom } from "../../lib/atom";
 import { useState, useEffect } from "react";
 import { readFile } from "@tauri-apps/plugin-fs";
@@ -10,7 +10,7 @@ import "@ant-design/v5-patch-for-react-19";
 
 export default function File({ fileInfo, index }: FileProps) {
   const [filePaths, setFilePaths] = useAtom(filePathsAtom);
-  const [, setFileInfos] = useAtom(fileInfosAtom);
+  const setFileInfos = useSetAtom(fileInfosAtom);
   const [imageSrc, setImageSrc] = useState<string | null>(null);
 
   useEffect(() => {
@@ -26,6 +26,12 @@ export default function File({ fileInfo, index }: FileProps) {
     };
 
     handleImageLoad(filePaths[index]);
+
+    return () => {
+      if (imageSrc) {
+        URL.revokeObjectURL(imageSrc);
+      }
+    };
   }, [fileInfo.file_name_with_extension]);
 
   const extension =

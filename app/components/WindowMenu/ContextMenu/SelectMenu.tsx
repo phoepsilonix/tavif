@@ -2,7 +2,7 @@
 
 import type { MenuProps } from "antd";
 import { Dropdown } from "antd";
-import { useAtom } from "jotai";
+import { useAtom, useAtomValue, useSetAtom } from "jotai";
 import {
   checkboxSelectedAtom,
   isFocusedAtom,
@@ -21,11 +21,11 @@ const items: MenuProps["items"] = [
 ];
 
 export default function SelectMenu() {
-  const [isFocused] = useAtom(isFocusedAtom);
+  const isFocused = useAtomValue(isFocusedAtom);
   const [checkboxSelected, setCheckboxSelected] = useAtom(checkboxSelectedAtom);
-  const [processedFilePathsSorted] = useAtom(processedFilePathsSortedAtom);
-  const [isProcessing] = useAtom(isProcessingAtom);
-  const [isSaving] = useAtom(isSavingAtom);
+  const processedFilePathsSorted = useAtomValue(processedFilePathsSortedAtom);
+  const isProcessing = useAtomValue(isProcessingAtom);
+  const isSaving = useAtomValue(isSavingAtom);
   const selectButtonRef = useRef<HTMLButtonElement | null>(null);
   useEffect(() => {
     const handleKeyDownSelectShortcut = async (event: KeyboardEvent) => {
@@ -72,8 +72,8 @@ export default function SelectMenu() {
 }
 
 function SelectAll(): React.ReactNode {
-  const [, setCheckboxSelected] = useAtom(checkboxSelectedAtom);
-  const [processedFilePathsSorted] = useAtom(processedFilePathsSortedAtom);
+  const setCheckboxSelected = useSetAtom(checkboxSelectedAtom);
+  const processedFilePathsSorted = useAtomValue(processedFilePathsSortedAtom);
   return (
     <button
       title="Select all files."

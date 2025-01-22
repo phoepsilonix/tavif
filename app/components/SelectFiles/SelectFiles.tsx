@@ -1,6 +1,6 @@
 "use client";
 
-import { useAtom } from "jotai";
+import { useAtom, useAtomValue } from "jotai";
 import { filePathsAtom, fileInfosAtom } from "@/app/lib/atom";
 import { FileInfo } from "@/app/index.d";
 import { useEffect } from "react";
@@ -9,7 +9,7 @@ import { getFileInfo } from "./utils";
 import { readFileAsync } from "../FileDialog/utils";
 
 export default function SelectFiles() {
-  const [filePaths] = useAtom(filePathsAtom);
+  const filePaths = useAtomValue(filePathsAtom);
   const [fileInfos, setFileInfos] = useAtom(fileInfosAtom);
 
   useEffect(() => {

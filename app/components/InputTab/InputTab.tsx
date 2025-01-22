@@ -1,15 +1,15 @@
 "use client";
 
 import SelectFiles from "../SelectFiles/SelectFiles";
-import { useAtom } from "jotai";
+import { useAtomValue } from "jotai";
 import { tabSelectedAtom, filePathsAtom } from "../../lib/atom";
 import InputNubMenu from "./InputNavMenu";
 import Null from "./Null";
 import Dropzone from "../Dropzone/Dropzone";
 
 export default function InputTab() {
-  const [tabSelected] = useAtom(tabSelectedAtom);
-  const [filePaths] = useAtom(filePathsAtom);
+  const tabSelected = useAtomValue(tabSelectedAtom);
+  const filePaths = useAtomValue(filePathsAtom);
 
   return (
     <div

@@ -1,12 +1,12 @@
 "use client";
 
-import { useAtom } from "jotai";
+import { useAtomValue } from "jotai";
 import { tabSelectedAtom } from "../../lib/atom";
 import ProcessedFiles from "../ProcessedFiles/ProcessedFiles";
 import OutputNavMenu from "./OutputNavMenu";
 
 export default function OutputTab() {
-  const [tabSelected] = useAtom(tabSelectedAtom);
+  const tabSelected = useAtomValue(tabSelectedAtom);
   return (
     <div
       className={`flex flex-col w-full h-full relative pb-2 bg-white/80 ${
