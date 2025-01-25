@@ -89,44 +89,33 @@ fn convert(
     // 一時ファイルを保存する一時ディレクトリを作成
     let output_dir = temp_dir.join(format!("tavif_{}", unique_dir_name));
     std::fs::create_dir_all(&output_dir)?;
-    let output_paths = Arc::new(Mutex::new(Vec::new()));
 
-    files_binary
+    let output_paths = files_binary
         .par_iter()
+        .zip(file_infos)
         .enumerate()
-        .for_each(|(i, file_binary)| {
-            let extension_str = match extension_type {
-                ExtensionType::Webp => "webp",
-                ExtensionType::Avif => "avif",
+        .filter_map(|(idx, (file_binary, file_info))| {
+            let output_path = match extension_type {
+                ExtensionType::Webp => {
+                    let output_path = output_dir.join(format!("{}.webp", file_info.file_name)); // 一時ディレクトリにファイル名を作成
+                    encode_to_webp(img_binary, &output_path, quality).ok()?;
+                    output_path
+                }
+                ExtensionType::Avif => {
+                    let output_path = output_dir.join(format!("{}.avif", file_info.file_name)); // 一時ディレクトリにファイル名を作成
+                    encode_to_avif(img_binary, &output_path, quality).ok()?;
+                    output_path
+                }
             };
+            Some(output_path)
+        })
+        .collect::<Vec<_>>();
 
-            let output_path =
-                output_dir.join(format!("{}.{}", file_infos[i].file_name, extension_str)); // 一時ディレクトリにファイル名を作成
-
-            if extension_type == ExtensionType::Webp {
-                encode_to_webp(file_binary.clone(), output_path.to_str().unwrap(), quality)
-                    .unwrap();
-            } else if extension_type == ExtensionType::Avif {
-                encode_to_avif(file_binary.clone(), output_path.to_str().unwrap(), quality)
-                    .unwrap();
-            }
-
-            output_paths
-                .lock()
-                .unwrap()
-                .push(output_path.to_str().unwrap().to_string());
-        });
-
-    // output_pathsのロックを取得
-    let output_paths_locked = output_paths.lock().unwrap();
-    Ok((
-        output_paths_locked.clone(),
-        output_dir.to_str().unwrap().to_string(),
-    )) // ロックを保持したまま値を返す
+    Ok((output_paths_locked, output_dir.to_str()?.to_string())) // ロックを保持したまま値を返す
 }
 
-fn encode_to_avif(img_binary: Vec<u8>, output_path: &str, quality: u8) -> Result<()> {
-    let img = image::load_from_memory(&img_binary)?;
+fn encode_to_avif(img_binary: &[u8], output_path: &std::path::Path, quality: u8) -> Result<()> {
+    let img = image::load_from_memory(img_binary)?;
     let img = img.to_rgb8();
     let file = File::create(output_path)?;
 
@@ -141,7 +130,7 @@ fn encode_to_avif(img_binary: Vec<u8>, output_path: &str, quality: u8) -> Result
     Ok(())
 }
 
-fn encode_to_webp(img_binary: Vec<u8>, output_path: &str, quality: u8) -> Result<()> {
+fn encode_to_webp(img_binary: &[u8], output_path: &std::path::Path, quality: u8) -> Result<()> {
     // 引数のqualityはu8型で統一しているため、ここでf32型に変換する
     let quality = quality as f32;
 
@@ -272,3 +261,4 @@ mod tests {
         assert!(result.is_ok());
     }
 }
+
