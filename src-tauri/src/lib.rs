@@ -31,7 +31,6 @@ use rayon::prelude::*;
 use serde::{Deserialize, Serialize};
 use std::fs::File;
 use std::io::{BufReader, BufWriter, Read};
-use std::sync::{Arc, Mutex};
 use tauri::Error;
 use webp;
 
@@ -103,25 +102,25 @@ fn convert(
         .par_iter()
         .zip(file_infos)
         .enumerate()
-        .filter_map(|(idx, (file_binary, file_info))| {
+        .filter_map(|(_idx, (file_binary, file_info))| {
             let output_path = output_dir.join(format!(
                 "{}.{}",
                 file_info.file_name,
                 extension_type.get_extension_str()
-            )); // 一時ディレクトリにファイル名を作成
+            ));
             match extension_type {
                 ExtensionType::Webp => {
-                    encode_to_webp(img_binary, &output_path, quality).ok()?;
+                    encode_to_webp(file_binary, &output_path, quality).ok()?;
                 }
                 ExtensionType::Avif => {
-                    encode_to_avif(img_binary, &output_path, quality).ok()?;
+                    encode_to_avif(file_binary, &output_path, quality).ok()?;
                 }
             };
-            Some(output_path)
+            Some(output_path.to_string_lossy().into_owned())
         })
-        .collect::<Vec<_>>();
+        .collect::<Vec<String>>();
 
-    Ok((output_paths_locked, output_dir.to_str()?.to_string())) // ロックを保持したまま値を返す
+    Ok((output_paths, output_dir.to_str().unwrap_or("").to_string()))
 }
 
 fn encode_to_avif(img_binary: &[u8], output_path: &std::path::Path, quality: u8) -> Result<()> {
@@ -271,4 +270,3 @@ mod tests {
         assert!(result.is_ok());
     }
 }
-
