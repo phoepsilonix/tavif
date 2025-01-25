@@ -75,6 +75,15 @@ enum ExtensionType {
     Avif,
 }
 
+impl ExtensionType {
+    fn get_extension_str(&self) -> &str {
+        match self {
+            ExtensionType::Webp => "webp",
+            ExtensionType::Avif => "avif",
+        }
+    }
+}
+
 #[tauri::command]
 fn convert(
     files_binary: Vec<Vec<u8>>,
@@ -95,16 +104,17 @@ fn convert(
         .zip(file_infos)
         .enumerate()
         .filter_map(|(idx, (file_binary, file_info))| {
-            let output_path = match extension_type {
+            let output_path = output_dir.join(format!(
+                "{}.{}",
+                file_info.file_name,
+                extension_type.get_extension_str()
+            )); // 一時ディレクトリにファイル名を作成
+            match extension_type {
                 ExtensionType::Webp => {
-                    let output_path = output_dir.join(format!("{}.webp", file_info.file_name)); // 一時ディレクトリにファイル名を作成
                     encode_to_webp(img_binary, &output_path, quality).ok()?;
-                    output_path
                 }
                 ExtensionType::Avif => {
-                    let output_path = output_dir.join(format!("{}.avif", file_info.file_name)); // 一時ディレクトリにファイル名を作成
                     encode_to_avif(img_binary, &output_path, quality).ok()?;
-                    output_path
                 }
             };
             Some(output_path)
