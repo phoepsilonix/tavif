@@ -31,6 +31,7 @@ use rayon::prelude::*;
 use serde::{Deserialize, Serialize};
 use std::fs::File;
 use std::io::{BufReader, BufWriter, Read};
+use std::path::PathBuf;
 use tauri::Error;
 use webp;
 
@@ -89,7 +90,7 @@ fn convert(
     file_infos: Vec<FileInfo>,
     extension_type: ExtensionType,
     quality: u8,
-) -> Result<(Vec<String>, String), Error> {
+) -> Result<(Vec<PathBuf>, String), Error> {
     // 一時ディレクトリを取得
     let temp_dir = std::env::temp_dir();
     // 一意なディレクトリ名を生成
@@ -116,9 +117,9 @@ fn convert(
                     encode_to_avif(file_binary, &output_path, quality).ok()?;
                 }
             };
-            Some(output_path.to_string_lossy().into_owned())
+            Some(output_path)
         })
-        .collect::<Vec<String>>();
+        .collect::<Vec<_>>();
 
     Ok((output_paths, output_dir.to_str().unwrap_or("").to_string()))
 }
