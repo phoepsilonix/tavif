@@ -102,8 +102,7 @@ fn convert(
     let output_paths = files_binary
         .par_iter()
         .zip(file_infos)
-        .enumerate()
-        .filter_map(|(_idx, (file_binary, file_info))| {
+        .filter_map(|(file_binary, file_info)| {
             let output_path = output_dir.join(format!(
                 "{}.{}",
                 file_info.file_name,
